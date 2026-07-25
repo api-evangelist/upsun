@@ -1,0 +1,585 @@
+openapi: 3.0.1
+info:
+  title: Upsun.com Rest Add-ons User Profiles API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  description: "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n"
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+security:
+- OAuth2: []
+tags:
+- name: User Profiles
+paths:
+  /profiles:
+    get:
+      tags:
+      - User Profiles
+      summary: List user profiles
+      operationId: list-profiles
+      responses:
+        '200':
+          description: The list of user profiles.
+          content:
+            application/json:
+              schema:
+                properties:
+                  count:
+                    description: Total number of results.
+                    type: integer
+                  profiles:
+                    description: Array of user profiles.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Profile'
+                  _links:
+                    $ref: '#/components/schemas/HalLinks'
+                type: object
+  /profiles/{userId}:
+    get:
+      tags:
+      - User Profiles
+      summary: Get a single user profile
+      operationId: get-profile
+      parameters:
+      - $ref: '#/components/parameters/user_id'
+      responses:
+        '200':
+          description: A User profile object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+    patch:
+      tags:
+      - User Profiles
+      summary: Update a user profile
+      description: Update a user profile, supplying one or more key/value pairs to to change.
+      operationId: update-profile
+      parameters:
+      - $ref: '#/components/parameters/user_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                display_name:
+                  description: The user's display name.
+                  type: string
+                username:
+                  description: The user's username.
+                  type: string
+                current_password:
+                  description: The user's current password.
+                  type: string
+                password:
+                  description: The user's new password.
+                  type: string
+                company_type:
+                  description: The company type.
+                  type: string
+                company_name:
+                  description: The name of the company.
+                  type: string
+                vat_number:
+                  description: The vat number of the user.
+                  type: string
+                company_role:
+                  description: The role of the user in the company.
+                  type: string
+                marketing:
+                  description: Flag if the user agreed to receive marketing communication.
+                  type: boolean
+                ui_colorscheme:
+                  description: The user's chosen color scheme for user interfaces. Available values are 'light' and 'dark'.
+                  type: string
+                default_catalog:
+                  description: The URL of a catalog file which overrides the default.
+                  type: string
+                project_options_url:
+                  description: The URL of an account-wide project options file.
+                  type: string
+                picture:
+                  description: Url of the user's picture.
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: A User profile object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+  /profiles/{userId}/address:
+    get:
+      tags:
+      - User Profiles
+      summary: Get a user address
+      operationId: get-address
+      parameters:
+      - $ref: '#/components/parameters/user_id'
+      responses:
+        '200':
+          description: A user Address object extended with field metadata
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Address'
+                - $ref: '#/components/schemas/AddressMetadata'
+    patch:
+      tags:
+      - User Profiles
+      summary: Update a user address
+      description: Update a user address, supplying one or more key/value pairs to to change.
+      operationId: update-address
+      parameters:
+      - $ref: '#/components/parameters/user_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '200':
+          description: A user Address object extended with field metadata.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Address'
+                - $ref: '#/components/schemas/AddressMetadata'
+  /profile/{uuid}/picture:
+    post:
+      tags:
+      - User Profiles
+      summary: Create a user profile picture
+      operationId: create-profile-picture
+      parameters:
+      - name: uuid
+        in: path
+        description: The uuid of the user
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  description: The image file to upload.
+                  type: string
+                  format: binary
+              type: object
+      responses:
+        '200':
+          description: The new picture url.
+          content:
+            application/json:
+              schema:
+                properties:
+                  url:
+                    description: The relative url of the picture.
+                    type: string
+                type: object
+    delete:
+      tags:
+      - User Profiles
+      summary: Delete a user profile picture
+      operationId: delete-profile-picture
+      parameters:
+      - name: uuid
+        in: path
+        description: The uuid of the user
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content success.
+components:
+  parameters:
+    user_id:
+      name: userId
+      in: path
+      description: The UUID of the user
+      required: true
+      schema:
+        type: string
+  schemas:
+    Address:
+      description: The address of the user.
+      properties:
+        country:
+          description: Two-letter country codes are used to represent countries and states
+          type: string
+          format: ISO ALPHA-2
+        name_line:
+          description: The full name of the user
+          type: string
+        premise:
+          description: Premise (i.e. Apt, Suite, Bldg.)
+          type: string
+        sub_premise:
+          description: Sub Premise (i.e. Suite, Apartment, Floor, Unknown.
+          type: string
+        thoroughfare:
+          description: The address of the user
+          type: string
+        administrative_area:
+          description: The administrative area of the user address
+          type: string
+          format: ISO ALPHA-2
+        sub_administrative_area:
+          description: The sub-administrative area of the user address
+          type: string
+        locality:
+          description: The locality of the user address
+          type: string
+        dependent_locality:
+          description: The dependant_locality area of the user address
+          type: string
+        postal_code:
+          description: The postal code area of the user address
+          type: string
+      type: object
+    Profile:
+      description: The user profile.
+      properties:
+        id:
+          description: The user's unique ID.
+          type: string
+          format: uuid
+        display_name:
+          description: The user's display name.
+          type: string
+        email:
+          description: The user's email address.
+          type: string
+          format: email
+        username:
+          description: The user's username.
+          type: string
+        type:
+          description: The user's type (user/organization).
+          type: string
+          enum:
+          - user
+          - organization
+        picture:
+          description: The URL of the user's picture.
+          type: string
+          format: url
+        company_type:
+          description: The company type.
+          type: string
+        company_name:
+          description: The name of the company.
+          type: string
+        currency:
+          description: A 3-letter ISO 4217 currency code (assigned according to the billing address).
+          type: string
+        vat_number:
+          description: The vat number of the user.
+          type: string
+        company_role:
+          description: The role of the user in the company.
+          type: string
+        website_url:
+          description: The user or company website.
+          type: string
+        new_ui:
+          description: Whether the new UI features are enabled for this user.
+          type: boolean
+        ui_colorscheme:
+          description: The user's chosen color scheme for user interfaces.
+          type: string
+        default_catalog:
+          description: The URL of a catalog file which overrides the default.
+          type: string
+        project_options_url:
+          description: The URL of an account-wide project options file.
+          type: string
+        marketing:
+          description: Flag if the user agreed to receive marketing communication.
+          type: boolean
+        created_at:
+          description: The timestamp representing when the user account was created.
+          type: string
+          format: date-time
+        updated_at:
+          description: The timestamp representing when the user account was last modified.
+          type: string
+          format: date-time
+        billing_contact:
+          description: The e-mail address of a contact to whom billing notices will be sent.
+          type: string
+          format: email
+        current_trial:
+          description: The current trial for the profile.
+          properties:
+            active:
+              description: The trial active status.
+              type: boolean
+            created:
+              description: The trial creation date.
+              type: string
+              format: date-time
+            description:
+              description: The trial description.
+              type: string
+            expiration:
+              description: The trial expiration-date.
+              type: string
+              format: date-time
+            current:
+              description: The total amount spent by the trial user at this point in time.
+              properties:
+                formatted:
+                  description: The total amount formatted.
+                  type: string
+                amount:
+                  description: The total amount.
+                  type: string
+                currency:
+                  description: The currency.
+                  type: string
+                currency_symbol:
+                  description: Currency symbol.
+                  type: string
+              type: object
+            spend:
+              description: The total amount available for the trial.
+              properties:
+                formatted:
+                  description: The total amount formatted.
+                  type: string
+                amount:
+                  description: The total amount.
+                  type: string
+                currency:
+                  description: The currency.
+                  type: string
+                currency_symbol:
+                  description: Currency symbol.
+                  type: string
+              type: object
+            spend_remaining:
+              description: The remaining amount available for the trial.
+              properties:
+                formatted:
+                  description: The total amount formatted.
+                  type: string
+                amount:
+                  description: The total amount.
+                  type: string
+                currency:
+                  description: The currency.
+                  type: string
+                currency_symbol:
+                  description: Currency symbol.
+                  type: string
+                unlimited:
+                  description: Spend limit is ignored (in favor of resource limitations).
+                  type: boolean
+              type: object
+            projects:
+              description: Projects active under trial
+              properties:
+                id:
+                  description: Trial project ID
+                  type: string
+                name:
+                  description: Trial project name
+                  type: string
+                total:
+                  properties:
+                    amount:
+                      description: Trial project cost
+                      type: integer
+                    currency_code:
+                      description: Currency code
+                      type: string
+                    currency_symbol:
+                      description: Currency symbol
+                      type: string
+                    formatted:
+                      description: Trial project cost formatted with currency sign
+                      type: string
+                  type: object
+              type: object
+            pending_verification:
+              description: Required verification method (if applicable).
+              type: string
+              enum:
+              - credit-card
+              nullable: true
+              deprecated: true
+            model:
+              description: The trial trial model.
+              type: string
+            days_remaining:
+              description: The amount of days until the trial expires.
+              type: integer
+          type: object
+        invoiced:
+          description: The customer is invoiced.
+          type: boolean
+      type: object
+    AddressMetadata:
+      description: Information about fields required to express an address.
+      properties:
+        metadata:
+          description: Address field metadata.
+          properties:
+            required_fields:
+              description: Fields required to express the address.
+              type: array
+              items:
+                type: string
+            field_labels:
+              description: Localized labels for address fields.
+              type: object
+            show_vat:
+              description: Whether this country supports a VAT number.
+              type: boolean
+          type: object
+      type: object
+    HalLinks:
+      description: Links to _self, and previous or next page, given that they exist.
+      properties:
+        self:
+          description: The cardinal link to the self resource.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        previous:
+          description: The link to the previous resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+        next:
+          description: The link to the next resource page, given that it exists.
+          properties:
+            title:
+              description: Title of the link
+              type: string
+            href:
+              description: URL of the link
+              type: string
+          type: object
+      type: object
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

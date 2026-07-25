@@ -1,0 +1,1639 @@
+openapi: 3.0.1
+info:
+  title: Upsun.com Rest Add-ons Environment API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  description: "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n"
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+security:
+- OAuth2: []
+tags:
+- name: Environment
+  description: 'On Upsun, an environment encompasses a single instance of your
+
+    entire application stack, the services used by the application,
+
+    the application''s data storage, and the environment''s backups.
+
+
+    In general, an environment represents a single branch or merge request
+
+    in the Git repository backing a project. It is a virtual cluster
+
+    of read-only application and service containers with read-write
+
+    mounts for application and service data.
+
+
+    On Upsun, the default branch is your production environment—thus,
+
+    merging changes to this branch will put those changes to production.
+
+    '
+paths:
+  /projects/{projectId}/environments:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      operationId: list-projects-environments
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentCollection'
+      tags:
+      - Environment
+      summary: Get list of project environments
+      description: 'Retrieve a list of a project''s existing environments and the
+
+        information associated with each environment.
+
+        '
+  /projects/{projectId}/environments/{environmentId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: get-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+      tags:
+      - Environment
+      summary: Get an environment
+      description: Retrieve the details of a single existing environment.
+    patch:
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentPatch'
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: update-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Update an environment
+      description: Update the details of a single existing environment.
+    delete:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: delete-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Delete an environment
+      description: Delete a specified environment.
+  /projects/{projectId}/environments/{environmentId}/activate:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: activate-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentActivateInput'
+      tags:
+      - Environment
+      summary: Activate an environment
+      description: Set the specified environment's status to active
+  /projects/{projectId}/environments/{environmentId}/branch:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: branch-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentBranchInput'
+      tags:
+      - Environment
+      summary: Branch an environment
+      description: 'Create a new environment as a branch of the current environment.
+
+        '
+  /projects/{projectId}/environments/{environmentId}/deactivate:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: deactivate-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Deactivate an environment
+      description: 'Destroy all services and data running on this environment so that
+
+        only the Git branch remains. The environment can be reactivated
+
+        later at any time; reactivating an environment will sync data
+
+        from the parent environment and redeploy.
+
+
+        **NOTE: ALL DATA IN THIS ENVIRONMENT WILL BE IRREVOCABLY LOST**
+
+        '
+  /projects/{projectId}/environments/{environmentId}/deploy:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: deploy-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentDeployInput'
+      tags:
+      - Environment
+      summary: Deploy an environment
+      description: 'Trigger a controlled [manual deployment](https://docs.upsun.com/learn/overview/build-deploy.html#manual-deployment)
+
+        to release all the staged changes
+
+        '
+  /projects/{projectId}/environments/{environmentId}/initialize:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: initialize-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentInitializeInput'
+      tags:
+      - Environment
+      summary: Initialize a new environment
+      description: "Initialize and configure a new environment with an existing repository.\nThe payload is the url of a git repository with a profile name:\n\n```\n{\n    \"repository\": \"git@github.com:platformsh/a-project-template.git@master\",\n    \"profile\": \"Example Project\",\n    \"files\": [\n      {\n        \"mode\": 0600,\n        \"path\": \"config.json\",\n        \"contents\": \"XXXXXXXX\"\n      }\n    ]\n}\n```\nIt can optionally carry additional files that will be committed to the\nrepository, the POSIX file mode to set on each file, and the base64-encoded\ncontents of each file.\n\nThis endpoint can also add a second repository\nURL in the `config` parameter that will be added to the contents of the first.\nThis allows you to put your application in one repository and the Upsun\nYAML configuration files in another.\n"
+  /projects/{projectId}/environments/{environmentId}/merge:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: merge-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentMergeInput'
+      tags:
+      - Environment
+      summary: Merge an environment
+      description: 'Merge an environment into its parent. This means that code changes
+
+        from the branch environment will be merged into the parent branch, and
+
+        the parent branch will be rebuilt and deployed with the new code changes,
+
+        retaining the existing data in the parent environment.
+
+        '
+  /projects/{projectId}/environments/{environmentId}/pause:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: pause-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Pause an environment
+      description: 'Pause an environment, stopping all services and applications (except the router).
+
+
+        Development environments are often used for a limited time and then abandoned.
+
+        To prevent unnecessary consumption of resources, development environments that
+
+        haven''t been redeployed in 14 days are automatically paused.
+
+
+        You can pause an environment manually at any time using this endpoint. Further
+
+        information is available in our [public documentation](https://docs.upsun.com/anchors/environments/paused/).
+
+        '
+  /projects/{projectId}/environments/{environmentId}/redeploy:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: redeploy-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Redeploy an environment
+      description: Trigger the redeployment sequence of an environment.
+  /projects/{projectId}/environments/{environmentId}/resume:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: resume-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Resume a paused environment
+      description: 'Resume a paused environment, restarting all services and applications.
+
+
+        Development environments that haven''t been used for 14 days will be paused
+
+        automatically. They can be resumed via a redeployment or manually using this
+
+        endpoint or the CLI as described in the [public documentation](https://docs.upsun.com/anchors/environments/paused/).
+
+        '
+  /projects/{projectId}/environments/{environmentId}/synchronize:
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: synchronize-environment
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentSynchronizeInput'
+      tags:
+      - Environment
+      summary: Synchronize a child environment with its parent
+      description: 'This synchronizes the code and/or data of an environment with that of
+
+        its parent, then redeploys the environment. Synchronization is only
+
+        possible if a branch has no unmerged commits and it can be fast-forwarded.
+
+
+        If data synchronization is specified, the data in the environment will
+
+        be overwritten with that of its parent.
+
+        '
+  /projects/{projectId}/environments/{environmentId}/versions:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: list-projects-environments-versions
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionCollection'
+      tags:
+      - Environment
+      summary: List versions associated with the environment
+      description: 'List versions associated with the `{environmentId}` environment.
+
+        At least one version always exists.
+
+        When multiple versions exist, it means that multiple versions of an app are deployed.
+
+        The deployment target type denotes whether staged deployment is supported.
+
+        '
+    post:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      operationId: create-projects-environments-versions
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VersionCreateInput'
+      tags:
+      - Environment
+      summary: Create versions associated with the environment
+      description: 'Create versions associated with the `{environmentId}` environment.
+
+        At least one version always exists.
+
+        When multiple versions exist, it means that multiple versions of an app are deployed.
+
+        The deployment target type denotes whether staged deployment is supported.
+
+        '
+  /projects/{projectId}/environments/{environmentId}/versions/{versionId}:
+    get:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: versionId
+      operationId: get-projects-environments-versions
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Version'
+      tags:
+      - Environment
+      summary: List the version
+      description: 'List the `{versionId}` version.
+
+        A routing percentage for this version may be specified for staged rollouts
+
+        (if the deployment target supports it).
+
+        '
+    patch:
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VersionPatch'
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: versionId
+      operationId: update-projects-environments-versions
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Update the version
+      description: 'Update the `{versionId}` version.
+
+        A routing percentage for this version may be specified for staged rollouts
+
+        (if the deployment target supports it).
+
+        '
+    delete:
+      parameters:
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: projectId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: environmentId
+      - in: path
+        required: true
+        schema:
+          type: string
+        name: versionId
+      operationId: delete-projects-environments-versions
+      responses:
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+      tags:
+      - Environment
+      summary: Delete the version
+      description: 'Delete the `{versionId}` version.
+
+        A routing percentage for this version may be specified for staged rollouts
+
+        (if the deployment target supports it).
+
+        '
+components:
+  schemas:
+    EnvironmentPatch:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: The name of the environment
+        title:
+          type: string
+          title: Title
+          description: The title of the environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - development
+          - production
+          - staging
+          title: Type
+          description: The type of environment (`production`, `staging` or `development`), if not provided, a default will be calculated
+        parent:
+          type: string
+          nullable: true
+          title: Parent environment
+          description: The name of the parent environment
+        clone_parent_on_create:
+          type: boolean
+          title: Clone parent on create
+          description: Clone data when creating that environment
+        http_access:
+          type: object
+          properties:
+            is_enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether http_access control is enabled
+            addresses:
+              type: array
+              items:
+                type: object
+                properties:
+                  permission:
+                    type: string
+                    enum:
+                    - allow
+                    - deny
+                    title: Permission
+                    description: ''
+                  address:
+                    type: string
+                    title: Address
+                    description: IP address or CIDR
+                required:
+                - permission
+                - address
+                additionalProperties: false
+              title: Address grants
+              description: ''
+            basic_auth:
+              type: object
+              additionalProperties:
+                type: string
+              title: Basic auth grants
+              description: ''
+          additionalProperties: false
+          title: HTTP access permissions
+          description: The HTTP access permissions for this environment
+        enable_smtp:
+          type: boolean
+          title: Enable SMTP
+          description: Whether to configure SMTP for this environment
+        restrict_robots:
+          type: boolean
+          title: Restrict robots
+          description: Whether to restrict robots for this environment
+      additionalProperties: false
+    EnvironmentBranchInput:
+      type: object
+      properties:
+        title:
+          type: string
+          title: Title
+          description: ''
+        name:
+          type: string
+          title: Name
+          description: ''
+        clone_parent:
+          type: boolean
+          title: Clone parent
+          description: Clone data from the parent environment
+        type:
+          type: string
+          enum:
+          - development
+          - staging
+          title: Type
+          description: The type of environment (`staging` or `development`)
+        resources:
+          type: object
+          properties:
+            init:
+              type: string
+              enum:
+              - default
+              - minimum
+              - parent
+              nullable: true
+              title: Init Resources
+              description: The resources used when initializing services of the new environment
+          required:
+          - init
+          additionalProperties: false
+          nullable: true
+          title: Resources
+          description: ''
+      required:
+      - title
+      - name
+      - clone_parent
+      - type
+      - resources
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    EnvironmentDeployInput:
+      type: object
+      properties:
+        strategy:
+          type: string
+          enum:
+          - rolling
+          - stopstart
+          title: Deployment strategy
+          description: The deployment strategy (`rolling` or `stopstart`)
+      required:
+      - strategy
+      additionalProperties: false
+    EnvironmentActivateInput:
+      type: object
+      properties:
+        resources:
+          type: object
+          properties:
+            init:
+              type: string
+              enum:
+              - default
+              - minimum
+              - parent
+              nullable: true
+              title: Init Resources
+              description: The resources used when activating an environment
+          required:
+          - init
+          additionalProperties: false
+          nullable: true
+          title: Resources
+          description: ''
+      required:
+      - resources
+      additionalProperties: false
+    Version:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Version Identifier
+          description: The identifier of Version
+        commit:
+          type: string
+          nullable: true
+          title: Commit SHA
+          description: The SHA of the commit of this version
+        locked:
+          type: boolean
+          title: Is locked
+          description: Whether this version is locked and cannot be modified
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          required:
+          - percentage
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
+      required:
+      - id
+      - commit
+      - locked
+      - routing
+      additionalProperties: false
+    VersionPatch:
+      type: object
+      properties:
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
+      additionalProperties: false
+    Environment:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Environment Identifier
+          description: The identifier of Environment
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          title: Update date
+          description: The update date
+        name:
+          type: string
+          title: Name
+          description: The name of the environment
+        machine_name:
+          type: string
+          title: Machine name
+          description: The machine name for the environment
+        title:
+          type: string
+          title: Title
+          description: The title of the environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - development
+          - production
+          - staging
+          title: Type
+          description: The type of environment (`production`, `staging` or `development`), if not provided, a default will be calculated
+        parent:
+          type: string
+          nullable: true
+          title: Parent environment
+          description: The name of the parent environment
+        default_domain:
+          type: string
+          nullable: true
+          title: Default domain
+          description: The default domain
+        has_domains:
+          type: boolean
+          title: Has domains
+          description: Whether the environment has domains
+        clone_parent_on_create:
+          type: boolean
+          title: Clone parent on create
+          description: Clone data when creating that environment
+        deployment_target:
+          type: string
+          nullable: true
+          title: Deployment target
+          description: Deployment target of the environment
+        is_pr:
+          type: boolean
+          title: Is pull or merge request
+          description: Is this environment a pull request / merge request
+        has_remote:
+          type: boolean
+          title: Has remote
+          description: Does this environment have a remote repository
+        status:
+          type: string
+          enum:
+          - active
+          - deleting
+          - dirty
+          - inactive
+          - paused
+          title: Status
+          description: The status of the environment
+        http_access:
+          type: object
+          properties:
+            is_enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether http_access control is enabled
+            addresses:
+              type: array
+              items:
+                type: object
+                properties:
+                  permission:
+                    type: string
+                    enum:
+                    - allow
+                    - deny
+                    title: Permission
+                    description: ''
+                  address:
+                    type: string
+                    title: Address
+                    description: IP address or CIDR
+                required:
+                - permission
+                - address
+                additionalProperties: false
+              title: Address grants
+              description: ''
+            basic_auth:
+              type: object
+              additionalProperties:
+                type: string
+              title: Basic auth grants
+              description: ''
+          required:
+          - is_enabled
+          - addresses
+          - basic_auth
+          additionalProperties: false
+          title: HTTP access permissions
+          description: The HTTP access permissions for this environment
+        enable_smtp:
+          type: boolean
+          title: Enable SMTP
+          description: Whether to configure SMTP for this environment
+        restrict_robots:
+          type: boolean
+          title: Restrict robots
+          description: Whether to restrict robots for this environment
+        edge_hostname:
+          type: string
+          title: Edge hostname
+          description: The hostname to use as the CNAME
+        deployment_state:
+          type: object
+          properties:
+            last_deployment_successful:
+              type: boolean
+              title: Last deployment successful
+              description: Whether the last deployment was successful
+            last_deployment_at:
+              type: string
+              format: date-time
+              nullable: true
+              title: Last deployment datetime
+              description: Datetime of the last deployment
+            last_autoscale_up_at:
+              type: string
+              format: date-time
+              nullable: true
+              title: Last autoscale up datetime
+              description: Datetime of the last autoscale up deployment
+            last_autoscale_down_at:
+              type: string
+              format: date-time
+              nullable: true
+              title: Last autoscale down datetime
+              description: Datetime of the last autoscale down deployment
+            crons:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                  title: Is enabled
+                  description: Enabled or disabled
+                status:
+                  type: string
+                  enum:
+                  - paused
+                  - running
+                  - sleeping
+                  title: Status
+                  description: The status of the crons
+              required:
+              - enabled
+              - status
+              additionalProperties: false
+              title: Crons deployment state
+              description: The crons deployment state
+          required:
+          - last_deployment_successful
+          - last_deployment_at
+          - last_autoscale_up_at
+          - last_autoscale_down_at
+          - crons
+          additionalProperties: false
+          nullable: true
+          title: Deployment state
+          description: The environment deployment state
+        sizing:
+          type: object
+          properties:
+            services:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type: object
+                    properties:
+                      profile_size:
+                        type: string
+                        nullable: true
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    nullable: true
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type: integer
+                    nullable: true
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type: integer
+                    nullable: true
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Services
+              description: ''
+            webapps:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type: object
+                    properties:
+                      profile_size:
+                        type: string
+                        nullable: true
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    nullable: true
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type: integer
+                    nullable: true
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type: integer
+                    nullable: true
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Web applications
+              description: ''
+            workers:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  resources:
+                    type: object
+                    properties:
+                      profile_size:
+                        type: string
+                        nullable: true
+                        title: Profile size
+                        description: Profile size of the service.
+                    required:
+                    - profile_size
+                    additionalProperties: false
+                    nullable: true
+                    title: Resources
+                    description: ''
+                  instance_count:
+                    type: integer
+                    nullable: true
+                    title: Instance count
+                    description: Instance replication count of this application
+                  disk:
+                    type: integer
+                    nullable: true
+                    title: Disk size
+                    description: The size of the disk.
+                required:
+                - resources
+                - instance_count
+                - disk
+                additionalProperties: false
+              title: Workers
+              description: ''
+          required:
+          - services
+          - webapps
+          - workers
+          additionalProperties: false
+          nullable: true
+          title: Sizing
+          description: The environment sizing configuration
+        resources_overrides:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              services:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    cpu:
+                      type: number
+                      format: float
+                      nullable: true
+                      title: CPU
+                      description: ''
+                    memory:
+                      type: integer
+                      nullable: true
+                      title: Memory
+                      description: ''
+                    disk:
+                      type: integer
+                      nullable: true
+                      title: Disk
+                      description: ''
+                  required:
+                  - cpu
+                  - memory
+                  - disk
+                  additionalProperties: false
+                title: Pre-service resources overrides
+                description: Per-service resources overrides.
+              starts_at:
+                type: string
+                format: date-time
+                nullable: true
+                title: Start date
+                description: Date when the override will apply. When null, don't do an auto redeployment but still be effective to redeploys initiated otherwise.
+              ends_at:
+                type: string
+                format: date-time
+                nullable: true
+                title: End date
+                description: Date when the override will be reverted. When null, the overrides will never go out of effect.
+              redeployed_start:
+                type: boolean
+                title: Is starting redeploy activity fired
+                description: Whether the starting redeploy activity has been fired for this override.
+              redeployed_end:
+                type: boolean
+                title: Is ending redeploy activity fired
+                description: Whether the ending redeploy activity has been fired for this override.
+            required:
+            - services
+            - starts_at
+            - ends_at
+            - redeployed_start
+            - redeployed_end
+            additionalProperties: false
+          title: Resources overrides
+          description: Resources overrides
+        max_instance_count:
+          type: integer
+          nullable: true
+          title: Max instances
+          description: Max number of instances for this environment
+        last_active_at:
+          type: string
+          format: date-time
+          nullable: true
+          title: Last activity date
+          description: Last activity date
+        last_backup_at:
+          type: string
+          format: date-time
+          nullable: true
+          title: Last backup date
+          description: Last backup date
+        project:
+          type: string
+          title: Project
+          description: The project the environment belongs to
+        is_main:
+          type: boolean
+          title: Is main environment
+          description: Is this environment the main environment
+        is_dirty:
+          type: boolean
+          title: Is dirty
+          description: Is there any pending activity on this environment
+        has_staged_activities:
+          type: boolean
+          title: Has staged activities
+          description: Is there any staged activity on this environment
+        can_rolling_deploy:
+          type: boolean
+          title: Can perform rolling deployments
+          description: If the environment has rolling deployments ready for use
+        supports_rolling_deployments:
+          type: boolean
+          title: Supports rolling deployments
+          description: If the environment supports rolling deployments
+        has_code:
+          type: boolean
+          title: Has code
+          description: Does this environment have code
+        head_commit:
+          type: string
+          nullable: true
+          title: Head commit
+          description: The SHA of the head commit for this environment
+        merge_info:
+          type: object
+          properties:
+            commits_ahead:
+              type: integer
+              nullable: true
+              title: Commits ahead
+              description: The amount of commits that are in the environment but not in the parent
+            commits_behind:
+              type: integer
+              nullable: true
+              title: Commits behind
+              description: The amount of commits that are in the parent but not in the environment
+            parent_ref:
+              type: string
+              nullable: true
+              title: Parent ref
+              description: The reference in Git for the parent environment
+          required:
+          - commits_ahead
+          - commits_behind
+          - parent_ref
+          additionalProperties: false
+          title: Merge info
+          description: The commit distance info between parent and child environments
+        has_deployment:
+          type: boolean
+          title: Has deployment
+          description: Whether this environment had a successful deployment
+        supports_restrict_robots:
+          type: boolean
+          title: Supports restrict_robots
+          description: Does this environment support configuring restrict_robots
+      required:
+      - id
+      - created_at
+      - updated_at
+      - name
+      - machine_name
+      - title
+      - attributes
+      - type
+      - parent
+      - default_domain
+      - has_domains
+      - clone_parent_on_create
+      - deployment_target
+      - is_pr
+      - has_remote
+      - status
+      - http_access
+      - enable_smtp
+      - restrict_robots
+      - edge_hostname
+      - deployment_state
+      - sizing
+      - resources_overrides
+      - max_instance_count
+      - last_active_at
+      - last_backup_at
+      - project
+      - is_main
+      - is_dirty
+      - has_staged_activities
+      - can_rolling_deploy
+      - supports_rolling_deployments
+      - has_code
+      - head_commit
+      - merge_info
+      - has_deployment
+      - supports_restrict_robots
+      additionalProperties: false
+    EnvironmentInitializeInput:
+      type: object
+      properties:
+        profile:
+          type: string
+          title: Profile
+          description: Name of the profile to show in the UI
+        repository:
+          type: string
+          title: Repository
+          description: Repository to clone from
+        config:
+          type: string
+          nullable: true
+          title: Configuration repository
+          description: Repository to clone the configuration files from
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                title: Path
+                description: The path to the file.
+              mode:
+                type: integer
+                title: Mode
+                description: The octal value of the file protection mode.
+              contents:
+                type: string
+                title: Contents
+                description: The contents of the file (base64 encoded).
+            required:
+            - path
+            - mode
+            - contents
+            additionalProperties: false
+          title: Files
+          description: A list of files to add to the repository during initialization
+        resources:
+          type: object
+          properties:
+            init:
+              type: string
+              enum:
+              - default
+              - minimum
+              nullable: true
+              title: Init Resources
+              description: The resources used when initializing the environment
+          required:
+          - init
+          additionalProperties: false
+          nullable: true
+          title: Resources
+          description: ''
+      required:
+      - profile
+      - repository
+      - config
+      - files
+      - resources
+      additionalProperties: false
+    VersionCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Version'
+    VersionCreateInput:
+      type: object
+      properties:
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
+      additionalProperties: false
+    EnvironmentCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Environment'
+    EnvironmentMergeInput:
+      type: object
+      properties:
+        resources:
+          type: object
+          properties:
+            init:
+              type: string
+              enum:
+              - child
+              - default
+              - manual
+              - minimum
+              nullable: true
+              title: Init Resources
+              description: The resources used when merging an environment
+          required:
+          - init
+          additionalProperties: false
+          nullable: true
+          title: Resources
+          description: ''
+      required:
+      - resources
+      additionalProperties: false
+    EnvironmentSynchronizeInput:
+      type: object
+      properties:
+        synchronize_code:
+          type: boolean
+          title: Is code synchronized
+          description: Synchronize code?
+        rebase:
+          type: boolean
+          title: Is code rebased
+          description: Synchronize code by rebasing instead of merging
+        synchronize_data:
+          type: boolean
+          title: Is data synchronized
+          description: Synchronize data?
+        synchronize_resources:
+          type: boolean
+          title: Are resources synchronized
+          description: Synchronize resources?
+      required:
+      - synchronize_code
+      - rebase
+      - synchronize_data
+      - synchronize_resources
+      additionalProperties: false
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile

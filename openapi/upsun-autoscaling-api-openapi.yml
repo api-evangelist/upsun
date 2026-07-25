@@ -1,0 +1,496 @@
+openapi: 3.0.1
+info:
+  title: Upsun.com Rest Add-ons Autoscaling API
+  version: '1.0'
+  contact:
+    name: Support
+    url: https://upsun.com/contact-us/
+  termsOfService: https://upsun.com/trust-center/legal/tos/
+  description: "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n"
+  x-logo:
+    url: https://docs.upsun.com/images/upsun-api.svg
+    href: https://upsun.com/#section/Introduction
+    altText: Upsun logo
+servers:
+- url: '{schemes}://api.upsun.com'
+  description: The Upsun.com API gateway
+  variables:
+    schemes:
+      default: https
+security:
+- OAuth2: []
+tags:
+- name: Autoscaling
+  description: "Upsun provides native support for autoscaling, allowing your applications to automatically adjust based on resource usage.\nThis ensures that your apps remain responsive under load while helping you optimize costs.\nYou can configure thresholds for metrics such as CPU, RAM, and request latency.  \nResources will automatically scale to meet demand.\nEach container profile assigned to an application or service provides a specific combination of CPU and RAM, which you can select via the Upsun UI or CLI.\n\nThese endpoints manage autoscaling configurations that are tied to a\nspecific environment, and optionally to its child environments.\nYou can define scaling rules based on metrics like CPU, memory, or\nrequest latency, and these rules will be applied at both build time\nand runtime. For more information on configuring autoscaling for your\nenvironments, see the [Autoscaling](https://docs.upsun.com/manage-resources/autoscaling.html) section\nof the documentation.\n"
+paths:
+  /projects/{projectId}/environments/{environmentId}/autoscaling/settings:
+    get:
+      tags:
+      - Autoscaling
+      description: Retrieves Autoscaler settings
+      operationId: get-autoscaler-settings
+      parameters:
+      - name: projectId
+        in: path
+        description: A string that uniquely identifies the project
+        required: true
+        schema:
+          type: string
+      - name: environmentId
+        in: path
+        description: A string that uniquely identifies the project environment
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Autoscaler settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoscalerSettings'
+      summary: Retrieves Autoscaler settings
+    post:
+      tags:
+      - Autoscaling
+      description: Updates Autoscaler settings
+      operationId: post-autoscaler-settings
+      parameters:
+      - name: projectId
+        in: path
+        description: A string that uniquely identifies the project
+        required: true
+        schema:
+          type: string
+      - name: environmentId
+        in: path
+        description: A string that uniquely identifies the project environment
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Settings to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoscalerSettings'
+      responses:
+        '200':
+          description: Updated Autoscaler settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoscalerSettings'
+      summary: Updates Autoscaler settings
+    patch:
+      tags:
+      - Autoscaling
+      description: Modifies Autoscaler settings
+      operationId: patch-autoscaler-settings
+      parameters:
+      - name: projectId
+        in: path
+        description: A string that uniquely identifies the project
+        required: true
+        schema:
+          type: string
+      - name: environmentId
+        in: path
+        description: A string that uniquely identifies the project environment
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Settings to modify
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoscalerSettings'
+      responses:
+        '200':
+          description: Updated Autoscaler settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoscalerSettings'
+      summary: Modifies Autoscaler settings
+components:
+  schemas:
+    AutoscalerTriggers:
+      additionalProperties: false
+      description: Scaling triggers settings
+      properties:
+        cpu:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerCPUTrigger'
+          nullable: true
+          description: Settings for scaling based on CPU usage
+        memory:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerMemoryTrigger'
+          nullable: true
+          description: Settings for scaling based on Memory usage
+        cpu_pressure:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerCPUPressureTrigger'
+          nullable: true
+          description: Settings for scaling based on CPU pressure
+        memory_pressure:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerMemoryPressureTrigger'
+          nullable: true
+          description: Settings for scaling based on Memory pressure
+      title: AutoscalerTriggers
+      type: object
+    AutoscalerMemoryResources:
+      description: Memory scaling settings
+      properties:
+        min:
+          description: Minimum memory (bytes) when scaling down vertically
+          minimum: 0
+          title: Min
+          type: integer
+        max:
+          description: Maximum memory (bytes) when scaling up vertically
+          minimum: 0
+          title: Max
+          type: integer
+      title: AutoscalerMemoryResources
+      type: object
+    AutoscalerMemoryPressureTrigger:
+      description: 'Memory pressure trigger settings.
+
+
+        When memory pressure goes below lower bound, service will be scaled down.
+
+        When memory pressure goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type: boolean
+          nullable: true
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerMemoryPressureTrigger
+      type: object
+    AutoscalerScalingCooldown:
+      description: Scaling cooldown settings
+      properties:
+        up:
+          description: Number of seconds to wait until scaling up can be done again (since last attempt)
+          minimum: 0
+          title: Up
+          type: integer
+        down:
+          description: Number of seconds to wait until scaling down can be done again (since last attempt)
+          minimum: 0
+          title: Down
+          type: integer
+      title: AutoscalerScalingCooldown
+      type: object
+    AutoscalerDuration:
+      enum:
+      - 60
+      - 120
+      - 300
+      - 600
+      - 1800
+      - 3600
+      title: AutoscalerDuration
+      type: integer
+    AutoscalerScalingFactor:
+      description: Scaling factor settings
+      properties:
+        up:
+          description: Number of instances to add when scaling up horizontally
+          minimum: 0
+          title: Up
+          type: integer
+        down:
+          description: Number of instances to remove when scaling down horizontally
+          minimum: 0
+          title: Down
+          type: integer
+      title: AutoscalerScalingFactor
+      type: object
+    AutoscalerCondition:
+      description: Trigger condition settings
+      properties:
+        threshold:
+          description: Value at which the condition is satisfied
+          maximum: 100
+          minimum: 0
+          title: Threshold
+          type: number
+        duration:
+          allOf:
+          - description: Number of seconds during which the condition must be satisfied
+          - $ref: '#/components/schemas/AutoscalerDuration'
+        enabled:
+          type: boolean
+          nullable: true
+          title: Enabled
+          description: Whether the condition should be used for generating alerts
+      required:
+      - threshold
+      title: AutoscalerCondition
+      type: object
+    AutoscalerServiceSettings:
+      description: Autoscaling settings for a specific service
+      properties:
+        triggers:
+          allOf:
+          - description: Metrics should be evaluated as triggers for autoscaling
+          - $ref: '#/components/schemas/AutoscalerTriggers'
+        instances:
+          allOf:
+          - description: Lower/Upper bounds on number of instances for horizontal scaling
+          - $ref: '#/components/schemas/AutoscalerInstances'
+        resources:
+          allOf:
+          - description: Lower/Upper bounds on cpu/memory for vertical scaling
+          - $ref: '#/components/schemas/AutoscalerResources'
+        scale_factor:
+          allOf:
+          - description: How many instances to add/remove on each scaling attempt
+          - $ref: '#/components/schemas/AutoscalerScalingFactor'
+        scale_cooldown:
+          allOf:
+          - description: How long to wait before the next scaling attempt can be performed
+          - $ref: '#/components/schemas/AutoscalerScalingCooldown'
+      title: AutoscalerServiceSettings
+      type: object
+    AutoscalerCPUTrigger:
+      description: 'CPU resource trigger settings.
+
+
+        When CPU usage goes below lower bound, service will be scaled down.
+
+        When CPU usage goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type: boolean
+          nullable: true
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerCPUTrigger
+      type: object
+    AutoscalerSettings:
+      description: 'Update model for autoscaling settings.
+
+
+        This model is mainly used for partial updates (PATCH), therefore all its
+
+        attributes are optional.'
+      properties:
+        services:
+          additionalProperties:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/AutoscalerServiceSettings'
+            nullable: true
+          type: object
+          nullable: true
+          title: Services
+          description: Each service for which autoscaling is configured is listed in the key
+      title: AutoscalerSettings
+      type: object
+    AutoscalerMemoryTrigger:
+      description: 'Memory resource trigger settings.
+
+
+        When memory usage goes below lower bound, service will be scaled down.
+
+        When memory usage goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type: boolean
+          nullable: true
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerMemoryTrigger
+      type: object
+    AutoscalerCPUResources:
+      description: CPU scaling settings
+      properties:
+        min:
+          description: Minimum CPUs when scaling down vertically
+          minimum: 0
+          title: Min
+          type: number
+        max:
+          description: Maximum CPUs when scaling up vertically
+          minimum: 0
+          title: Max
+          type: number
+      title: AutoscalerCPUResources
+      type: object
+    AutoscalerResources:
+      description: Vertical scaling settings
+      properties:
+        cpu:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerCPUResources'
+          nullable: true
+          description: Lower/Upper bounds on CPU allocation when scaling
+        memory:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerMemoryResources'
+          nullable: true
+          description: Lower/Upper bounds on Memory allocation when scaling
+      title: AutoscalerResources
+      type: object
+    AutoscalerInstances:
+      description: Horizontal scaling settings
+      properties:
+        min:
+          description: Minimum number of instances when scaling down horizontally
+          title: Min
+          type: integer
+        max:
+          description: Maximum number of instances when scaling up horizontally
+          title: Max
+          type: integer
+      title: AutoscalerInstances
+      type: object
+    AutoscalerCPUPressureTrigger:
+      description: 'CPU pressure trigger settings.
+
+
+        When CPU pressure goes below lower bound, service will be scaled down.
+
+        When CPU pressure goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type: boolean
+          nullable: true
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerCPUPressureTrigger
+      type: object
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: https://auth.api.platform.sh/oauth2/token
+          scopes: {}
+          authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+      description: ''
+    OAuth2Admin:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.api.platform.sh/oauth2/token
+          refreshUrl: ''
+          scopes:
+            admin: administrative operations
+      description: ''
+x-tagGroups:
+- name: Organization Administration
+  tags:
+  - Organizations
+  - Organization Members
+  - Organization Invitations
+  - Organization Projects
+  - Add-ons
+- name: Project Administration
+  tags:
+  - Project
+  - Domain Management
+  - Cert Management
+  - Certificate Provisioner
+  - Project Variables
+  - Repository
+  - Third-Party Integrations
+  - Support
+- name: Environments
+  tags:
+  - Environment
+  - Environment Backups
+  - Environment Type
+  - Environment Variables
+  - Routing
+  - Source Operations
+  - Runtime Operations
+  - Deployment
+  - Autoscaling
+- name: User Activity
+  tags:
+  - Project Activity
+  - Environment Activity
+- name: Project Access
+  tags:
+  - Project Invitations
+  - Teams
+  - Team Access
+  - User Access
+- name: Account Management
+  tags:
+  - API Tokens
+  - Connections
+  - MFA
+  - Users
+  - User Profiles
+  - SSH Keys
+  - Plans
+- name: Billing
+  tags:
+  - Organization Management
+  - Subscriptions
+  - Orders
+  - Invoices
+  - Discounts
+  - Vouchers
+  - Records
+  - Profiles
+- name: Global Info
+  tags:
+  - Project Discovery
+  - References
+  - Regions
+- name: Internal APIs
+  tags:
+  - Project Settings
+  - Environment Settings
+  - Deployment Target
+  - System Information
+  - Container Profile
