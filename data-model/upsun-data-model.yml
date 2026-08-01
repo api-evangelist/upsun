@@ -1,0 +1,717 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/upsun-openapi-original.json
+entities:
+- APIToken
+- AcceptedResponse
+- Activity
+- ActivityCollection
+- AddonType
+- Address
+- AddressMetadata
+- Alert
+- ArrayFilter
+- AutoscalerCPUPressureTrigger
+- AutoscalerCPUResources
+- AutoscalerCPUTrigger
+- AutoscalerCondition
+- AutoscalerDuration
+- AutoscalerInstances
+- AutoscalerMemoryPressureTrigger
+- AutoscalerMemoryResources
+- AutoscalerMemoryTrigger
+- AutoscalerResources
+- AutoscalerScalingCooldown
+- AutoscalerScalingFactor
+- AutoscalerServiceSettings
+- AutoscalerSettings
+- AutoscalerTriggers
+- Backup
+- BackupCollection
+- BitbucketIntegration
+- BitbucketIntegrationCreateInput
+- BitbucketIntegrationPatch
+- BitbucketServerIntegration
+- BitbucketServerIntegrationCreateInput
+- BitbucketServerIntegrationPatch
+- BlackfireIntegration
+- BlackfireIntegrationCreateInput
+- BlackfireIntegrationPatch
+- Blob
+- CarbonTotal
+- Certificate
+- CertificateCollection
+- CertificateCreateInput
+- CertificatePatch
+- CertificateProvisioner
+- CertificateProvisionerCollection
+- CertificateProvisionerPatch
+- Commit
+- Components
+- Connection
+- CreatedAt
+- CurrencyAmount
+- CurrencyAmountNullable
+- CurrentUser
+- DateTimeFilter
+- DedicatedDeploymentTarget
+- DedicatedDeploymentTargetCreateInput
+- DedicatedDeploymentTargetPatch
+- Deployment
+- DeploymentCollection
+- DeploymentTarget
+- DeploymentTargetCollection
+- DeploymentTargetCreateInput
+- DeploymentTargetPatch
+- Discount
+- Domain
+- DomainCollection
+- DomainCreateInput
+- DomainPatch
+- EmailIntegration
+- EmailIntegrationCreateInput
+- EmailIntegrationPatch
+- EnterpriseDeploymentTarget
+- EnterpriseDeploymentTargetCreateInput
+- EnterpriseDeploymentTargetPatch
+- Environment
+- EnvironmentActivateInput
+- EnvironmentBackupInput
+- EnvironmentBranchInput
+- EnvironmentCollection
+- EnvironmentDeployInput
+- EnvironmentInitializeInput
+- EnvironmentMergeInput
+- EnvironmentOperationInput
+- EnvironmentPatch
+- EnvironmentRestoreInput
+- EnvironmentSourceOperation
+- EnvironmentSourceOperationCollection
+- EnvironmentSourceOperationInput
+- EnvironmentSynchronizeInput
+- EnvironmentType
+- EnvironmentTypeCollection
+- EnvironmentVariable
+- EnvironmentVariableCollection
+- EnvironmentVariableCreateInput
+- EnvironmentVariablePatch
+- Error
+- EstimationObject
+- FastlyIntegration
+- FastlyIntegrationCreateInput
+- FastlyIntegrationPatch
+- FoundationDeploymentTarget
+- FoundationDeploymentTargetCreateInput
+- FoundationDeploymentTargetPatch
+- GitLabIntegration
+- GitLabIntegrationCreateInput
+- GitLabIntegrationPatch
+- GithubIntegration
+- GithubIntegrationCreateInput
+- GithubIntegrationPatch
+- GoogleSSOConfig
+- HalLinks
+- HealthWebHookIntegration
+- HealthWebHookIntegrationCreateInput
+- HealthWebHookIntegrationPatch
+- HttpLogIntegration
+- HttpLogIntegrationCreateInput
+- HttpLogIntegrationPatch
+- Integration
+- IntegrationCollection
+- IntegrationCreateInput
+- IntegrationPatch
+- Invoice
+- InvoicePDF
+- LineItem
+- LineItemComponent
+- Link
+- ListLinks
+- MetricsMetadata
+- MetricsValue
+- MetricsValues
+- NewRelicIntegration
+- NewRelicIntegrationCreateInput
+- NewRelicIntegrationPatch
+- Order
+- Organization
+- OrganizationAddonsObject
+- OrganizationAlertConfig
+- OrganizationCarbon
+- OrganizationEstimationObject
+- OrganizationID
+- OrganizationInvitation
+- OrganizationMFAEnforcement
+- OrganizationMember
+- OrganizationPermissions
+- OrganizationProject
+- OrganizationProjectCarbon
+- OrganizationReference
+- OrganizationSSOConfig
+- OwnerInfo
+- PagerDutyIntegration
+- PagerDutyIntegrationCreateInput
+- PagerDutyIntegrationPatch
+- Permissions
+- PlanRecords
+- PrepaymentObject
+- PrepaymentTransactionObject
+- ProdDomainStorage
+- ProdDomainStorageCreateInput
+- ProdDomainStoragePatch
+- Profile
+- Project
+- ProjectAddon
+- ProjectAddonBase
+- ProjectAddonID
+- ProjectAddonQuantity
+- ProjectAddonSKU
+- ProjectAddonWithQuantityFields
+- ProjectAddonWithSkuFields
+- ProjectCSENotes
+- ProjectCapabilities
+- ProjectCarbon
+- ProjectDedicatedTag
+- ProjectDefaultBranch
+- ProjectID
+- ProjectInvitation
+- ProjectLocked
+- ProjectOptions
+- ProjectPatch
+- ProjectPermissions
+- ProjectPlan
+- ProjectReference
+- ProjectSettings
+- ProjectSettingsPatch
+- ProjectStatus
+- ProjectTimeZone
+- ProjectTitle
+- ProjectTrialPlan
+- ProjectType
+- ProjectUI
+- ProjectVariable
+- ProjectVariableCollection
+- ProjectVariableCreateInput
+- ProjectVariablePatch
+- ProxyRoute
+- RedirectRoute
+- Ref
+- RefCollection
+- Region
+- RegionAvailable
+- RegionCode
+- RegionCompliance
+- RegionDataCenter
+- RegionEndpoint
+- RegionEnvImpact
+- RegionID
+- RegionLabel
+- RegionPrivate
+- RegionProjectLabel
+- RegionProvider
+- RegionReference
+- RegionSelectionLabel
+- RegionTimezone
+- RegionZone
+- ReplacementDomainStorage
+- ReplacementDomainStorageCreateInput
+- ReplacementDomainStoragePatch
+- Route
+- RouteCollection
+- SSHKey
+- ScriptIntegration
+- ScriptIntegrationCreateInput
+- ScriptIntegrationPatch
+- SlackIntegration
+- SlackIntegrationCreateInput
+- SlackIntegrationPatch
+- SplunkIntegration
+- SplunkIntegrationCreateInput
+- SplunkIntegrationPatch
+- StringFilter
+- Subscription
+- SubscriptionAddonsObject
+- SubscriptionCurrentUsageObject
+- SubscriptionID
+- SumologicIntegration
+- SumologicIntegrationCreateInput
+- SumologicIntegrationPatch
+- SyslogIntegration
+- SyslogIntegrationCreateInput
+- SyslogIntegrationPatch
+- SystemInformation
+- Team
+- TeamMember
+- TeamProjectAccess
+- TeamReference
+- Ticket
+- Tree
+- UpdatedAt
+- UpstreamRoute
+- Usage
+- UsageAlert
+- UsageGroupCurrentUsageProperties
+- User
+- UserProjectAccess
+- UserReference
+- Version
+- VersionCollection
+- VersionCreateInput
+- VersionPatch
+- Vouchers
+- WebHookIntegration
+- WebHookIntegrationCreateInput
+- WebHookIntegrationPatch
+relationships:
+- from: LineItem
+  relation: belongs_to
+  to: Project
+  via: project_id
+- from: Discount
+  relation: belongs_to
+  to: Organization
+  via: organization_id
+- from: Subscription
+  relation: has_one
+  to: OwnerInfo
+  via: owner_info
+- from: Subscription
+  relation: belongs_to
+  to: Project
+  via: project_id
+- from: Subscription
+  relation: has_one
+  to: ProjectOptions
+  via: project_options
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: cpu_app
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: storage_app_services
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: memory_app
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: cpu_services
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: memory_services
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: backup_storage
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: build_cpu
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: build_memory
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: egress_bandwidth
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: ingress_requests
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: logs_fwd_content_size
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: fastly_bandwidth
+- from: SubscriptionCurrentUsageObject
+  relation: has_one
+  to: UsageGroupCurrentUsageProperties
+  via: fastly_requests
+- from: Ticket
+  relation: belongs_to
+  to: Organization
+  via: organization_id
+- from: Ticket
+  relation: belongs_to
+  to: Subscription
+  via: subscription_id
+- from: CurrentUser
+  relation: has_many
+  to: SSHKey
+  via: ssh_keys
+- from: OrganizationInvitation
+  relation: belongs_to
+  to: Organization
+  via: organization_id
+- from: OrganizationInvitation
+  relation: has_one
+  to: OrganizationPermissions
+  via: permissions
+- from: ProjectInvitation
+  relation: belongs_to
+  to: Project
+  via: project_id
+- from: ListLinks
+  relation: has_one
+  to: Link
+  via: self
+- from: ListLinks
+  relation: has_one
+  to: Link
+  via: previous
+- from: ListLinks
+  relation: has_one
+  to: Link
+  via: next
+- from: Team
+  relation: belongs_to
+  to: Organization
+  via: organization_id
+- from: TeamMember
+  relation: belongs_to
+  to: Team
+  via: team_id
+- from: TeamMember
+  relation: belongs_to
+  to: User
+  via: user_id
+- from: TeamReference
+  relation: belongs_to
+  to: Organization
+  via: organization_id
+- from: Invoice
+  relation: has_one
+  to: Address
+  via: address
+- from: Invoice
+  relation: has_one
+  to: InvoicePDF
+  via: invoice_pdf
+- from: Organization
+  relation: belongs_to
+  to: Owner
+  via: owner_id
+- from: OrganizationReference
+  relation: belongs_to
+  to: Owner
+  via: owner_id
+- from: OrganizationMember
+  relation: belongs_to
+  to: Organization
+  via: organization_id
+- from: OrganizationMember
+  relation: belongs_to
+  to: User
+  via: user_id
+- from: OrganizationMember
+  relation: has_one
+  to: Permissions
+  via: permissions
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectID
+  via: id
+- from: OrganizationProject
+  relation: has_one
+  to: OrganizationID
+  via: organization_id
+- from: OrganizationProject
+  relation: has_one
+  to: SubscriptionID
+  via: subscription_id
+- from: OrganizationProject
+  relation: has_one
+  to: RegionID
+  via: region
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectTitle
+  via: title
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectType
+  via: type
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectPlan
+  via: plan
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectTimeZone
+  via: timezone
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectDefaultBranch
+  via: default_branch
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectStatus
+  via: status
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectTrialPlan
+  via: trial_plan
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectUI
+  via: project_ui
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectLocked
+  via: locked
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectCSENotes
+  via: cse_notes
+- from: OrganizationProject
+  relation: has_one
+  to: ProjectDedicatedTag
+  via: dedicated_tag
+- from: OrganizationProject
+  relation: has_one
+  to: CreatedAt
+  via: created_at
+- from: OrganizationProject
+  relation: has_one
+  to: UpdatedAt
+  via: updated_at
+- from: OrganizationCarbon
+  relation: has_one
+  to: OrganizationID
+  via: organization_id
+- from: OrganizationCarbon
+  relation: has_one
+  to: MetricsMetadata
+  via: meta
+- from: OrganizationCarbon
+  relation: has_many
+  to: OrganizationProjectCarbon
+  via: projects
+- from: OrganizationCarbon
+  relation: has_one
+  to: CarbonTotal
+  via: total
+- from: ProjectAddonBase
+  relation: has_one
+  to: ProjectAddonID
+  via: id
+- from: ProjectAddonBase
+  relation: has_one
+  to: ProjectID
+  via: project_id
+- from: ProjectAddonBase
+  relation: has_one
+  to: AddonType
+  via: type
+- from: ProjectAddonBase
+  relation: has_one
+  to: CreatedAt
+  via: created_at
+- from: ProjectAddonBase
+  relation: has_one
+  to: UpdatedAt
+  via: updated_at
+- from: ProjectAddonWithSkuFields
+  relation: has_one
+  to: ProjectAddonSKU
+  via: sku
+- from: ProjectAddonWithQuantityFields
+  relation: has_one
+  to: ProjectAddonQuantity
+  via: quantity
+- from: ProjectCarbon
+  relation: has_one
+  to: ProjectID
+  via: project_id
+- from: ProjectCarbon
+  relation: has_one
+  to: ProjectTitle
+  via: project_title
+- from: ProjectCarbon
+  relation: has_one
+  to: MetricsMetadata
+  via: meta
+- from: ProjectCarbon
+  relation: has_one
+  to: MetricsValues
+  via: values
+- from: ProjectCarbon
+  relation: has_one
+  to: CarbonTotal
+  via: total
+- from: OrganizationProjectCarbon
+  relation: has_one
+  to: ProjectID
+  via: project_id
+- from: OrganizationProjectCarbon
+  relation: has_one
+  to: ProjectTitle
+  via: project_title
+- from: OrganizationProjectCarbon
+  relation: has_one
+  to: MetricsValues
+  via: values
+- from: OrganizationProjectCarbon
+  relation: has_one
+  to: CarbonTotal
+  via: total
+- from: ProjectReference
+  relation: has_one
+  to: ProjectID
+  via: id
+- from: ProjectReference
+  relation: has_one
+  to: OrganizationID
+  via: organization_id
+- from: ProjectReference
+  relation: has_one
+  to: SubscriptionID
+  via: subscription_id
+- from: ProjectReference
+  relation: has_one
+  to: RegionID
+  via: region
+- from: ProjectReference
+  relation: has_one
+  to: ProjectTitle
+  via: title
+- from: ProjectReference
+  relation: has_one
+  to: ProjectType
+  via: type
+- from: ProjectReference
+  relation: has_one
+  to: ProjectPlan
+  via: plan
+- from: ProjectReference
+  relation: has_one
+  to: ProjectStatus
+  via: status
+- from: ProjectReference
+  relation: has_one
+  to: CreatedAt
+  via: created_at
+- from: ProjectReference
+  relation: has_one
+  to: UpdatedAt
+  via: updated_at
+- from: RegionReference
+  relation: has_one
+  to: RegionID
+  via: id
+- from: RegionReference
+  relation: has_one
+  to: RegionLabel
+  via: label
+- from: RegionReference
+  relation: has_one
+  to: RegionZone
+  via: zone
+- from: RegionReference
+  relation: has_one
+  to: RegionSelectionLabel
+  via: selection_label
+- from: RegionReference
+  relation: has_one
+  to: RegionProjectLabel
+  via: project_label
+- from: RegionReference
+  relation: has_one
+  to: RegionTimezone
+  via: timezone
+- from: RegionReference
+  relation: has_one
+  to: RegionAvailable
+  via: available
+- from: RegionReference
+  relation: has_one
+  to: RegionPrivate
+  via: private
+- from: RegionReference
+  relation: has_one
+  to: RegionEndpoint
+  via: endpoint
+- from: RegionReference
+  relation: has_one
+  to: RegionCode
+  via: code
+- from: RegionReference
+  relation: has_one
+  to: RegionProvider
+  via: provider
+- from: RegionReference
+  relation: has_one
+  to: RegionDataCenter
+  via: datacenter
+- from: RegionReference
+  relation: has_one
+  to: RegionEnvImpact
+  via: envimpact
+- from: RegionReference
+  relation: has_one
+  to: RegionCompliance
+  via: compliance
+- from: RegionReference
+  relation: has_one
+  to: CreatedAt
+  via: created_at
+- from: RegionReference
+  relation: has_one
+  to: UpdatedAt
+  via: updated_at
+- from: TeamProjectAccess
+  relation: belongs_to
+  to: Team
+  via: team_id
+- from: TeamProjectAccess
+  relation: belongs_to
+  to: Organization
+  via: organization_id
+- from: TeamProjectAccess
+  relation: belongs_to
+  to: Project
+  via: project_id
+- from: UserProjectAccess
+  relation: belongs_to
+  to: User
+  via: user_id
+- from: UserProjectAccess
+  relation: belongs_to
+  to: Organization
+  via: organization_id
+- from: UserProjectAccess
+  relation: belongs_to
+  to: Project
+  via: project_id
+- from: UserProjectAccess
+  relation: has_one
+  to: ProjectPermissions
+  via: permissions
+- from: Order
+  relation: has_one
+  to: Address
+  via: address
+- from: Order
+  relation: has_one
+  to: Components
+  via: components
+- from: Order
+  relation: has_many
+  to: LineItem
+  via: line_items
+- from: PlanRecords
+  relation: belongs_to
+  to: Subscription
+  via: subscription_id
+- from: Usage
+  relation: belongs_to
+  to: Subscription
+  via: subscription_id

@@ -1,0 +1,1669 @@
+{
+  "info": {
+    "_postman_id": "6f8b43bd-0757-4475-b851-0734782bdc80",
+    "name": "Upsun.com Rest Add-ons Users API",
+    "description": "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n\n\nContact Support:\n Name: Support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T03:25:19.000Z",
+    "updatedAt": "2026-07-28T03:25:20.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-6f8b43bd-0757-4475-b851-0734782bdc80"
+  },
+  "item": [
+    {
+      "name": "me",
+      "item": [
+        {
+          "name": "phone",
+          "item": [
+            {
+              "name": "Check if phone verification is required",
+              "id": "3487667e-5d1c-4a79-b9f6-6a313a927918",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/me/phone",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "me",
+                    "phone"
+                  ]
+                },
+                "description": "Find out if the current logged in user requires phone verification to create projects."
+              },
+              "response": [
+                {
+                  "id": "f644df93-c90e-43c7-a23b-644786333076",
+                  "name": "The information pertinent to determine if the account requires phone verification before project creation.",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/me/phone",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "me",
+                        "phone"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"verify_phone\": \"<boolean>\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-f644df93-c90e-43c7-a23b-644786333076"
+                }
+              ],
+              "createdAt": "2026-07-28T03:25:20.000Z",
+              "updatedAt": "2026-07-28T03:25:20.000Z",
+              "uid": "35240-3487667e-5d1c-4a79-b9f6-6a313a927918"
+            }
+          ],
+          "id": "3692754e-8224-47ec-a986-b7a7072bf93e",
+          "createdAt": "2026-07-28T03:25:20.000Z",
+          "updatedAt": "2026-07-28T03:25:20.000Z",
+          "uid": "35240-3692754e-8224-47ec-a986-b7a7072bf93e"
+        },
+        {
+          "name": "verification",
+          "item": [
+            {
+              "name": "Check if verification is required",
+              "id": "5f4ec044-d626-41f7-8939-3dc733f035c3",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/me/verification",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "me",
+                    "verification"
+                  ]
+                },
+                "description": "Find out if the current logged in user requires verification (phone or staff) to create projects."
+              },
+              "response": [
+                {
+                  "id": "80a0c772-d42d-4467-8d3c-60609ac200d6",
+                  "name": "The information pertinent to determine if the account requires any type of verification before project creation.",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/me/verification",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "me",
+                        "verification"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"state\": \"<boolean>\",\n  \"type\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-80a0c772-d42d-4467-8d3c-60609ac200d6"
+                }
+              ],
+              "createdAt": "2026-07-28T03:25:20.000Z",
+              "updatedAt": "2026-07-28T03:25:20.000Z",
+              "uid": "35240-5f4ec044-d626-41f7-8939-3dc733f035c3"
+            }
+          ],
+          "id": "5ecc2139-3be1-4ee3-a121-68919cfb97ff",
+          "createdAt": "2026-07-28T03:25:20.000Z",
+          "updatedAt": "2026-07-28T03:25:20.000Z",
+          "uid": "35240-5ecc2139-3be1-4ee3-a121-68919cfb97ff"
+        },
+        {
+          "name": "Get current logged-in user info",
+          "id": "68907748-ccfb-4b6f-b944-0e13af2fd8ef",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me"
+              ]
+            },
+            "description": "Retrieve information about the currently logged-in user (the user associated with the access token)."
+          },
+          "response": [
+            {
+              "id": "74e60a92-d5ff-4089-9c26-ab896fb8ba25",
+              "name": "The user object.",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: oauth2",
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "me"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"id\": \"<uuid>\",\n  \"uuid\": \"<uuid>\",\n  \"username\": \"<string>\",\n  \"display_name\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"mail\": \"<email>\",\n  \"ssh_keys\": [\n    {\n      \"key_id\": \"<integer>\",\n      \"uid\": \"<integer>\",\n      \"fingerprint\": \"<string>\",\n      \"title\": \"<string>\",\n      \"value\": \"<string>\",\n      \"changed\": \"<string>\"\n    },\n    {\n      \"key_id\": \"<integer>\",\n      \"uid\": \"<integer>\",\n      \"fingerprint\": \"<string>\",\n      \"title\": \"<string>\",\n      \"value\": \"<string>\",\n      \"changed\": \"<string>\"\n    }\n  ],\n  \"has_key\": \"<boolean>\",\n  \"projects\": [\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"title\": \"<string>\",\n      \"cluster\": \"<string>\",\n      \"cluster_label\": \"<string>\",\n      \"region\": \"<string>\",\n      \"region_label\": \"<string>\",\n      \"uri\": \"<string>\",\n      \"endpoint\": \"<string>\",\n      \"license_id\": \"<integer>\",\n      \"owner\": \"<uuid>\",\n      \"owner_info\": {\n        \"type\": \"<string>\",\n        \"username\": \"<string>\",\n        \"display_name\": \"<string>\"\n      },\n      \"plan\": \"<string>\",\n      \"subscription_id\": \"<integer>\",\n      \"status\": \"<string>\",\n      \"vendor\": \"<string>\",\n      \"vendor_label\": \"<string>\",\n      \"vendor_website\": \"<string>\",\n      \"vendor_resources\": \"<string>\",\n      \"created_at\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"title\": \"<string>\",\n      \"cluster\": \"<string>\",\n      \"cluster_label\": \"<string>\",\n      \"region\": \"<string>\",\n      \"region_label\": \"<string>\",\n      \"uri\": \"<string>\",\n      \"endpoint\": \"<string>\",\n      \"license_id\": \"<integer>\",\n      \"owner\": \"<uuid>\",\n      \"owner_info\": {\n        \"type\": \"<string>\",\n        \"username\": \"<string>\",\n        \"display_name\": \"<string>\"\n      },\n      \"plan\": \"<string>\",\n      \"subscription_id\": \"<integer>\",\n      \"status\": \"<string>\",\n      \"vendor\": \"<string>\",\n      \"vendor_label\": \"<string>\",\n      \"vendor_website\": \"<string>\",\n      \"vendor_resources\": \"<string>\",\n      \"created_at\": \"<dateTime>\"\n    }\n  ],\n  \"sequence\": \"<integer>\",\n  \"roles\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"picture\": \"<string>\",\n  \"tickets\": {},\n  \"trial\": \"<boolean>\",\n  \"current_trial\": [\n    {\n      \"created\": \"<dateTime>\",\n      \"description\": \"<string>\",\n      \"spend_remaining\": \"<string>\",\n      \"expiration\": \"<dateTime>\"\n    },\n    {\n      \"created\": \"<dateTime>\",\n      \"description\": \"<string>\",\n      \"spend_remaining\": \"<string>\",\n      \"expiration\": \"<dateTime>\"\n    }\n  ]\n}",
+              "createdAt": "2026-07-28T03:25:20.000Z",
+              "updatedAt": "2026-07-28T03:25:20.000Z",
+              "uid": "35240-74e60a92-d5ff-4089-9c26-ab896fb8ba25"
+            }
+          ],
+          "createdAt": "2026-07-28T03:25:20.000Z",
+          "updatedAt": "2026-07-28T03:25:20.000Z",
+          "uid": "35240-68907748-ccfb-4b6f-b944-0e13af2fd8ef"
+        }
+      ],
+      "id": "0a3e0ecb-0315-4faf-8187-0fd9babcea72",
+      "createdAt": "2026-07-28T03:25:20.000Z",
+      "updatedAt": "2026-07-28T03:25:20.000Z",
+      "uid": "35240-0a3e0ecb-0315-4faf-8187-0fd9babcea72"
+    },
+    {
+      "name": "users",
+      "item": [
+        {
+          "name": "me",
+          "item": [
+            {
+              "name": "Get the current user",
+              "id": "92bdce73-e73a-4f0c-b9d9-a8f4fed85957",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "me"
+                  ]
+                },
+                "description": "Retrieves the current user, determined from the used access token."
+              },
+              "response": [
+                {
+                  "id": "6b2c3e23-bf75-478f-b79a-951acbf419b0",
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/me",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "me"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<uuid>\",\n  \"deactivated\": \"<boolean>\",\n  \"namespace\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"email_verified\": \"<boolean>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"picture\": \"<uri>\",\n  \"company\": \"<string>\",\n  \"website\": \"<uri>\",\n  \"country\": \"<string>\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"consented_at\": \"<dateTime>\",\n  \"consent_method\": \"opt-in\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-6b2c3e23-bf75-478f-b79a-951acbf419b0"
+                },
+                {
+                  "id": "1bdcea74-1d58-4385-947f-d836ef56fc26",
+                  "name": "Forbidden",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/me",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "me"
+                      ]
+                    }
+                  },
+                  "status": "Forbidden",
+                  "code": 403,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-1bdcea74-1d58-4385-947f-d836ef56fc26"
+                },
+                {
+                  "id": "b10a1012-03d8-46c2-aa60-e83130ef3f6f",
+                  "name": "Not Found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/me",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "me"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-b10a1012-03d8-46c2-aa60-e83130ef3f6f"
+                }
+              ],
+              "createdAt": "2026-07-28T03:25:20.000Z",
+              "updatedAt": "2026-07-28T03:25:20.000Z",
+              "uid": "35240-92bdce73-e73a-4f0c-b9d9-a8f4fed85957"
+            }
+          ],
+          "id": "e0c6aaf9-26b8-48f4-b31e-edf5daf11098",
+          "createdAt": "2026-07-28T03:25:20.000Z",
+          "updatedAt": "2026-07-28T03:25:20.000Z",
+          "uid": "35240-e0c6aaf9-26b8-48f4-b31e-edf5daf11098"
+        },
+        {
+          "name": "email={email}",
+          "item": [
+            {
+              "name": "Get a user by email",
+              "id": "b7a7e5ae-edf9-472d-90d0-bb7dad5ec28f",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/email={{email}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "email={{email}}"
+                  ]
+                },
+                "description": "Retrieves a user matching the specified email address."
+              },
+              "response": [
+                {
+                  "id": "06c6add3-6ca7-4d58-a190-7cd52c39033c",
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/email={{email}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "email={{email}}"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<uuid>\",\n  \"deactivated\": \"<boolean>\",\n  \"namespace\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"email_verified\": \"<boolean>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"picture\": \"<uri>\",\n  \"company\": \"<string>\",\n  \"website\": \"<uri>\",\n  \"country\": \"<string>\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"consented_at\": \"<dateTime>\",\n  \"consent_method\": \"opt-in\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-06c6add3-6ca7-4d58-a190-7cd52c39033c"
+                },
+                {
+                  "id": "0a8b3a7b-fba7-4121-a967-c3b2359b0713",
+                  "name": "Forbidden",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/email={{email}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "email={{email}}"
+                      ]
+                    }
+                  },
+                  "status": "Forbidden",
+                  "code": 403,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-0a8b3a7b-fba7-4121-a967-c3b2359b0713"
+                },
+                {
+                  "id": "4c43338f-9153-4d93-a001-2f5439f2fd03",
+                  "name": "Not Found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/email={{email}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "email={{email}}"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-4c43338f-9153-4d93-a001-2f5439f2fd03"
+                }
+              ],
+              "createdAt": "2026-07-28T03:25:20.000Z",
+              "updatedAt": "2026-07-28T03:25:20.000Z",
+              "uid": "35240-b7a7e5ae-edf9-472d-90d0-bb7dad5ec28f"
+            }
+          ],
+          "id": "e38eed1f-5d77-4904-830d-99dc1f3db145",
+          "createdAt": "2026-07-28T03:25:20.000Z",
+          "updatedAt": "2026-07-28T03:25:20.000Z",
+          "uid": "35240-e38eed1f-5d77-4904-830d-99dc1f3db145"
+        },
+        {
+          "name": "username={username}",
+          "item": [
+            {
+              "name": "Get a user by username",
+              "id": "b8889e3d-9359-4d2b-a6e3-7580db707e58",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/username={{username}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "username={{username}}"
+                  ]
+                },
+                "description": "Retrieves a user matching the specified username."
+              },
+              "response": [
+                {
+                  "id": "e9aceed5-3a02-458d-ba67-f6b7537f0555",
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/username={{username}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "username={{username}}"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<uuid>\",\n  \"deactivated\": \"<boolean>\",\n  \"namespace\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"email_verified\": \"<boolean>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"picture\": \"<uri>\",\n  \"company\": \"<string>\",\n  \"website\": \"<uri>\",\n  \"country\": \"<string>\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"consented_at\": \"<dateTime>\",\n  \"consent_method\": \"opt-in\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-e9aceed5-3a02-458d-ba67-f6b7537f0555"
+                },
+                {
+                  "id": "cfa3adec-fc91-4f5b-904f-d89b9c0f8f5f",
+                  "name": "Forbidden",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/username={{username}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "username={{username}}"
+                      ]
+                    }
+                  },
+                  "status": "Forbidden",
+                  "code": 403,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-cfa3adec-fc91-4f5b-904f-d89b9c0f8f5f"
+                },
+                {
+                  "id": "f4df552b-8596-4423-9a6c-0a0e19e19965",
+                  "name": "Not Found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/username={{username}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "username={{username}}"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-f4df552b-8596-4423-9a6c-0a0e19e19965"
+                }
+              ],
+              "createdAt": "2026-07-28T03:25:20.000Z",
+              "updatedAt": "2026-07-28T03:25:20.000Z",
+              "uid": "35240-b8889e3d-9359-4d2b-a6e3-7580db707e58"
+            }
+          ],
+          "id": "821f1ed4-a899-41d7-bd62-cd70dd6e8348",
+          "createdAt": "2026-07-28T03:25:20.000Z",
+          "updatedAt": "2026-07-28T03:25:20.000Z",
+          "uid": "35240-821f1ed4-a899-41d7-bd62-cd70dd6e8348"
+        },
+        {
+          "name": "{user_id}",
+          "item": [
+            {
+              "name": "emailaddress",
+              "item": [
+                {
+                  "name": "Reset email address",
+                  "id": "e80051d9-21da-4a8d-bdfd-c509ef4978d7",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"email_address\": \"<email>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:user_id/emailaddress",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":user_id",
+                        "emailaddress"
+                      ],
+                      "variable": [
+                        {
+                          "id": "747df87d-7ede-4e17-b82b-22da58f151d0",
+                          "key": "user_id",
+                          "value": "<uuid>",
+                          "description": "(Required) The ID of the user."
+                        }
+                      ]
+                    },
+                    "description": "Requests a reset of the user's email address. A confirmation email will be sent to the new address when the request is accepted."
+                  },
+                  "response": [
+                    {
+                      "id": "1c787b4a-97db-4f8f-845f-5add2aa96094",
+                      "name": "No Content",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"email_address\": \"<email>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/users/:user_id/emailaddress",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "users",
+                            ":user_id",
+                            "emailaddress"
+                          ],
+                          "variable": [
+                            {
+                              "key": "user_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "No Content",
+                      "code": 204,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-07-28T03:25:20.000Z",
+                      "updatedAt": "2026-07-28T03:25:20.000Z",
+                      "uid": "35240-1c787b4a-97db-4f8f-845f-5add2aa96094"
+                    },
+                    {
+                      "id": "77bc2ebc-6487-4ea7-88a6-2a51ac7be081",
+                      "name": "Bad Request",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"email_address\": \"<email>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/users/:user_id/emailaddress",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "users",
+                            ":user_id",
+                            "emailaddress"
+                          ],
+                          "variable": [
+                            {
+                              "key": "user_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:25:20.000Z",
+                      "updatedAt": "2026-07-28T03:25:20.000Z",
+                      "uid": "35240-77bc2ebc-6487-4ea7-88a6-2a51ac7be081"
+                    },
+                    {
+                      "id": "47659fe0-12fe-4ffc-8208-12336f524518",
+                      "name": "Forbidden",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"email_address\": \"<email>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/users/:user_id/emailaddress",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "users",
+                            ":user_id",
+                            "emailaddress"
+                          ],
+                          "variable": [
+                            {
+                              "key": "user_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Forbidden",
+                      "code": 403,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:25:20.000Z",
+                      "updatedAt": "2026-07-28T03:25:20.000Z",
+                      "uid": "35240-47659fe0-12fe-4ffc-8208-12336f524518"
+                    },
+                    {
+                      "id": "a3b393bb-c8db-4472-86fa-909f199e3533",
+                      "name": "Conflict",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"email_address\": \"<email>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/users/:user_id/emailaddress",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "users",
+                            ":user_id",
+                            "emailaddress"
+                          ],
+                          "variable": [
+                            {
+                              "key": "user_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Conflict",
+                      "code": 409,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:25:20.000Z",
+                      "updatedAt": "2026-07-28T03:25:20.000Z",
+                      "uid": "35240-a3b393bb-c8db-4472-86fa-909f199e3533"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-e80051d9-21da-4a8d-bdfd-c509ef4978d7"
+                }
+              ],
+              "id": "2cb8570b-89ba-423a-85e7-1e1fb352cb8d",
+              "createdAt": "2026-07-28T03:25:20.000Z",
+              "updatedAt": "2026-07-28T03:25:20.000Z",
+              "uid": "35240-2cb8570b-89ba-423a-85e7-1e1fb352cb8d"
+            },
+            {
+              "name": "resetpassword",
+              "item": [
+                {
+                  "name": "Reset user password",
+                  "id": "81f0a885-627e-4f91-9784-4b3a9e9b2bf7",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:user_id/resetpassword",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":user_id",
+                        "resetpassword"
+                      ],
+                      "variable": [
+                        {
+                          "id": "8dcda3eb-5fcb-4e24-af32-33d7fa3842a4",
+                          "key": "user_id",
+                          "value": "<uuid>",
+                          "description": "(Required) The ID of the user."
+                        }
+                      ]
+                    },
+                    "description": "Requests a reset of the user's password. A password reset email will be sent to the user when the request is accepted."
+                  },
+                  "response": [
+                    {
+                      "id": "7b5355c4-410e-4505-8873-a4baeae04105",
+                      "name": "No Content",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/users/:user_id/resetpassword",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "users",
+                            ":user_id",
+                            "resetpassword"
+                          ],
+                          "variable": [
+                            {
+                              "key": "user_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "No Content",
+                      "code": 204,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-07-28T03:25:20.000Z",
+                      "updatedAt": "2026-07-28T03:25:20.000Z",
+                      "uid": "35240-7b5355c4-410e-4505-8873-a4baeae04105"
+                    },
+                    {
+                      "id": "db2edd97-2835-4f70-ade6-b3c0e1b23220",
+                      "name": "Forbidden",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/users/:user_id/resetpassword",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "users",
+                            ":user_id",
+                            "resetpassword"
+                          ],
+                          "variable": [
+                            {
+                              "key": "user_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Forbidden",
+                      "code": 403,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:25:20.000Z",
+                      "updatedAt": "2026-07-28T03:25:20.000Z",
+                      "uid": "35240-db2edd97-2835-4f70-ade6-b3c0e1b23220"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-81f0a885-627e-4f91-9784-4b3a9e9b2bf7"
+                }
+              ],
+              "id": "70b30491-1166-4efb-86c9-6be11c8e2a65",
+              "createdAt": "2026-07-28T03:25:20.000Z",
+              "updatedAt": "2026-07-28T03:25:20.000Z",
+              "uid": "35240-70b30491-1166-4efb-86c9-6be11c8e2a65"
+            },
+            {
+              "name": "Get a user",
+              "id": "2384d5b6-1b44-421c-a20a-24b550611f6a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/:user_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":user_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "ec554962-3e1e-4410-9ba2-8a37ae0f46c1",
+                      "key": "user_id",
+                      "value": "<uuid>",
+                      "description": "(Required) The ID of the user."
+                    }
+                  ]
+                },
+                "description": "Retrieves the specified user."
+              },
+              "response": [
+                {
+                  "id": "48c4d9cf-4743-4f87-b89a-65b7fc7bee26",
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:user_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":user_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "user_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<uuid>\",\n  \"deactivated\": \"<boolean>\",\n  \"namespace\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"email_verified\": \"<boolean>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"picture\": \"<uri>\",\n  \"company\": \"<string>\",\n  \"website\": \"<uri>\",\n  \"country\": \"<string>\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"consented_at\": \"<dateTime>\",\n  \"consent_method\": \"opt-in\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-48c4d9cf-4743-4f87-b89a-65b7fc7bee26"
+                },
+                {
+                  "id": "c45768a6-29d3-42e0-a0bd-ffcfb0cd0d03",
+                  "name": "Forbidden",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:user_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":user_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "user_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Forbidden",
+                  "code": 403,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-c45768a6-29d3-42e0-a0bd-ffcfb0cd0d03"
+                },
+                {
+                  "id": "525b5532-fe68-4189-86ae-d9dbc32c0032",
+                  "name": "Not Found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:user_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":user_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "user_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-525b5532-fe68-4189-86ae-d9dbc32c0032"
+                }
+              ],
+              "createdAt": "2026-07-28T03:25:20.000Z",
+              "updatedAt": "2026-07-28T03:25:20.000Z",
+              "uid": "35240-2384d5b6-1b44-421c-a20a-24b550611f6a"
+            },
+            {
+              "name": "Update a user",
+              "id": "5c0d407d-ecc8-4544-9f56-cc704f5847c1",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"picture\": \"<uri>\",\n  \"company\": \"<string>\",\n  \"website\": \"<uri>\",\n  \"country\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users/:user_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":user_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "aeee1580-a162-4969-8748-c2407c25bf8e",
+                      "key": "user_id",
+                      "value": "<uuid>",
+                      "description": "(Required) The ID of the user."
+                    }
+                  ]
+                },
+                "description": "Updates the specified user."
+              },
+              "response": [
+                {
+                  "id": "21e421db-60f7-4516-9694-431f8442d619",
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"username\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"picture\": \"<uri>\",\n  \"company\": \"<string>\",\n  \"website\": \"<uri>\",\n  \"country\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:user_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":user_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "user_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<uuid>\",\n  \"deactivated\": \"<boolean>\",\n  \"namespace\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"email_verified\": \"<boolean>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"picture\": \"<uri>\",\n  \"company\": \"<string>\",\n  \"website\": \"<uri>\",\n  \"country\": \"<string>\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"consented_at\": \"<dateTime>\",\n  \"consent_method\": \"opt-in\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-21e421db-60f7-4516-9694-431f8442d619"
+                },
+                {
+                  "id": "ed9f50ce-fb22-4cea-8435-0bbd4fdd20fa",
+                  "name": "Bad Request",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"username\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"picture\": \"<uri>\",\n  \"company\": \"<string>\",\n  \"website\": \"<uri>\",\n  \"country\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:user_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":user_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "user_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-ed9f50ce-fb22-4cea-8435-0bbd4fdd20fa"
+                },
+                {
+                  "id": "5e4ed548-2019-4f64-bb4a-610bb6024641",
+                  "name": "Forbidden",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"username\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"picture\": \"<uri>\",\n  \"company\": \"<string>\",\n  \"website\": \"<uri>\",\n  \"country\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:user_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":user_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "user_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Forbidden",
+                  "code": 403,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T03:25:20.000Z",
+                  "updatedAt": "2026-07-28T03:25:20.000Z",
+                  "uid": "35240-5e4ed548-2019-4f64-bb4a-610bb6024641"
+                }
+              ],
+              "createdAt": "2026-07-28T03:25:20.000Z",
+              "updatedAt": "2026-07-28T03:25:20.000Z",
+              "uid": "35240-5c0d407d-ecc8-4544-9f56-cc704f5847c1"
+            }
+          ],
+          "id": "24f69f92-a8a6-4870-9770-277fd54adb35",
+          "createdAt": "2026-07-28T03:25:20.000Z",
+          "updatedAt": "2026-07-28T03:25:20.000Z",
+          "uid": "35240-24f69f92-a8a6-4870-9770-277fd54adb35"
+        }
+      ],
+      "id": "5382e5f4-e602-4f05-8999-d9e28fb6107d",
+      "createdAt": "2026-07-28T03:25:20.000Z",
+      "updatedAt": "2026-07-28T03:25:20.000Z",
+      "uid": "35240-5382e5f4-e602-4f05-8999-d9e28fb6107d"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "redirect_uri",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://auth.api.platform.sh/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "schemes",
+      "value": "https"
+    },
+    {
+      "key": "baseUrl",
+      "value": "{{schemes}}://api.upsun.com"
+    },
+    {
+      "key": "email",
+      "value": "<email>"
+    },
+    {
+      "key": "username",
+      "value": "<string>"
+    }
+  ]
+}

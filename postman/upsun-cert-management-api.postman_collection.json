@@ -1,0 +1,959 @@
+{
+  "info": {
+    "_postman_id": "97312ad1-7caa-465d-8162-ceb678aa3997",
+    "name": "Upsun.com Rest Add-ons Cert Management API",
+    "description": "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n\n\nContact Support:\n Name: Support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T03:24:01.000Z",
+    "updatedAt": "2026-07-28T03:24:02.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-97312ad1-7caa-465d-8162-ceb678aa3997"
+  },
+  "item": [
+    {
+      "name": "projects",
+      "item": [
+        {
+          "name": "{projectId}",
+          "item": [
+            {
+              "name": "certificates",
+              "item": [
+                {
+                  "name": "{certificateId}",
+                  "item": [
+                    {
+                      "name": "Get an SSL certificate",
+                      "id": "bb8ad7c5-74b2-4fb7-960d-1cbd68060bf0",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/certificates/:certificateId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "certificates",
+                            ":certificateId"
+                          ],
+                          "variable": [
+                            {
+                              "id": "654bdbe4-82cf-4f6e-a9b1-91990b08367b",
+                              "key": "projectId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            },
+                            {
+                              "id": "60ce4178-0ff3-4c52-9ada-c192b04785c1",
+                              "key": "certificateId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        },
+                        "description": "Retrieve information about a single SSL certificate\nassociated with a project.\n"
+                      },
+                      "response": [
+                        {
+                          "id": "aa40e094-308b-4e85-99cc-bb38f1ce9888",
+                          "name": "New Response",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/projects/:projectId/certificates/:certificateId",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "projects",
+                                ":projectId",
+                                "certificates",
+                                ":certificateId"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "projectId"
+                                },
+                                {
+                                  "key": "certificateId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Internal Server Error",
+                          "code": 500,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"id\": \"<string>\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"certificate\": \"<string>\",\n  \"chain\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"is_provisioned\": \"<boolean>\",\n  \"is_invalid\": \"<boolean>\",\n  \"is_root\": \"<boolean>\",\n  \"domains\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"auth_type\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"issuer\": [\n    {\n      \"oid\": \"<string>\",\n      \"alias\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"oid\": \"<string>\",\n      \"alias\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"expires_at\": \"<dateTime>\"\n}",
+                          "createdAt": "2026-07-28T03:24:02.000Z",
+                          "updatedAt": "2026-07-28T03:24:02.000Z",
+                          "uid": "35240-aa40e094-308b-4e85-99cc-bb38f1ce9888"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:24:02.000Z",
+                      "updatedAt": "2026-07-28T03:24:02.000Z",
+                      "uid": "35240-bb8ad7c5-74b2-4fb7-960d-1cbd68060bf0"
+                    },
+                    {
+                      "name": "Update an SSL certificate",
+                      "id": "232bbcb3-fee6-443f-81b2-72c8e91022bc",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"chain\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"is_invalid\": \"<boolean>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/certificates/:certificateId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "certificates",
+                            ":certificateId"
+                          ],
+                          "variable": [
+                            {
+                              "id": "171a5d19-e556-4319-b0d6-fe9e5a7d031f",
+                              "key": "projectId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            },
+                            {
+                              "id": "6392ea36-b2a6-4170-8127-b7233caaead6",
+                              "key": "certificateId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        },
+                        "description": "Update a single SSL certificate associated with a project.\n"
+                      },
+                      "response": [
+                        {
+                          "id": "9d0f1bd1-e52a-4625-8e7d-01677206285e",
+                          "name": "New Response",
+                          "originalRequest": {
+                            "method": "PATCH",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"chain\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"is_invalid\": \"<boolean>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/projects/:projectId/certificates/:certificateId",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "projects",
+                                ":projectId",
+                                "certificates",
+                                ":certificateId"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "projectId"
+                                },
+                                {
+                                  "key": "certificateId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Internal Server Error",
+                          "code": 500,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"status\": \"<string>\",\n  \"code\": \"<integer>\"\n}",
+                          "createdAt": "2026-07-28T03:24:02.000Z",
+                          "updatedAt": "2026-07-28T03:24:02.000Z",
+                          "uid": "35240-9d0f1bd1-e52a-4625-8e7d-01677206285e"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:24:02.000Z",
+                      "updatedAt": "2026-07-28T03:24:02.000Z",
+                      "uid": "35240-232bbcb3-fee6-443f-81b2-72c8e91022bc"
+                    },
+                    {
+                      "name": "Delete an SSL certificate",
+                      "id": "32ac9257-ec3d-4a45-b774-b7bcc7d9a3d8",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/certificates/:certificateId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "certificates",
+                            ":certificateId"
+                          ],
+                          "variable": [
+                            {
+                              "id": "ac086ea6-e15b-4027-b272-ef1e65d838ca",
+                              "key": "projectId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            },
+                            {
+                              "id": "e758c028-0133-4c2e-a0d1-cd0cf6f1d814",
+                              "key": "certificateId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        },
+                        "description": "Delete a single SSL certificate associated with a project.\n"
+                      },
+                      "response": [
+                        {
+                          "id": "127b4100-4160-4aba-aee6-01ed0abd5c97",
+                          "name": "New Response",
+                          "originalRequest": {
+                            "method": "DELETE",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/projects/:projectId/certificates/:certificateId",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "projects",
+                                ":projectId",
+                                "certificates",
+                                ":certificateId"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "projectId"
+                                },
+                                {
+                                  "key": "certificateId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Internal Server Error",
+                          "code": 500,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"status\": \"<string>\",\n  \"code\": \"<integer>\"\n}",
+                          "createdAt": "2026-07-28T03:24:02.000Z",
+                          "updatedAt": "2026-07-28T03:24:02.000Z",
+                          "uid": "35240-127b4100-4160-4aba-aee6-01ed0abd5c97"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:24:02.000Z",
+                      "updatedAt": "2026-07-28T03:24:02.000Z",
+                      "uid": "35240-32ac9257-ec3d-4a45-b774-b7bcc7d9a3d8"
+                    }
+                  ],
+                  "id": "1a2ecbc6-d4ab-4b0c-9cdf-49fd5c18936e",
+                  "createdAt": "2026-07-28T03:24:02.000Z",
+                  "updatedAt": "2026-07-28T03:24:02.000Z",
+                  "uid": "35240-1a2ecbc6-d4ab-4b0c-9cdf-49fd5c18936e"
+                },
+                {
+                  "name": "Get list of SSL certificates",
+                  "id": "9ef7484b-7196-41e3-8f4d-093a079261f3",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/projects/:projectId/certificates",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "projects",
+                        ":projectId",
+                        "certificates"
+                      ],
+                      "variable": [
+                        {
+                          "id": "f32acb63-0431-48ff-b84c-92678b3be71c",
+                          "key": "projectId",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    },
+                    "description": "Retrieve a list of objects representing the SSL certificates\nassociated with a project.\n"
+                  },
+                  "response": [
+                    {
+                      "id": "65679c05-6c6b-4ce5-a0c8-3d5c96f43c7b",
+                      "name": "New Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/certificates",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "certificates"
+                          ],
+                          "variable": [
+                            {
+                              "key": "projectId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "[\n  {\n    \"id\": \"<string>\",\n    \"created_at\": \"<dateTime>\",\n    \"updated_at\": \"<dateTime>\",\n    \"certificate\": \"<string>\",\n    \"chain\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"is_provisioned\": \"<boolean>\",\n    \"is_invalid\": \"<boolean>\",\n    \"is_root\": \"<boolean>\",\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"auth_type\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"issuer\": [\n      {\n        \"oid\": \"<string>\",\n        \"alias\": \"<string>\",\n        \"value\": \"<string>\"\n      },\n      {\n        \"oid\": \"<string>\",\n        \"alias\": \"<string>\",\n        \"value\": \"<string>\"\n      }\n    ],\n    \"expires_at\": \"<dateTime>\"\n  },\n  {\n    \"id\": \"<string>\",\n    \"created_at\": \"<dateTime>\",\n    \"updated_at\": \"<dateTime>\",\n    \"certificate\": \"<string>\",\n    \"chain\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"is_provisioned\": \"<boolean>\",\n    \"is_invalid\": \"<boolean>\",\n    \"is_root\": \"<boolean>\",\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"auth_type\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"issuer\": [\n      {\n        \"oid\": \"<string>\",\n        \"alias\": \"<string>\",\n        \"value\": \"<string>\"\n      },\n      {\n        \"oid\": \"<string>\",\n        \"alias\": \"<string>\",\n        \"value\": \"<string>\"\n      }\n    ],\n    \"expires_at\": \"<dateTime>\"\n  }\n]",
+                      "createdAt": "2026-07-28T03:24:02.000Z",
+                      "updatedAt": "2026-07-28T03:24:02.000Z",
+                      "uid": "35240-65679c05-6c6b-4ce5-a0c8-3d5c96f43c7b"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:24:02.000Z",
+                  "updatedAt": "2026-07-28T03:24:02.000Z",
+                  "uid": "35240-9ef7484b-7196-41e3-8f4d-093a079261f3"
+                },
+                {
+                  "name": "Add an SSL certificate",
+                  "id": "ca40dec7-cc9d-4394-aba7-269e684349f0",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"certificate\": \"<string>\",\n  \"key\": \"<string>\",\n  \"chain\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"is_invalid\": \"<boolean>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/projects/:projectId/certificates",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "projects",
+                        ":projectId",
+                        "certificates"
+                      ],
+                      "variable": [
+                        {
+                          "id": "c09c049a-fa30-4cde-95f8-d3e37a0f5f14",
+                          "key": "projectId",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    },
+                    "description": "Add a single SSL certificate to a project.\n"
+                  },
+                  "response": [
+                    {
+                      "id": "6d80e19f-9074-480a-88fb-9e06779cc56f",
+                      "name": "New Response",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"certificate\": \"<string>\",\n  \"key\": \"<string>\",\n  \"chain\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"is_invalid\": \"<boolean>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/certificates",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "certificates"
+                          ],
+                          "variable": [
+                            {
+                              "key": "projectId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"code\": \"<integer>\"\n}",
+                      "createdAt": "2026-07-28T03:24:02.000Z",
+                      "updatedAt": "2026-07-28T03:24:02.000Z",
+                      "uid": "35240-6d80e19f-9074-480a-88fb-9e06779cc56f"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:24:02.000Z",
+                  "updatedAt": "2026-07-28T03:24:02.000Z",
+                  "uid": "35240-ca40dec7-cc9d-4394-aba7-269e684349f0"
+                }
+              ],
+              "id": "7219f30b-6cb7-4efd-a213-e5252cbc60e6",
+              "createdAt": "2026-07-28T03:24:02.000Z",
+              "updatedAt": "2026-07-28T03:24:02.000Z",
+              "uid": "35240-7219f30b-6cb7-4efd-a213-e5252cbc60e6"
+            },
+            {
+              "name": "provisioners",
+              "item": [
+                {
+                  "name": "{certificateProvisionerDocumentId}",
+                  "item": [
+                    {
+                      "name": "get-projects-provisioners",
+                      "id": "1b6237e5-24d1-4ca3-bd93-ff41753c6dcf",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/provisioners/:certificateProvisionerDocumentId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "provisioners",
+                            ":certificateProvisionerDocumentId"
+                          ],
+                          "variable": [
+                            {
+                              "id": "7fada70c-2d4c-4a83-b750-ba224670c674",
+                              "key": "projectId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            },
+                            {
+                              "id": "88ec6079-8e5a-4ef8-bf9b-d5a03178e093",
+                              "key": "certificateProvisionerDocumentId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "c511eb96-7cd4-4daf-b9fd-c26fb58ab74b",
+                          "name": "New Response",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/projects/:projectId/provisioners/:certificateProvisionerDocumentId",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "projects",
+                                ":projectId",
+                                "provisioners",
+                                ":certificateProvisionerDocumentId"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "projectId"
+                                },
+                                {
+                                  "key": "certificateProvisionerDocumentId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Internal Server Error",
+                          "code": 500,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"id\": \"<string>\",\n  \"directory_url\": \"<string>\",\n  \"email\": \"<string>\",\n  \"eab_kid\": \"<string>\",\n  \"eab_hmac_key\": \"<string>\"\n}",
+                          "createdAt": "2026-07-28T03:24:02.000Z",
+                          "updatedAt": "2026-07-28T03:24:02.000Z",
+                          "uid": "35240-c511eb96-7cd4-4daf-b9fd-c26fb58ab74b"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:24:02.000Z",
+                      "updatedAt": "2026-07-28T03:24:02.000Z",
+                      "uid": "35240-1b6237e5-24d1-4ca3-bd93-ff41753c6dcf"
+                    },
+                    {
+                      "name": "update-projects-provisioners",
+                      "id": "be57c21f-d426-42b6-96c7-e0042699c1ed",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"directory_url\": \"<string>\",\n  \"email\": \"<string>\",\n  \"eab_kid\": \"<string>\",\n  \"eab_hmac_key\": \"<string>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/provisioners/:certificateProvisionerDocumentId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "provisioners",
+                            ":certificateProvisionerDocumentId"
+                          ],
+                          "variable": [
+                            {
+                              "id": "d441ee0d-08c6-4c6d-9410-4a3079f8d7a3",
+                              "key": "projectId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            },
+                            {
+                              "id": "c1965c9c-bfd1-4212-ac7d-e820228d1615",
+                              "key": "certificateProvisionerDocumentId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "b0f64ae9-0359-40fa-8555-9f59d38c4f5e",
+                          "name": "New Response",
+                          "originalRequest": {
+                            "method": "PATCH",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"directory_url\": \"<string>\",\n  \"email\": \"<string>\",\n  \"eab_kid\": \"<string>\",\n  \"eab_hmac_key\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/projects/:projectId/provisioners/:certificateProvisionerDocumentId",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "projects",
+                                ":projectId",
+                                "provisioners",
+                                ":certificateProvisionerDocumentId"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "projectId"
+                                },
+                                {
+                                  "key": "certificateProvisionerDocumentId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Internal Server Error",
+                          "code": 500,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"status\": \"<string>\",\n  \"code\": \"<integer>\"\n}",
+                          "createdAt": "2026-07-28T03:24:02.000Z",
+                          "updatedAt": "2026-07-28T03:24:02.000Z",
+                          "uid": "35240-b0f64ae9-0359-40fa-8555-9f59d38c4f5e"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:24:02.000Z",
+                      "updatedAt": "2026-07-28T03:24:02.000Z",
+                      "uid": "35240-be57c21f-d426-42b6-96c7-e0042699c1ed"
+                    }
+                  ],
+                  "id": "c7245b45-0d0c-4bb4-8f6b-74a031cd9a65",
+                  "createdAt": "2026-07-28T03:24:02.000Z",
+                  "updatedAt": "2026-07-28T03:24:02.000Z",
+                  "uid": "35240-c7245b45-0d0c-4bb4-8f6b-74a031cd9a65"
+                },
+                {
+                  "name": "list-projects-provisioners",
+                  "id": "5a9dc17c-20c7-4296-b76c-52a9dd055722",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/projects/:projectId/provisioners",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "projects",
+                        ":projectId",
+                        "provisioners"
+                      ],
+                      "variable": [
+                        {
+                          "id": "68e3ef06-9e2b-44f0-ad46-8603621e3e41",
+                          "key": "projectId",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "id": "01be1e97-8322-4b28-a6f8-727f81446ea2",
+                      "name": "New Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/provisioners",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "provisioners"
+                          ],
+                          "variable": [
+                            {
+                              "key": "projectId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "[\n  {\n    \"id\": \"<string>\",\n    \"directory_url\": \"<string>\",\n    \"email\": \"<string>\",\n    \"eab_kid\": \"<string>\",\n    \"eab_hmac_key\": \"<string>\"\n  },\n  {\n    \"id\": \"<string>\",\n    \"directory_url\": \"<string>\",\n    \"email\": \"<string>\",\n    \"eab_kid\": \"<string>\",\n    \"eab_hmac_key\": \"<string>\"\n  }\n]",
+                      "createdAt": "2026-07-28T03:24:02.000Z",
+                      "updatedAt": "2026-07-28T03:24:02.000Z",
+                      "uid": "35240-01be1e97-8322-4b28-a6f8-727f81446ea2"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:24:02.000Z",
+                  "updatedAt": "2026-07-28T03:24:02.000Z",
+                  "uid": "35240-5a9dc17c-20c7-4296-b76c-52a9dd055722"
+                }
+              ],
+              "id": "7d457541-eb6d-4b94-bb6f-17445c5499cb",
+              "createdAt": "2026-07-28T03:24:02.000Z",
+              "updatedAt": "2026-07-28T03:24:02.000Z",
+              "uid": "35240-7d457541-eb6d-4b94-bb6f-17445c5499cb"
+            }
+          ],
+          "id": "880c5445-5562-4e96-9ce6-853af71b8a55",
+          "createdAt": "2026-07-28T03:24:02.000Z",
+          "updatedAt": "2026-07-28T03:24:02.000Z",
+          "uid": "35240-880c5445-5562-4e96-9ce6-853af71b8a55"
+        }
+      ],
+      "id": "3b630613-bb1a-417a-a69e-58052df6a81d",
+      "createdAt": "2026-07-28T03:24:02.000Z",
+      "updatedAt": "2026-07-28T03:24:02.000Z",
+      "uid": "35240-3b630613-bb1a-417a-a69e-58052df6a81d"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "redirect_uri",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://auth.api.platform.sh/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "schemes",
+      "value": "https"
+    },
+    {
+      "key": "baseUrl",
+      "value": "{{schemes}}://api.upsun.com"
+    }
+  ]
+}

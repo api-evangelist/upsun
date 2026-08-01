@@ -1,0 +1,43 @@
+generated: '2026-07-21'
+method: searched
+status: published
+source: https://github.com/upsun/upsun-mcp-server
+server:
+  name: upsun
+  transport: http
+  url: https://mcp.upsun.com/mcp
+  repository: https://github.com/upsun/upsun-mcp-server
+  docs: https://developer.upsun.com/ai/mcp/overview
+authentication:
+  type: api-token
+  notes: >-
+    Requires an Upsun API token (from the Upsun Console) passed via the
+    `upsun-api-token` header. Beta defaults to read-only; set the
+    `enable-write` header to true to enable write operations.
+local:
+  transports: [stdio, http, sse]
+  install: git clone https://github.com/upsun/upsun-mcp-server && npm install && npm run build && npm run run
+tool_groups:
+  - name: projects
+    description: Create, delete, retrieve info, and list projects
+  - name: environments
+    description: Activate, delete, pause, resume, merge, redeploy environments; retrieve details and URLs
+  - name: organizations
+    description: Retrieve details and list accessible organizations
+  - name: activities
+    description: View and retrieve detailed deployment activities
+  - name: ssh-keys
+    description: Create, delete, and list SSH keys
+  - name: domains
+    description: Add, delete, retrieve, list, and update custom domains
+  - name: routing
+    description: Retrieve route configuration and list routes
+  - name: certificates
+    description: Add, delete, retrieve details, and list SSL/TLS certificates
+  - name: backups
+    description: Create backups, list available backups, and restore from backups
+  - name: configuration
+    description: Generate project configuration templates
+related:
+  - https://github.com/upsun/ai            # Upsun AI agent toolkit (plugin, skill, MCP)
+  - https://github.com/upsun/claude-marketplace   # Official Claude Code marketplace for Upsun tools

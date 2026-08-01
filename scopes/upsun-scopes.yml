@@ -1,0 +1,22 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/upsun-openapi-original.json
+schemes:
+- name: OAuth2
+  source: openapi/upsun-openapi-original.json
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+    tokenUrl: https://auth.api.platform.sh/oauth2/token
+- name: OAuth2Admin
+  source: openapi/upsun-openapi-original.json
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://auth.api.platform.sh/oauth2/token
+scopes:
+- scope: admin
+  description: administrative operations
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/upsun-openapi-original.json

@@ -1,27 +1,1002 @@
 aid: upsun
 name: Upsun
-description: 'Upsun is a company surfaced as a portfolio company of partech and added to the API Evangelist
-  network as a stub for enrichment. Sector: Infrastructure SaaS. This profile is a lead awaiting the enrichment
-  pipeline.'
+description: >-
+  Upsun is the cloud application platform from Platform.sh that automatically
+  builds, deploys, and scales applications with git-driven workflows, preview
+  environments per branch, managed services, and usage-based pricing. Its REST
+  API at api.upsun.com covers projects, environments, deployments, backups,
+  domains, certificates, variables, teams, organizations, subscriptions, and
+  observability, secured with OAuth2 API-token exchange, and is complemented
+  by a full-featured CLI, Node.js and PHP SDKs, activity webhooks, and an
+  official hosted MCP server at mcp.upsun.com.
 url: https://raw.githubusercontent.com/api-evangelist/upsun/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - partech
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: full
+x-tier-reason: enriched from stub via enrichment pipeline
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
+image: https://avatars.githubusercontent.com/u/151578842?v=4
 tags:
 - Company
 - Infrastructure Saas
-apis: []
+- Cloud
+- PaaS
+- Hosting
+- Deployment
+- DevOps
+- Containers
+- Observability
+apis:
+- aid: upsun:upsun-add-ons-api
+  name: Upsun Add-ons API
+  description: The Add-ons API from Upsun — 1 operation(s) for add-ons.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Add-ons
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-add-ons-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-alerts-api
+  name: Upsun Alerts API
+  description: The Alerts API from Upsun — 1 operation(s) for alerts.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Alerts
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-alerts-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-api-tokens-api
+  name: Upsun API Tokens API
+  description: The API Tokens API from Upsun — 2 operation(s) for api tokens.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - API Tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-api-tokens-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-autoscaling-api
+  name: Upsun Autoscaling API
+  description: "Upsun provides native support for autoscaling, allowing your applications to automatically\
+    \ adjust based on resource usage.\nThis ensures that your apps remain responsive under load while\
+    \ helping you optimize costs.\nYou can configure thresholds for metrics such as CPU, RAM, and request\
+    \ latency.  \nResources will automatically scale to meet demand.\nEach container profile assigned\
+    \ to an application or service provides a specific combination of CPU and RAM, which you can select\
+    \ via the Upsun UI or CLI.\n\nThese endpoints manage autoscaling configurations that are tied to a\n\
+    specific environment, and optionally to its child environments.\nYou can define scaling rules based\
+    \ on metrics like CPU, memory, or\nrequest latency, and these rules will be applied at both build\
+    \ time\nand runtime. For more information on configuring autoscaling for your\nenvironments, see the\
+    \ [Autoscaling](https://docs.upsun.com/manage-resources/autoscaling.html) section\nof the documentation."
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Autoscaling
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-autoscaling-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-cert-management-api
+  name: Upsun Cert Management API
+  description: >-
+    User-supplied SSL/TLS certificates can be managed using these
+
+    endpoints. You can now list and modify certificate provisioners
+
+    using the `/projects/{projectId}/provisioners` and
+
+    `/projects/{projectId}/provisioners/{certificateProvisionerDocumentId}`
+
+    endpoints. For more information, see our
+
+    [Third-party TLS certificate](https://docs.upsun.com/anchors/domains/custom/custom-certificates/)
+
+    documentation. These endpoints are not for managing certificates
+
+    that are automatically supplied by Upsun via Let's Encrypt.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Cert Management
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-cert-management-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-connections-api
+  name: Upsun Connections API
+  description: The Connections API from Upsun — 2 operation(s) for connections.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Connections
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-connections-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-deployment-api
+  name: Upsun Deployment API
+  description: The Deployment API from Upsun — 2 operation(s) for deployment.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Deployment
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-deployment-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-deployment-target-api
+  name: Upsun Deployment Target API
+  description: >-
+    Upsun is capable of deploying the production environments of
+
+    projects in multiple topologies: both in clusters of containers, and
+
+    as dedicated virtual machines. This is an internal API that can
+
+    only be used by privileged users.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Deployment Target
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-deployment-target-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-discounts-api
+  name: Upsun Discounts API
+  description: The Discounts API from Upsun — 3 operation(s) for discounts.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Discounts
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-discounts-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-domain-management-api
+  name: Upsun Domain Management API
+  description: >-
+    These endpoints can be used to add, modify, or remove domains from
+
+    a project. For more information on how domains function on
+
+    Upsun, see the [Domains](https://docs.upsun.com/anchors/domains/custom/)
+
+    section of our documentation.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Domain Management
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-domain-management-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-environment-activity-api
+  name: Upsun Environment Activity API
+  description: The Environment Activity API from Upsun — 3 operation(s) for environment activity.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Environment Activity
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-environment-activity-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-environment-api
+  name: Upsun Environment API
+  description: >-
+    On Upsun, an environment encompasses a single instance of your
+
+    entire application stack, the services used by the application,
+
+    the application's data storage, and the environment's backups.
+
+
+    In general, an environment represents a single branch or merge request
+
+    in the Git repository backing a project. It is a virtual cluster
+
+    of read-only application and service containers with read-write
+
+    mounts for application and service data.
+
+
+    On Upsun, the default branch is your production environment—thus,
+
+    merging changes to this branch will put those changes to production.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Environment
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-environment-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-environment-backups-api
+  name: Upsun Environment Backups API
+  description: >-
+    A snapshot is a complete backup of an environment, including all the
+
+    persistent data from all services running in an environment and all
+
+    files present in mounted volumes.
+
+
+    These endpoints can be used to trigger the creation of new backups,
+
+    get information about existing backups, delete existing backups or
+
+    restore a backup.
+
+    More information about backups can be found in our
+
+    [documentation](https://docs.upsun.com/anchors/environments/backup/).
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Environment Backups
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-environment-backups-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-environment-type-api
+  name: Upsun Environment Type API
+  description: >-
+    Environment Types is the way Upsun manages access. We currently have 3 environment types:
+
+    * Development
+
+    * Staging
+
+    * Production
+
+
+    Each environment type will contain a group of users and their accesses. We manage access,
+
+    adding, updating and removing users and their roles, here.
+
+
+    Each environment will have a type, pointing to one of these 3 environment types.
+
+    See `type` in [Environments](#tag/Environment).
+
+
+    In general:
+
+    * Production will be reserved for the default branch, and cannot be set manually.
+
+    * An environment can be set to be type `staging` or development manually and when branching.
+
+
+    Dedicated Generation 2 projects have different rules for environment types. If your project
+
+    contains at least one of those Dedicated Generation 2 environments, the rules are slightly different:
+
+    * All non-dedicated environments in your project can be `development` or `staging`, but never `production`.
+
+    * Dedicated Generation 2 environments can be set either to `staging` or `production`, but never `development`.
+
+    * The default branch is not considered to be a special case.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Environment Type
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-environment-type-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-environment-variables-api
+  name: Upsun Environment Variables API
+  description: >-
+    These endpoints manipulate user-defined variables which are bound to a
+
+    specific environment, as well as (optionally) the children of an
+
+    environment. These variables can be made available at both build time
+
+    and runtime. For more information on environment variables,
+
+    see the [Variables](https://docs.upsun.com/anchors/variables/set/environment/create/)
+
+    section of the documentation.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Environment Variables
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-environment-variables-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-grants-api
+  name: Upsun Grants API
+  description: The Grants API from Upsun — 1 operation(s) for grants.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Grants
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-grants-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-invoices-api
+  name: Upsun Invoices API
+  description: >-
+    These endpoints can be used to retrieve invoices from our billing system.
+
+    An invoice of type "invoice" is generated automatically every month, if the customer has active projects.
+
+    Invoices of type "credit_memo" are a result of manual action when there was a refund or an invoice
+    correction.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-invoices-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-mfa-api
+  name: Upsun MFA API
+  description: "Multi-factor authentication (MFA) requires the user to present two (or more) types of\
+    \ evidence (or factors) to prove their identity.\n\nFor example, the evidence might be a password\
+    \ and a device-generated code, which show the user has the knowledge factor (\"something you know\"\
+    ) \nas well as the possession factor (\"something you have\"). In this way MFA offers good protection\
+    \ against the compromise of any single factor, \nsuch as a stolen password.\n\nUsing the MFA API you\
+    \ can set up time-based one-time passcodes (TOTP), which can be generated on a single registered device\
+    \ (\"something you have\") such as a mobile phone."
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - MFA
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-mfa-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-orders-api
+  name: Upsun Orders API
+  description: >-
+    These endpoints can be used to retrieve order information from our billing
+
+    system. Here you can view information about your bill for our services,
+
+    include the billed amount and a link to a PDF of the bill.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-orders-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-organization-invitations-api
+  name: Upsun Organization Invitations API
+  description: >-
+    The Organization Invitations API from Upsun — 2 operation(s) for organization invitations.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Organization Invitations
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-organization-invitations-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-organization-management-api
+  name: Upsun Organization Management API
+  description: The Organization Management API from Upsun — 4 operation(s) for organization management.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Organization Management
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-organization-management-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-organization-members-api
+  name: Upsun Organization Members API
+  description: The Organization Members API from Upsun — 2 operation(s) for organization members.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Organization Members
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-organization-members-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-organization-projects-api
+  name: Upsun Organization Projects API
+  description: The Organization Projects API from Upsun — 3 operation(s) for organization projects.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Organization Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-organization-projects-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-organizations-api
+  name: Upsun Organizations API
+  description: The Organizations API from Upsun — 4 operation(s) for organizations.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-phonenumber-api
+  name: Upsun PhoneNumber API
+  description: The PhoneNumber API from Upsun — 2 operation(s) for phonenumber.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - PhoneNumber
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-phonenumber-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-profiles-api
+  name: Upsun Profiles API
+  description: The Profiles API from Upsun — 2 operation(s) for profiles.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Profiles
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-profiles-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-project-activity-api
+  name: Upsun Project Activity API
+  description: The Project Activity API from Upsun — 3 operation(s) for project activity.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Project Activity
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-project-activity-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-project-api
+  name: Upsun Project API
+  description: >-
+    ## Project Overview
+
+
+    On Upsun, a Project is backed by a single Git repository
+
+    and encompasses your entire application stack, the services
+
+    used by your application, the application's data storage,
+
+    the production and staging environments, and the backups of those
+
+    environments.
+
+
+    When you create a new project, you start with a single
+
+    [Environment](#tag/Environment) called *Master*,
+
+    corresponding to the master branch in the Git repository of
+
+    the project—this will be your production environment.
+
+
+    If you connect your project to an external Git repo
+
+    using one of our [Third-Party Integrations](#tag/Third-Party-Integrations)
+
+    a new development environment can be created for each branch
+
+    or pull request created in the repository. When a new development
+
+    environment is created, the production environment's data
+
+    will be cloned on-the-fly, giving you an isolated, production-ready
+
+    test environment.
+
+
+    This set of API endpoints can be used to retrieve a list of projects
+
+    associated with an API key, as well as create and update the parameters
+
+    of existing projects.
+
+
+    > **Note**:
+
+    >
+
+    > To list projects or to create a new project, use [`/subscriptions`](#tag/Subscriptions).
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Project
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-project-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-project-invitations-api
+  name: Upsun Project Invitations API
+  description: The Project Invitations API from Upsun — 2 operation(s) for project invitations.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Project Invitations
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-project-invitations-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-project-settings-api
+  name: Upsun Project Settings API
+  description: >-
+    These endpoints can be used to retrieve and manipulate project-level
+
+    settings. Only the `initialize` property can be set by end users. It is used
+
+    to initialize a project from an existing Git repository.
+
+
+    The other properties can only be set by a privileged user.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Project Settings
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-project-settings-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-project-variables-api
+  name: Upsun Project Variables API
+  description: >-
+    These endpoints manipulate user-defined variables which are bound to an
+
+    entire project. These variables are accessible to all environments
+
+    within a single project, and they can be made available at both build
+
+    time and runtime. For more information on project variables,
+
+    see the [Variables](https://docs.upsun.com/anchors/variables/set/project/create/)
+
+    section of the documentation.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Project Variables
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-project-variables-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-records-api
+  name: Upsun Records API
+  description: >-
+    These endpoints retrieve information about which plans were assigned to a particular
+
+    project at which time.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Records
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-records-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-references-api
+  name: Upsun References API
+  description: The References API from Upsun — 5 operation(s) for references.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - References
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-references-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-regions-api
+  name: Upsun Regions API
+  description: The Regions API from Upsun — 2 operation(s) for regions.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Regions
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-regions-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-repository-api
+  name: Upsun Repository API
+  description: >-
+    The Git repository backing projects hosted on Upsun can be
+
+    accessed in a **read-only** manner through the `/projects/{projectId}/git/*`
+
+    family of endpoints. With these endpoints, you can retrieve objects from
+
+    the Git repository in the same way that you would in a local environment.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Repository
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-repository-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-routing-api
+  name: Upsun Routing API
+  description: >-
+    These endpoints modify an environment's `routes:` section of the `.upsun/config.yaml` file.
+
+    For routes to propagate to child environments, the child environments
+
+    must be synchronized with their parent.
+
+
+    More information about routing can be found in the [Routes](https://docs.upsun.com/anchors/routes/)
+
+    section of the documentation.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Routing
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-routing-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-runtime-operations-api
+  name: Upsun Runtime Operations API
+  description: The Runtime Operations API from Upsun — 1 operation(s) for runtime operations.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Runtime Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-runtime-operations-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-source-operations-api
+  name: Upsun Source Operations API
+  description: >-
+    These endpoints interact with source code operations as defined in the `source.operations`
+
+    key in a project's `.upsun/config.yaml` configuration. More information
+
+    on source code operations is
+
+    [available in our user documentation](https://docs.upsun.com/anchors/app/source-operations/).
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Source Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-source-operations-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-ssh-keys-api
+  name: Upsun SSH Keys API
+  description: The SSH Keys API from Upsun — 2 operation(s) for ssh keys.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - SSH Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-ssh-keys-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-subscriptions-api
+  name: Upsun Subscriptions API
+  description: >-
+    Each project is represented by a subscription that holds the plan information.
+
+    These endpoints can be used to go to a larger plan, add more storage, or subscribe to
+
+    optional features.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-subscriptions-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-support-api
+  name: Upsun Support API
+  description: >-
+    These endpoints can be used to retrieve information about support ticket priority
+
+    and allow you to submit new ticket to the Upsun Support Team.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Support
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-support-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-system-information-api
+  name: Upsun System Information API
+  description: >-
+    These endpoints can be used to retrieve low-level information and interact with the
+
+    core component of Upsun infrastructure.
+
+
+    This is an internal API that can only be used by privileged users.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - System Information
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-system-information-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-team-access-api
+  name: Upsun Team Access API
+  description: The Team Access API from Upsun — 4 operation(s) for team access.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Team Access
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-team-access-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-teams-api
+  name: Upsun Teams API
+  description: The Teams API from Upsun — 5 operation(s) for teams.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Teams
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-teams-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-third-party-integrations-api
+  name: Upsun Third-Party Integrations API
+  description: >-
+    Upsun can easily integrate with many third-party services, including
+
+    Git hosting services (GitHub, GitLab, and Bitbucket),
+
+    health notification services (email, Slack, PagerDuty),
+
+    performance analytics platforms (New Relic, Blackfire, Tideways),
+
+    and webhooks.
+
+
+    For clarification about what information each field requires, see the
+
+    [External Integrations](https://docs.upsun.com/anchors/integrations/)
+
+    documentation. NOTE: The names of the CLI arguments listed in the
+
+    documentation are not always named exactly the same as the
+
+    required body fields in the API request.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Third-Party Integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-third-party-integrations-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-tickets-api
+  name: Upsun Tickets API
+  description: The Tickets API from Upsun — 1 operation(s) for tickets.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Tickets
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-tickets-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-user-access-api
+  name: Upsun User Access API
+  description: The User Access API from Upsun — 4 operation(s) for user access.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - User Access
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-user-access-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-user-profiles-api
+  name: Upsun User Profiles API
+  description: The User Profiles API from Upsun — 4 operation(s) for user profiles.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - User Profiles
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-user-profiles-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-users-api
+  name: Upsun Users API
+  description: The Users API from Upsun — 9 operation(s) for users.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-users-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-vouchers-api
+  name: Upsun Vouchers API
+  description: >-
+    These endpoints can be used to retrieve vouchers associated with a particular
+
+    user as well as apply a voucher to a particular user.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Vouchers
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-vouchers-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+common:
+- type: PostmanWorkspace
+  url: https://www.postman.com/kinlaneapi/upsun/overview
+- type: Website
+  url: https://upsun.com/
+- type: DeveloperPortal
+  url: https://developer.upsun.com/
+- type: Documentation
+  url: https://developer.upsun.com/docs
+- type: APIReference
+  url: https://developer.upsun.com/api-reference
+- type: GettingStarted
+  url: https://developer.upsun.com/docs/get-started
+- type: Authentication
+  url: authentication/upsun-authentication.yml
+- type: OAuthScopes
+  url: scopes/upsun-scopes.yml
+- type: SDKs
+  url: packages/upsun-packages.yml
+- type: Packages
+  url: packages/upsun-packages.yml
+- type: CLI
+  url: cli/upsun-cli.yml
+- type: MCPServer
+  url: mcp/upsun-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/upsun-llms.txt
+- type: WellKnown
+  url: well-known/upsun-well-known.yml
+- type: SecurityTxt
+  url: well-known/upsun-security.txt
+- type: Overlay
+  url: overlays/upsun-api-overlay.yaml
+- type: Conformance
+  url: conformance/upsun-conformance.yml
+- type: Compliance
+  url: https://upsun.com/trust-center/
+- type: ErrorCatalog
+  url: errors/upsun-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/upsun-lifecycle.yml
+- type: StatusPage
+  url: https://status.upsun.com/
+- type: ChangeLog
+  url: changelog/upsun-changelog.yml
+- type: Conventions
+  url: conventions/upsun-conventions.yml
+- type: DataModel
+  url: data-model/upsun-data-model.yml
+- type: Webhooks
+  url: asyncapi/upsun-activity-webhooks.yml
+- type: Security
+  url: https://upsun.com/trust-center/security/responsible-disclosure/
+- type: VulnerabilityDisclosure
+  url: security/upsun-vulnerability-disclosure.yml
+- type: TrustCenter
+  url: security/upsun-trust-center.yml
+- type: DomainSecurity
+  url: security/upsun-domain-security.yml
+- type: Console
+  url: https://console.upsun.com/
+- type: Support
+  url: https://community.upsun.com/
+- type: Blog
+  url: https://upsun.com/blog/
+- type: GitHubOrganization
+  url: https://github.com/upsun
+- type: Pricing
+  url: https://upsun.com/pricing/
+- type: SignUp
+  url: https://auth.upsun.com/register
+- type: TermsOfService
+  url: https://upsun.com/trust-center/legal/tos/
+- type: PrivacyPolicy
+  url: https://upsun.com/trust-center/privacy/privacy-notice/
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
-common:
-- type: Website
-  url: https://upsun.com/
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 26
+  pass: local-v1

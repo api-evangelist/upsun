@@ -1,0 +1,91 @@
+generated: '2026-07-21'
+method: searched
+source: https://developer.upsun.com/cli + https://developer.upsun.com/cli/reference
+name: Upsun CLI
+binary: upsun
+version: 5.10.8
+repository: https://github.com/upsun/cli
+docs: https://developer.upsun.com/cli
+reference: https://developer.upsun.com/cli/reference
+install:
+  - method: homebrew (macOS)
+    command: brew install upsun/tap/upsun-cli
+  - method: shell script (Linux)
+    command: curl -fsSL https://raw.githubusercontent.com/upsun/cli/main/installer.sh | bash
+  - method: scoop (Windows)
+    command: scoop bucket add upsun https://github.com/upsun/homebrew-tap.git && scoop install upsun
+  - method: npm
+    command: npm install -g upsun
+authentication:
+  - upsun auth:browser-login (interactive OAuth via browser)
+  - upsun auth:api-token-login (API token for CI/CD; see https://developer.upsun.com/cli/api-tokens)
+command_groups:
+  - group: environment
+    commands: 22
+    notes: branch, merge, pause, resume, redeploy, ssh, url, logs, sync and more
+  - group: project
+    commands: 9
+    notes: create, delete, get, info, list, set-remote
+  - group: integration
+    commands: 6
+    notes: third-party integrations (GitHub, GitLab, Bitbucket, webhooks)
+  - group: variable
+    commands: 5
+  - group: user
+    commands: 5
+  - group: tunnel
+    commands: 5
+    notes: open service tunnels to local machine
+  - group: team
+    commands: 5
+  - group: domain
+    commands: 5
+  - group: backup
+    commands: 5
+    notes: create, delete, get, list, restore
+  - group: auth
+    commands: 5
+  - group: organization
+    commands: 4
+  - group: metrics
+    commands: 4
+  - group: certificate
+    commands: 4
+  - group: activity
+    commands: 4
+  - group: ssh-key
+    commands: 3
+  - group: service
+    commands: 3
+  - group: repo
+    commands: 3
+  - group: mount
+    commands: 3
+  - group: app
+    commands: 3
+  - group: source-operation
+    commands: 2
+  - group: route
+    commands: 2
+  - group: resources
+    commands: 2
+  - group: operation
+    commands: 2
+  - group: db
+    commands: 2
+    notes: db:dump, db:sql
+  - group: commit
+    commands: 2
+  - group: autoscaling
+    commands: 2
+  - group: misc
+    commands: 10
+    notes: console, docs, decode, list, multi, local, worker, subscription, ssh-cert, clear-cache
+key_flows:
+  - upsun project:create — provision a new project
+  - upsun push — push code and deploy an environment
+  - upsun environment:branch / merge — preview environments per git branch
+  - upsun ssh — shell into a running environment
+  - upsun tunnel:open — connect local tooling to managed services
+  - upsun backup:create / backup:restore — data protection
+ai_agents: https://developer.upsun.com/cli/ai-coding-agents

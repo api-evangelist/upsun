@@ -1,0 +1,26 @@
+generated: '2026-07-21'
+method: searched
+source: https://developer.upsun.com/docs/integrations/activity/webhooks
+type: Webhooks
+spec_type: none
+notes: >-
+  Upsun publishes no AsyncAPI document; this captures the documented webhook
+  (activity) event surface. A webhook integration POSTs the full activity
+  payload for every activity triggered on a project, filterable by activity
+  type and branch.
+setup:
+  create: upsun integration:add --type=webhook --url=<URL_TO_RECEIVE_JSON>
+  update_secret: upsun integration:update <INTEGRATION_ID> --shared-key=<SECRET_KEY>
+  validate: upsun integration:validate
+delivery:
+  method: POST
+  payload: full project activity state as JSON (same payload as activity scripts)
+  filtering: by activity type and by environment/branch
+security:
+  signing: >-
+    Optional shared key enables an X-JWS-Signature header carrying a JWS
+    (RFC 7515) with detached, unencoded payload per RFC 7797; algorithm HS256
+    (HMAC-SHA256), protected header {"alg":"HS256","b64":false,"crit":["b64"]}.
+    Receivers verify the HS256 MAC over the raw request body bytes.
+  header: X-JWS-Signature
+schema_reference: https://developer.upsun.com/docs/integrations/activity/reference

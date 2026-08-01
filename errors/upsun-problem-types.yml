@@ -1,0 +1,88 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/upsun-openapi-original.json
+format: rfc9457
+notes: Derived from OpenAPI 4xx/default responses; 167 responses declare application/problem+json (RFC 9457 Problem Details).
+problems:
+- status: 400
+  title: Bad Request
+  content_types:
+  - application/json
+  - application/problem+json
+  operation_count: 49
+  example_operations:
+  - create-org-invite
+  - create-project-invite
+  - list-referenced-users
+  - list-referenced-teams
+- status: 400
+  title: Bad Request when no authorization is required.
+  content_types:
+  - application/problem+json
+  operation_count: 1
+  example_operations:
+  - create-authorization-credentials
+- status: 402
+  title: Payment Required when the number of users exceeds the subscription limit
+  content_types:
+  - application/json
+  operation_count: 1
+  example_operations:
+  - create-project-invite
+- status: 403
+  title: Forbidden
+  content_types:
+  - application/json
+  - application/problem+json
+  operation_count: 114
+  example_operations:
+  - create-org-invite
+  - list-org-invites
+  - cancel-org-invite
+  - create-project-invite
+- status: 404
+  title: Not Found
+  content_types:
+  - application/json
+  - application/problem+json
+  operation_count: 80
+  example_operations:
+  - cancel-org-invite
+  - create-project-invite
+  - list-project-invites
+  - cancel-project-invite
+- status: 409
+  title: Conflict when there already is a pending invitation for the invitee
+  content_types:
+  - application/json
+  operation_count: 2
+  example_operations:
+  - create-org-invite
+  - create-project-invite
+- status: 409
+  title: Conflict
+  content_types:
+  - application/json
+  operation_count: 6
+  example_operations:
+  - reset-email-address
+  - create-api-token
+  - get-totp-enrollment
+  - confirm-totp-enrollment
+- status: default
+  title: null
+  content_types:
+  - application/json
+  operation_count: 91
+  example_operations:
+  - get-projects
+  - update-projects
+  - delete-projects
+  - list-projects-activities
+- status: default
+  title: Autoscaler settings
+  content_types:
+  - application/json
+  operation_count: 1
+  example_operations:
+  - get-autoscaler-settings

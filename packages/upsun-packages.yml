@@ -1,0 +1,51 @@
+generated: '2026-07-21'
+method: searched
+source: npm registry search + packagist.org search + github.com/upsun
+packages:
+  - language: cli
+    registry: npm
+    name: upsun
+    version: 5.10.8
+    url: https://www.npmjs.com/package/upsun
+    install: npm install -g upsun
+    official: true
+    notes: Upsun CLI (platform binaries published as @upsun/cli-darwin, @upsun/cli-linux-x64, @upsun/cli-linux-arm64, @upsun/cli-win32-x64)
+  - language: cli
+    registry: homebrew
+    name: upsun/tap/upsun
+    url: https://github.com/upsun/homebrew-tap
+    install: brew install upsun/tap/upsun
+    official: true
+  - language: javascript
+    registry: npm
+    name: upsun-sdk-node
+    version: 0.7.0
+    url: https://www.npmjs.com/package/upsun-sdk-node
+    install: npm install upsun-sdk-node
+    official: true
+    notes: The official Upsun SDK for Node.js (github.com/upsun/upsun-sdk-node)
+  - language: php
+    registry: packagist
+    name: upsun/upsun-sdk-php
+    url: https://packagist.org/packages/upsun/upsun-sdk-php
+    install: composer require upsun/upsun-sdk-php
+    official: true
+    notes: The official Upsun SDK for PHP (BETA, github.com/upsun/upsun-sdk-php)
+  - language: typescript
+    registry: github
+    name: upsun/upsun-mcp-server
+    url: https://github.com/upsun/upsun-mcp-server
+    official: true
+    notes: MCP server for the Upsun cloud application platform
+  - language: typescript
+    registry: vscode-marketplace
+    name: upsun/vscode-upsun
+    url: https://github.com/upsun/vscode-upsun
+    official: true
+    notes: VS Code extension for Upsun
+  - language: python
+    registry: github
+    name: upsun/ai
+    url: https://github.com/upsun/ai
+    official: true
+    notes: Upsun AI agent toolkit (plugin, skill, and MCP); Claude Code marketplace at github.com/upsun/claude-marketplace

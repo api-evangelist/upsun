@@ -1,0 +1,97 @@
+generated: '2026-07-21'
+method: searched
+source: https://developer.upsun.com/changelog
+name: Upsun Changelog
+scheme: dated entries (no product version numbers; platform features + runtime image releases)
+feed: https://developer.upsun.com/changelog
+community: https://community.upsun.com/
+entries:
+  - date: '2026-06-08'
+    kind: feature
+    breaking: false
+    title: Task containers, now in prerelease access
+    highlights:
+      - Ephemeral, API-triggered containers for run-to-completion workloads (batch jobs, migrations, background AI agents)
+      - Available on Upsun Flex as a prerelease
+  - date: '2026-05-26'
+    kind: image
+    breaking: false
+    title: RabbitMQ 4.2 is now available
+    highlights:
+      - Quorum queues support single active consumer
+      - Stream performance and observability improvements
+  - date: '2026-05-13'
+    kind: image
+    breaking: true
+    title: Solr 10.0 is now available
+    highlights:
+      - Expanded vector search (scalar/binary quantized dense vectors), optional GPU acceleration
+      - Java 21 support, Jetty 12, OpenTelemetry migration
+      - Major release with breaking changes and removed legacy components
+  - date: '2026-04-24'
+    kind: system
+    breaking: false
+    title: New status page is live at status.upsun.com
+    highlights:
+      - Status page moved to status.upsun.com with new RSS feed; resubscribe required
+  - date: '2026-03-17'
+    kind: feature
+    breaking: false
+    title: CPU & RAM autoscaling for workers
+    highlights:
+      - Horizontal autoscaling for worker instances on Upsun Flex, configurable via Console, CLI, and API
+  - date: '2026-03-06'
+    kind: image
+    breaking: false
+    title: Elasticsearch Enterprise 8.19
+    highlights:
+      - ES|QL pipe-based querying, ELSER semantic search, BBQ vector memory reduction, logsdb mode
+      - Available as a Premium Service
+  - date: '2026-03-05'
+    kind: image
+    breaking: false
+    title: FrankenPHP support
+    highlights:
+      - High-performance alternative to PHP-FPM; Classic and Worker modes; Blackfire profiling supported
+  - date: '2026-03-04'
+    kind: image
+    breaking: false
+    title: .NET 10 (LTS) is now available
+    highlights:
+      - C# 14, ASP.NET Core 10, Native AOT, post-quantum cryptography support
+  - date: '2026-03-03'
+    kind: image
+    breaking: false
+    title: Real-time updates with Mercure
+    highlights:
+      - Managed Mercure Hub image for server-sent events with JWT authorization
+  - date: '2026-03-02'
+    kind: image
+    breaking: false
+    title: Nix 25.11 available for Composable Images
+    highlights:
+      - Latest Nix stable channel for Composable Image configurations
+  - date: '2026-02-10'
+    kind: image
+    breaking: false
+    title: Ruby 4.0 support
+    highlights:
+      - Ruby Box (experimental), ZJIT compiler, Ractor enhancements
+  - date: '2026-02-09'
+    kind: image
+    breaking: false
+    title: Python 3.14 now available
+    highlights:
+      - Concurrent subinterpreters, UUID6-8, t-strings
+  - date: '2026-02-02'
+    kind: feature
+    breaking: false
+    title: App-specific environment variables
+    highlights:
+      - Variables scoped to individual apps; scoped rebuild/redeploy; Console, CLI, and API on Upsun Flex
+  - date: '2025-12-19'
+    kind: image
+    breaking: false
+    title: Valkey 8.1
+    highlights:
+      - New hash table design, better I/O threading, improved replication and observability

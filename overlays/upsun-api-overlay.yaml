@@ -1,0 +1,29 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Upsun REST API
+  version: 1.0.0
+extends: openapi/upsun-openapi-original.json
+x-generated: '2026-07-21'
+x-method: generated
+actions:
+  - target: $.info
+    update:
+      x-apievangelist:
+        provider: upsun
+        profile: https://raw.githubusercontent.com/api-evangelist/upsun/refs/heads/main/apis.yml
+        documentation: https://developer.upsun.com/api-reference
+        authentication: https://developer.upsun.com/api/rest/authentication
+        changelog: https://developer.upsun.com/changelog
+        status: https://status.upsun.com/
+        mcp: https://mcp.upsun.com/mcp
+  - target: $.info
+    update:
+      x-error-format: RFC 9457 application/problem+json
+      x-pagination:
+        style: cursor
+        params: ['page[before]', 'page[after]', 'page[size]', 'sort']
+  - target: $.components.securitySchemes.OAuth2
+    update:
+      description: >-
+        Exchange a Console-issued API token for a 900-second bearer access
+        token via grant_type=api_token at https://auth.upsun.com/oauth2/token.

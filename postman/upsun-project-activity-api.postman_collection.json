@@ -1,0 +1,388 @@
+{
+  "info": {
+    "_postman_id": "646022b7-2707-4e5c-9a2a-7186d812d326",
+    "name": "Upsun.com Rest Add-ons Project Activity API",
+    "description": "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n\n\nContact Support:\n Name: Support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T03:24:56.000Z",
+    "updatedAt": "2026-07-28T03:24:57.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-646022b7-2707-4e5c-9a2a-7186d812d326"
+  },
+  "item": [
+    {
+      "name": "projects",
+      "item": [
+        {
+          "name": "{projectId}",
+          "item": [
+            {
+              "name": "activities",
+              "item": [
+                {
+                  "name": "{activityId}",
+                  "item": [
+                    {
+                      "name": "cancel",
+                      "item": [
+                        {
+                          "name": "Cancel a project activity",
+                          "id": "0d05b33e-208a-4b64-b089-655d4ded389e",
+                          "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                          },
+                          "request": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/projects/:projectId/activities/:activityId/cancel",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "projects",
+                                ":projectId",
+                                "activities",
+                                ":activityId",
+                                "cancel"
+                              ],
+                              "variable": [
+                                {
+                                  "id": "573ffa93-f185-4593-902c-d2e81956bbe5",
+                                  "key": "projectId",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                },
+                                {
+                                  "id": "2a4517f6-429e-4830-9281-a88346d5ab26",
+                                  "key": "activityId",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                }
+                              ]
+                            },
+                            "description": "Cancel a single activity as specified by an `id` returned by the\n[Get project activity log](#tag/Project-Activity%2Fpaths%2F~1projects~1%7BprojectId%7D~1activities%2Fget)\nendpoint.\n\nPlease note that not all activities are cancelable.\n"
+                          },
+                          "response": [
+                            {
+                              "id": "9696a1e4-b599-4fe3-8844-a876ecbc55a5",
+                              "name": "New Response",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: oauth2",
+                                    "key": "Authorization",
+                                    "value": "<token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/projects/:projectId/activities/:activityId/cancel",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "projects",
+                                    ":projectId",
+                                    "activities",
+                                    ":activityId",
+                                    "cancel"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "projectId"
+                                    },
+                                    {
+                                      "key": "activityId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Internal Server Error",
+                              "code": 500,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"status\": \"<string>\",\n  \"code\": \"<integer>\"\n}",
+                              "createdAt": "2026-07-28T03:24:57.000Z",
+                              "updatedAt": "2026-07-28T03:24:57.000Z",
+                              "uid": "35240-9696a1e4-b599-4fe3-8844-a876ecbc55a5"
+                            }
+                          ],
+                          "createdAt": "2026-07-28T03:24:57.000Z",
+                          "updatedAt": "2026-07-28T03:24:57.000Z",
+                          "uid": "35240-0d05b33e-208a-4b64-b089-655d4ded389e"
+                        }
+                      ],
+                      "id": "18238646-a784-4173-ae72-75ab92630a62",
+                      "createdAt": "2026-07-28T03:24:57.000Z",
+                      "updatedAt": "2026-07-28T03:24:57.000Z",
+                      "uid": "35240-18238646-a784-4173-ae72-75ab92630a62"
+                    },
+                    {
+                      "name": "Get a project activity log entry",
+                      "id": "c14ffe14-a447-41c5-8818-b70bd777ec53",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/activities/:activityId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "activities",
+                            ":activityId"
+                          ],
+                          "variable": [
+                            {
+                              "id": "fa6f5aec-1862-4d2c-9c18-9ed958569a3b",
+                              "key": "projectId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            },
+                            {
+                              "id": "4e9243d9-6859-4bfc-9867-e98b7163f695",
+                              "key": "activityId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        },
+                        "description": "Retrieve a single activity log entry as specified by an\n`id` returned by the\n[Get project activity log](#tag/Project-Activity%2Fpaths%2F~1projects~1%7BprojectId%7D~1activities%2Fget)\nendpoint. See the documentation on that endpoint for details about\nthe information this endpoint can return.\n"
+                      },
+                      "response": [
+                        {
+                          "id": "3396f5da-a8a9-471d-acaa-3699f073c58d",
+                          "name": "New Response",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/projects/:projectId/activities/:activityId",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "projects",
+                                ":projectId",
+                                "activities",
+                                ":activityId"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "projectId"
+                                },
+                                {
+                                  "key": "activityId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Internal Server Error",
+                          "code": 500,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"id\": \"<string>\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"type\": \"<string>\",\n  \"parameters\": {},\n  \"project\": \"<string>\",\n  \"state\": \"staged\",\n  \"result\": \"success\",\n  \"started_at\": \"<dateTime>\",\n  \"completed_at\": \"<dateTime>\",\n  \"completion_percent\": \"<integer>\",\n  \"cancelled_at\": \"<dateTime>\",\n  \"timings\": {\n    \"in01\": \"<float>\"\n  },\n  \"log\": \"<string>\",\n  \"payload\": {},\n  \"description\": \"<string>\",\n  \"text\": \"<string>\",\n  \"expires_at\": \"<dateTime>\",\n  \"commands\": [\n    {\n      \"app\": \"<string>\",\n      \"type\": \"<string>\",\n      \"exit_code\": \"<integer>\"\n    },\n    {\n      \"app\": \"<string>\",\n      \"type\": \"<string>\",\n      \"exit_code\": \"<integer>\"\n    }\n  ],\n  \"integration\": \"<string>\",\n  \"environments\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                          "createdAt": "2026-07-28T03:24:57.000Z",
+                          "updatedAt": "2026-07-28T03:24:57.000Z",
+                          "uid": "35240-3396f5da-a8a9-471d-acaa-3699f073c58d"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:24:57.000Z",
+                      "updatedAt": "2026-07-28T03:24:57.000Z",
+                      "uid": "35240-c14ffe14-a447-41c5-8818-b70bd777ec53"
+                    }
+                  ],
+                  "id": "92b58283-14f2-4d31-84ad-c108d04e74ef",
+                  "createdAt": "2026-07-28T03:24:57.000Z",
+                  "updatedAt": "2026-07-28T03:24:57.000Z",
+                  "uid": "35240-92b58283-14f2-4d31-84ad-c108d04e74ef"
+                },
+                {
+                  "name": "Get project activity log",
+                  "id": "15dff2d7-1b40-403e-a79e-3c4431ba618c",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/projects/:projectId/activities",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "projects",
+                        ":projectId",
+                        "activities"
+                      ],
+                      "variable": [
+                        {
+                          "id": "c3752857-a2cc-47f2-afc3-b58fce12d68d",
+                          "key": "projectId",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    },
+                    "description": "Retrieve a project's activity log including logging actions in all\nenvironments within a project. This returns a list of objects\nwith records of actions such as:\n\n- Commits being pushed to the repository\n- A new environment being branched out from the specified environment\n- A snapshot being created of the specified environment\n\nThe object includes a timestamp of when the action occurred\n(`created_at`), when the action concluded (`updated_at`),\nthe current `state` of the action, the action's completion\npercentage (`completion_percent`), the `environments` it\napplies to and when the activity expires (`expires_at`).\n\nThere are other related information in the `payload`.\nThe contents of the `payload` varies based on the `type` of the\nactivity. For example:\n\n- An `environment.branch` action's `payload` can contain objects\nrepresenting the environment's `parent` environment and the\nbranching action's `outcome`.\n\n- An `environment.push` action's `payload` can contain objects\nrepresenting the `environment`, the specific `commits` included in\nthe push, and the `user` who pushed.\n\nExpired activities are removed from the project activity log, except\nthe last 100 expired objects provided they are not of type `environment.cron`\nor `environment.backup`.\n"
+                  },
+                  "response": [
+                    {
+                      "id": "85322d93-1aac-485b-961f-0e7cc61c47f3",
+                      "name": "New Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/activities",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "activities"
+                          ],
+                          "variable": [
+                            {
+                              "key": "projectId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "[\n  {\n    \"id\": \"<string>\",\n    \"created_at\": \"<dateTime>\",\n    \"updated_at\": \"<dateTime>\",\n    \"type\": \"<string>\",\n    \"parameters\": {},\n    \"project\": \"<string>\",\n    \"state\": \"complete\",\n    \"result\": \"success\",\n    \"started_at\": \"<dateTime>\",\n    \"completed_at\": \"<dateTime>\",\n    \"completion_percent\": \"<integer>\",\n    \"cancelled_at\": \"<dateTime>\",\n    \"timings\": {\n      \"nostrud_0\": \"<float>\"\n    },\n    \"log\": \"<string>\",\n    \"payload\": {},\n    \"description\": \"<string>\",\n    \"text\": \"<string>\",\n    \"expires_at\": \"<dateTime>\",\n    \"commands\": [\n      {\n        \"app\": \"<string>\",\n        \"type\": \"<string>\",\n        \"exit_code\": \"<integer>\"\n      },\n      {\n        \"app\": \"<string>\",\n        \"type\": \"<string>\",\n        \"exit_code\": \"<integer>\"\n      }\n    ],\n    \"integration\": \"<string>\",\n    \"environments\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  {\n    \"id\": \"<string>\",\n    \"created_at\": \"<dateTime>\",\n    \"updated_at\": \"<dateTime>\",\n    \"type\": \"<string>\",\n    \"parameters\": {},\n    \"project\": \"<string>\",\n    \"state\": \"pending\",\n    \"result\": \"failure\",\n    \"started_at\": \"<dateTime>\",\n    \"completed_at\": \"<dateTime>\",\n    \"completion_percent\": \"<integer>\",\n    \"cancelled_at\": \"<dateTime>\",\n    \"timings\": {\n      \"pariatur5\": \"<float>\"\n    },\n    \"log\": \"<string>\",\n    \"payload\": {},\n    \"description\": \"<string>\",\n    \"text\": \"<string>\",\n    \"expires_at\": \"<dateTime>\",\n    \"commands\": [\n      {\n        \"app\": \"<string>\",\n        \"type\": \"<string>\",\n        \"exit_code\": \"<integer>\"\n      },\n      {\n        \"app\": \"<string>\",\n        \"type\": \"<string>\",\n        \"exit_code\": \"<integer>\"\n      }\n    ],\n    \"integration\": \"<string>\",\n    \"environments\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n]",
+                      "createdAt": "2026-07-28T03:24:57.000Z",
+                      "updatedAt": "2026-07-28T03:24:57.000Z",
+                      "uid": "35240-85322d93-1aac-485b-961f-0e7cc61c47f3"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:24:57.000Z",
+                  "updatedAt": "2026-07-28T03:24:57.000Z",
+                  "uid": "35240-15dff2d7-1b40-403e-a79e-3c4431ba618c"
+                }
+              ],
+              "id": "4806d0d3-0a90-44d1-8db8-995afe0d258f",
+              "createdAt": "2026-07-28T03:24:57.000Z",
+              "updatedAt": "2026-07-28T03:24:57.000Z",
+              "uid": "35240-4806d0d3-0a90-44d1-8db8-995afe0d258f"
+            }
+          ],
+          "id": "bc698133-382f-4d60-a7c9-3e9565485338",
+          "createdAt": "2026-07-28T03:24:57.000Z",
+          "updatedAt": "2026-07-28T03:24:57.000Z",
+          "uid": "35240-bc698133-382f-4d60-a7c9-3e9565485338"
+        }
+      ],
+      "id": "a7256ab2-3a84-4005-b7a4-ed0a2abd141f",
+      "createdAt": "2026-07-28T03:24:57.000Z",
+      "updatedAt": "2026-07-28T03:24:57.000Z",
+      "uid": "35240-a7256ab2-3a84-4005-b7a4-ed0a2abd141f"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "redirect_uri",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://auth.api.platform.sh/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "schemes",
+      "value": "https"
+    },
+    {
+      "key": "baseUrl",
+      "value": "{{schemes}}://api.upsun.com"
+    }
+  ]
+}

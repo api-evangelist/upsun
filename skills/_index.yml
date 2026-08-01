@@ -1,0 +1,19 @@
+generated: '2026-07-21'
+method: generated
+skills:
+  - file: upsun-manage-environments.md
+    name: Manage Upsun preview environments
+    api: openapi/upsun-openapi-original.json
+    operations: [list-projects-environments, get-environment, branch-environment, merge-environment, pause-environment, resume-environment, redeploy-environment, synchronize-environment]
+  - file: upsun-backup-and-restore.md
+    name: Back up and restore an Upsun environment
+    api: openapi/upsun-openapi-original.json
+    operations: [backup-environment, list-projects-environments-backups, get-projects-environments-backups, restore-backup, delete-projects-environments-backups]
+  - file: upsun-custom-domain.md
+    name: Add a custom domain to an Upsun project
+    api: openapi/upsun-openapi-original.json
+    operations: [list-projects-domains, create-projects-domains, get-projects-domains, create-projects-environments-domains, list-projects-certificates, create-projects-certificates]
+  - file: upsun-api-token-onboarding.md
+    name: Onboard with an Upsun API token
+    api: openapi/upsun-openapi-original.json
+    operations: [list-api-tokens, create-api-token, get-api-token, delete-api-token]

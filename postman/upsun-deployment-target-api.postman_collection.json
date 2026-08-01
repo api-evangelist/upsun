@@ -1,0 +1,623 @@
+{
+  "info": {
+    "_postman_id": "039f24d3-f26c-4de4-ac1e-5d3190f7a13d",
+    "name": "Upsun.com Rest Add-ons Deployment Target API",
+    "description": "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n\n\nContact Support:\n Name: Support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T03:24:05.000Z",
+    "updatedAt": "2026-07-28T03:24:06.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-039f24d3-f26c-4de4-ac1e-5d3190f7a13d"
+  },
+  "item": [
+    {
+      "name": "projects",
+      "item": [
+        {
+          "name": "{projectId}",
+          "item": [
+            {
+              "name": "deployments",
+              "item": [
+                {
+                  "name": "{deploymentTargetConfigurationId}",
+                  "item": [
+                    {
+                      "name": "Get a single project deployment target",
+                      "id": "6dacf499-efff-44f1-8c3a-fdeb1f263459",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/deployments/:deploymentTargetConfigurationId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "deployments",
+                            ":deploymentTargetConfigurationId"
+                          ],
+                          "variable": [
+                            {
+                              "id": "01df4ffb-be91-4239-a91b-4aee88480d1d",
+                              "key": "projectId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            },
+                            {
+                              "id": "3093eeff-5c6d-48ce-9089-9a1cca925cf9",
+                              "key": "deploymentTargetConfigurationId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        },
+                        "description": "Get a single deployment target configuration of a project.\n"
+                      },
+                      "response": [
+                        {
+                          "id": "3f7f796f-a576-4d03-829a-290e787a81f9",
+                          "name": "New Response",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/projects/:projectId/deployments/:deploymentTargetConfigurationId",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "projects",
+                                ":projectId",
+                                "deployments",
+                                ":deploymentTargetConfigurationId"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "projectId"
+                                },
+                                {
+                                  "key": "deploymentTargetConfigurationId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Internal Server Error",
+                          "code": 500,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"type\": \"local\",\n  \"name\": \"<string>\",\n  \"deploy_host\": \"<string>\",\n  \"deploy_port\": \"<integer>\",\n  \"ssh_host\": \"<string>\",\n  \"hosts\": [\n    {\n      \"id\": \"<string>\",\n      \"type\": \"satellite\",\n      \"services\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"id\": \"<string>\",\n      \"type\": \"satellite\",\n      \"services\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"auto_mounts\": \"<boolean>\",\n  \"excluded_mounts\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"enforced_mounts\": {},\n  \"auto_crons\": \"<boolean>\",\n  \"auto_nginx\": \"<boolean>\",\n  \"maintenance_mode\": \"<boolean>\",\n  \"guardrails_phase\": \"<integer>\",\n  \"id\": \"<string>\"\n}",
+                          "createdAt": "2026-07-28T03:24:06.000Z",
+                          "updatedAt": "2026-07-28T03:24:06.000Z",
+                          "uid": "35240-3f7f796f-a576-4d03-829a-290e787a81f9"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:24:06.000Z",
+                      "updatedAt": "2026-07-28T03:24:06.000Z",
+                      "uid": "35240-6dacf499-efff-44f1-8c3a-fdeb1f263459"
+                    },
+                    {
+                      "name": "Update a project deployment",
+                      "id": "23fa393a-114d-4153-8135-1a1ef30eb5bf",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"type\": \"dedicated\",\n  \"name\": \"<string>\",\n  \"enforced_mounts\": {}\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/deployments/:deploymentTargetConfigurationId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "deployments",
+                            ":deploymentTargetConfigurationId"
+                          ],
+                          "variable": [
+                            {
+                              "id": "3deef6e6-d448-4b79-95db-c5e93c23c450",
+                              "key": "projectId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            },
+                            {
+                              "id": "a336973b-66d2-4924-b2bc-356d919bc66a",
+                              "key": "deploymentTargetConfigurationId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "f1572b9e-2af2-456f-b41b-23cba97e1b5f",
+                          "name": "New Response",
+                          "originalRequest": {
+                            "method": "PATCH",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"type\": \"dedicated\",\n  \"name\": \"<string>\",\n  \"enforced_mounts\": {}\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/projects/:projectId/deployments/:deploymentTargetConfigurationId",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "projects",
+                                ":projectId",
+                                "deployments",
+                                ":deploymentTargetConfigurationId"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "projectId"
+                                },
+                                {
+                                  "key": "deploymentTargetConfigurationId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Internal Server Error",
+                          "code": 500,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"status\": \"<string>\",\n  \"code\": \"<integer>\"\n}",
+                          "createdAt": "2026-07-28T03:24:06.000Z",
+                          "updatedAt": "2026-07-28T03:24:06.000Z",
+                          "uid": "35240-f1572b9e-2af2-456f-b41b-23cba97e1b5f"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:24:06.000Z",
+                      "updatedAt": "2026-07-28T03:24:06.000Z",
+                      "uid": "35240-23fa393a-114d-4153-8135-1a1ef30eb5bf"
+                    },
+                    {
+                      "name": "Delete a single project deployment target",
+                      "id": "9dc11aa9-4feb-4594-a13a-38c3b498873e",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/deployments/:deploymentTargetConfigurationId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "deployments",
+                            ":deploymentTargetConfigurationId"
+                          ],
+                          "variable": [
+                            {
+                              "id": "42d083cb-70d5-43a7-a784-79e80b49998a",
+                              "key": "projectId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            },
+                            {
+                              "id": "62e97f02-b470-41d7-9633-7a82fba35d7d",
+                              "key": "deploymentTargetConfigurationId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        },
+                        "description": "Delete a single deployment target configuration associated with a specific project.\n"
+                      },
+                      "response": [
+                        {
+                          "id": "426b1266-6a7e-4c37-b818-12e51ff2ef3b",
+                          "name": "New Response",
+                          "originalRequest": {
+                            "method": "DELETE",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/projects/:projectId/deployments/:deploymentTargetConfigurationId",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "projects",
+                                ":projectId",
+                                "deployments",
+                                ":deploymentTargetConfigurationId"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "projectId"
+                                },
+                                {
+                                  "key": "deploymentTargetConfigurationId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Internal Server Error",
+                          "code": 500,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"status\": \"<string>\",\n  \"code\": \"<integer>\"\n}",
+                          "createdAt": "2026-07-28T03:24:06.000Z",
+                          "updatedAt": "2026-07-28T03:24:06.000Z",
+                          "uid": "35240-426b1266-6a7e-4c37-b818-12e51ff2ef3b"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:24:06.000Z",
+                      "updatedAt": "2026-07-28T03:24:06.000Z",
+                      "uid": "35240-9dc11aa9-4feb-4594-a13a-38c3b498873e"
+                    }
+                  ],
+                  "id": "37e38f42-3cce-46e6-9571-f8b7f22ee440",
+                  "createdAt": "2026-07-28T03:24:06.000Z",
+                  "updatedAt": "2026-07-28T03:24:06.000Z",
+                  "uid": "35240-37e38f42-3cce-46e6-9571-f8b7f22ee440"
+                },
+                {
+                  "name": "Get project deployment target info",
+                  "id": "a30d92ba-55e2-46af-aa6d-f1ecd372d112",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/projects/:projectId/deployments",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "projects",
+                        ":projectId",
+                        "deployments"
+                      ],
+                      "variable": [
+                        {
+                          "id": "b3b909a0-06c3-4558-8728-29b4f713ad9c",
+                          "key": "projectId",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    },
+                    "description": "The deployment target information for the project.\n"
+                  },
+                  "response": [
+                    {
+                      "id": "995e67f7-592e-4d7f-817a-6e4df17e9215",
+                      "name": "New Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/deployments",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "deployments"
+                          ],
+                          "variable": [
+                            {
+                              "key": "projectId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "[\n  {\n    \"type\": \"dedicated\",\n    \"name\": \"<string>\",\n    \"deploy_host\": \"<string>\",\n    \"deploy_port\": \"<integer>\",\n    \"ssh_host\": \"<string>\",\n    \"hosts\": [\n      {\n        \"id\": \"<string>\",\n        \"type\": \"core\",\n        \"services\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      {\n        \"id\": \"<string>\",\n        \"type\": \"satellite\",\n        \"services\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      }\n    ],\n    \"auto_mounts\": \"<boolean>\",\n    \"excluded_mounts\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"enforced_mounts\": {},\n    \"auto_crons\": \"<boolean>\",\n    \"auto_nginx\": \"<boolean>\",\n    \"maintenance_mode\": \"<boolean>\",\n    \"guardrails_phase\": \"<integer>\",\n    \"id\": \"<string>\"\n  },\n  {\n    \"type\": \"dedicated\",\n    \"name\": \"<string>\",\n    \"deploy_host\": \"<string>\",\n    \"deploy_port\": \"<integer>\",\n    \"ssh_host\": \"<string>\",\n    \"hosts\": [\n      {\n        \"id\": \"<string>\",\n        \"type\": \"satellite\",\n        \"services\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      {\n        \"id\": \"<string>\",\n        \"type\": \"satellite\",\n        \"services\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      }\n    ],\n    \"auto_mounts\": \"<boolean>\",\n    \"excluded_mounts\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"enforced_mounts\": {},\n    \"auto_crons\": \"<boolean>\",\n    \"auto_nginx\": \"<boolean>\",\n    \"maintenance_mode\": \"<boolean>\",\n    \"guardrails_phase\": \"<integer>\",\n    \"id\": \"<string>\"\n  }\n]",
+                      "createdAt": "2026-07-28T03:24:06.000Z",
+                      "updatedAt": "2026-07-28T03:24:06.000Z",
+                      "uid": "35240-995e67f7-592e-4d7f-817a-6e4df17e9215"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:24:06.000Z",
+                  "updatedAt": "2026-07-28T03:24:06.000Z",
+                  "uid": "35240-a30d92ba-55e2-46af-aa6d-f1ecd372d112"
+                },
+                {
+                  "name": "Create a project deployment target",
+                  "id": "58f2d32a-e6da-4658-aa36-a1d2d4d6515f",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"type\": \"dedicated\",\n  \"name\": \"<string>\",\n  \"enforced_mounts\": {}\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/projects/:projectId/deployments",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "projects",
+                        ":projectId",
+                        "deployments"
+                      ],
+                      "variable": [
+                        {
+                          "id": "ae28be53-feda-4aed-8a47-f1f77331364f",
+                          "key": "projectId",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    },
+                    "description": "Set the deployment target information for a project.\n"
+                  },
+                  "response": [
+                    {
+                      "id": "6508b352-4212-4404-876d-6e19ee677e05",
+                      "name": "New Response",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"type\": \"dedicated\",\n  \"name\": \"<string>\",\n  \"enforced_mounts\": {}\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/deployments",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "deployments"
+                          ],
+                          "variable": [
+                            {
+                              "key": "projectId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"code\": \"<integer>\"\n}",
+                      "createdAt": "2026-07-28T03:24:06.000Z",
+                      "updatedAt": "2026-07-28T03:24:06.000Z",
+                      "uid": "35240-6508b352-4212-4404-876d-6e19ee677e05"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:24:06.000Z",
+                  "updatedAt": "2026-07-28T03:24:06.000Z",
+                  "uid": "35240-58f2d32a-e6da-4658-aa36-a1d2d4d6515f"
+                }
+              ],
+              "id": "96561e3e-f08a-4c3f-bd05-58be8d3902ce",
+              "createdAt": "2026-07-28T03:24:06.000Z",
+              "updatedAt": "2026-07-28T03:24:06.000Z",
+              "uid": "35240-96561e3e-f08a-4c3f-bd05-58be8d3902ce"
+            }
+          ],
+          "id": "337b872a-dc44-45e9-b4e0-4b557f33e938",
+          "createdAt": "2026-07-28T03:24:06.000Z",
+          "updatedAt": "2026-07-28T03:24:06.000Z",
+          "uid": "35240-337b872a-dc44-45e9-b4e0-4b557f33e938"
+        }
+      ],
+      "id": "267a6979-5348-4df2-9cfd-2ea7a7a70e20",
+      "createdAt": "2026-07-28T03:24:06.000Z",
+      "updatedAt": "2026-07-28T03:24:06.000Z",
+      "uid": "35240-267a6979-5348-4df2-9cfd-2ea7a7a70e20"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "redirect_uri",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://auth.api.platform.sh/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "schemes",
+      "value": "https"
+    },
+    {
+      "key": "baseUrl",
+      "value": "{{schemes}}://api.upsun.com"
+    }
+  ]
+}

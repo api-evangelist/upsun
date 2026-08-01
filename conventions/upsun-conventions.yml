@@ -1,0 +1,38 @@
+generated: '2026-07-21'
+method: searched
+source: openapi/upsun-openapi-original.json + https://developer.upsun.com/api/rest/authentication + https://developer.upsun.com/docs/integrations/activity/webhooks
+authentication:
+  style: OAuth2 bearer tokens; API token exchanged for a 900-second access token via grant_type=api_token at https://auth.upsun.com/oauth2/token
+  header: 'Authorization: Bearer <access_token>'
+  see: authentication/upsun-authentication.yml
+base_url: https://api.upsun.com
+idempotency:
+  supported: false
+  notes: No Idempotency-Key header or idempotency contract documented in the OpenAPI or REST docs.
+pagination:
+  style: cursor
+  params:
+    - 'page[before]'
+    - 'page[after]'
+    - 'page[size]'
+  sorting: sort query parameter (14 list operations)
+  filtering: 'JSON:API-style filter[...] query parameters (e.g. filter[status], filter[updated_at], filter[organization_id])'
+  source: derived from openapi/upsun-openapi-original.json query parameters
+errors:
+  envelope: RFC 9457 Problem Details (application/problem+json) on 167 declared error responses
+  see: errors/upsun-problem-types.yml
+versioning:
+  scheme: unversioned REST API (no version segment in paths); platform changes announced on the dated changelog
+  see: lifecycle/upsun-lifecycle.yml
+webhooks:
+  signing: X-JWS-Signature header, JWS HS256 with detached unencoded payload (RFC 7797) when a shared key is set
+  see: asyncapi/upsun-activity-webhooks.yml
+request_tracing:
+  documented: false
+rate_limits:
+  documented: false
+  notes: No rate-limit headers or policy documented in the OpenAPI or developer docs surveyed.
+field_expansion:
+  documented: false
+metadata:
+  documented: false

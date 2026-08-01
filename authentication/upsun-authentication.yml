@@ -1,0 +1,48 @@
+generated: '2026-07-21'
+method: searched
+source: openapi/upsun-openapi-original.json
+docs: https://developer.upsun.com/api/rest/authentication
+summary:
+  types:
+  - oauth2
+  oauth2_flows:
+  - authorizationCode
+  - clientCredentials
+  api_token_exchange: true
+schemes:
+- name: OAuth2
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://auth.api.platform.sh/oauth2/authorize
+    tokenUrl: https://auth.api.platform.sh/oauth2/token
+    scopes: 0
+  sources:
+  - openapi/upsun-openapi-original.json
+- name: OAuth2Admin
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://auth.api.platform.sh/oauth2/token
+    scopes: 1
+  sources:
+  - openapi/upsun-openapi-original.json
+token_exchange:
+  description: >-
+    The Upsun REST API uses OAuth2 bearer tokens. Users create an API token in
+    the Console, then exchange it for a short-lived access token via
+    grant_type=api_token at https://auth.upsun.com/oauth2/token (HTTP basic
+    user platform-api-user). The bearer access token expires in 900 seconds
+    (15 minutes); clients re-exchange on 401 Unauthorized. All API requests go
+    to https://api.upsun.com.
+  exchange_endpoint: https://auth.upsun.com/oauth2/token
+  grant_type: api_token
+  token_type: bearer
+  expires_in_seconds: 900
+oidc_discovery:
+  url: https://auth.upsun.com/.well-known/openid-configuration
+  grant_types_supported: [authorization_code, client_credentials]
+  code_challenge_methods_supported: [S256]
+  id_token_signing_alg: ES256
+  resource_indicators_supported: true
+mfa_docs: https://developer.upsun.com/docs/administration/security/mfa

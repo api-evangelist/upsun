@@ -1,0 +1,31 @@
+generated: '2026-07-21'
+method: searched
+hosts:
+  - host: https://upsun.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        file: upsun-security.txt
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: https://auth.upsun.com
+    documents:
+      - path: /.well-known/openid-configuration
+        status: 200
+        file: upsun-openid-configuration.json
+  - host: https://api.upsun.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+notes: >-
+  security.txt (RFC 9116) is published on the website root with contact,
+  policy (responsible disclosure) and a hall of fame. OpenID Connect
+  discovery is published on auth.upsun.com (authorization_code +
+  client_credentials grants, PKCE S256, ES256 id tokens, RFC 8707
+  resource indicators supported).

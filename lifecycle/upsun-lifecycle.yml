@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: searched
+source: https://developer.upsun.com/changelog + https://status.upsun.com/ + openapi/upsun-openapi-original.json
+versioning:
+  scheme: unversioned REST API (no version segment in paths); dated changelog announces platform changes
+  docs: https://developer.upsun.com/api-reference
+status_page: https://status.upsun.com/
+status_page_notes: New status page live since 2026-04-24 with RSS feed, region/system health, and maintenance events (per changelog).
+changelog: https://developer.upsun.com/changelog
+deprecation:
+  policy_url: null
+  sunset_header: null
+deprecated_operations:
+  - operation: 'GET /me'
+    source: openapi/upsun-openapi-original.json
+    note: marked deprecated:true in the OpenAPI

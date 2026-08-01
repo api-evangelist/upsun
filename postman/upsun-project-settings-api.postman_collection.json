@@ -1,0 +1,284 @@
+{
+  "info": {
+    "_postman_id": "9c0eefe8-e1a3-4c02-81b0-2414fb447194",
+    "name": "Upsun.com Rest Add-ons Project Settings API",
+    "description": "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n\n\nContact Support:\n Name: Support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T03:24:59.000Z",
+    "updatedAt": "2026-07-28T03:25:00.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-9c0eefe8-e1a3-4c02-81b0-2414fb447194"
+  },
+  "item": [
+    {
+      "name": "projects",
+      "item": [
+        {
+          "name": "{projectId}",
+          "item": [
+            {
+              "name": "settings",
+              "item": [
+                {
+                  "name": "Get list of project settings",
+                  "id": "2e76590d-e994-4627-a3bb-9d7876b407ff",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/projects/:projectId/settings",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "projects",
+                        ":projectId",
+                        "settings"
+                      ],
+                      "variable": [
+                        {
+                          "id": "bf780ee8-f865-48f6-91c8-7fb88aca0011",
+                          "key": "projectId",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    },
+                    "description": "Retrieve the global settings for a project."
+                  },
+                  "response": [
+                    {
+                      "id": "23c4c8c0-628c-4401-8936-a46113d9180c",
+                      "name": "New Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/settings",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "settings"
+                          ],
+                          "variable": [
+                            {
+                              "key": "projectId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"initialize\": {},\n  \"product_name\": \"<string>\",\n  \"product_code\": \"<string>\",\n  \"ui_uri_template\": \"<string>\",\n  \"variables_prefix\": \"<string>\",\n  \"bot_email\": \"<string>\",\n  \"application_config_file\": \"<string>\",\n  \"project_config_dir\": \"<string>\",\n  \"use_drupal_defaults\": \"<boolean>\",\n  \"use_legacy_subdomains\": \"<boolean>\",\n  \"development_service_size\": \"2XL\",\n  \"development_application_size\": \"L\",\n  \"enable_certificate_provisioning\": \"<boolean>\",\n  \"certificate_style\": \"ecdsa\",\n  \"certificate_renewal_activity\": \"<boolean>\",\n  \"development_domain_template\": \"<string>\",\n  \"enable_state_api_deployments\": \"<boolean>\",\n  \"temporary_disk_size\": \"<integer>\",\n  \"local_disk_size\": \"<integer>\",\n  \"cron_minimum_interval\": \"<integer>\",\n  \"cron_maximum_jitter\": \"<integer>\",\n  \"cron_production_expiry_interval\": \"<integer>\",\n  \"cron_non_production_expiry_interval\": \"<integer>\",\n  \"concurrency_limits\": {\n    \"minim_49e\": \"<integer>\",\n    \"magna_8\": \"<integer>\"\n  },\n  \"flexible_build_cache\": \"<boolean>\",\n  \"strict_configuration\": \"<boolean>\",\n  \"has_sleepy_crons\": \"<boolean>\",\n  \"crons_in_git\": \"<boolean>\",\n  \"custom_error_template\": \"<string>\",\n  \"app_error_page_template\": \"<string>\",\n  \"environment_name_strategy\": \"hash\",\n  \"data_retention\": {\n    \"amet_e3\": {\n      \"max_backups\": \"<integer>\",\n      \"default_config\": {\n        \"manual_count\": \"<integer>\",\n        \"schedule\": [\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          },\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          }\n        ]\n      }\n    },\n    \"adipisicing9\": {\n      \"max_backups\": \"<integer>\",\n      \"default_config\": {\n        \"manual_count\": \"<integer>\",\n        \"schedule\": [\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          },\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          }\n        ]\n      }\n    }\n  },\n  \"enable_codesource_integration_push\": \"<boolean>\",\n  \"enforce_mfa\": \"<boolean>\",\n  \"systemd\": \"<boolean>\",\n  \"router_gen2\": \"<boolean>\",\n  \"build_resources\": {\n    \"cpu\": \"<float>\",\n    \"memory\": \"<integer>\"\n  },\n  \"outbound_restrictions_default_policy\": \"allow\",\n  \"self_upgrade\": \"<boolean>\",\n  \"self_upgrade_latest_major\": \"<boolean>\",\n  \"additional_hosts\": {\n    \"dolor7e0\": \"<string>\",\n    \"adipisicing7d\": \"<string>\",\n    \"dolor_76d\": \"<string>\"\n  },\n  \"max_allowed_routes\": \"<integer>\",\n  \"max_allowed_redirects_paths\": \"<integer>\",\n  \"enable_incremental_backups\": \"<boolean>\",\n  \"sizing_api_enabled\": \"<boolean>\",\n  \"enable_cache_grace_period\": \"<boolean>\",\n  \"enable_zero_downtime_deployments\": \"<boolean>\",\n  \"enable_admin_agent\": \"<boolean>\",\n  \"certifier_url\": \"<string>\",\n  \"centralized_permissions\": \"<boolean>\",\n  \"glue_server_max_request_size\": \"<integer>\",\n  \"persistent_endpoints_ssh\": \"<boolean>\",\n  \"persistent_endpoints_ssl_certificates\": \"<boolean>\",\n  \"enable_disk_health_monitoring\": \"<boolean>\",\n  \"enable_paused_environments\": \"<boolean>\",\n  \"enable_unified_configuration\": \"<boolean>\",\n  \"enable_routes_tracing\": \"<boolean>\",\n  \"image_deployment_validation\": \"<boolean>\",\n  \"support_generic_images\": \"<boolean>\",\n  \"enable_github_app_token_exchange\": \"<boolean>\",\n  \"continuous_profiling\": {\n    \"supported_runtimes\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"disable_agent_error_reporter\": \"<boolean>\",\n  \"requires_domain_ownership\": \"<boolean>\",\n  \"enable_guaranteed_resources\": \"<boolean>\",\n  \"git_server\": {\n    \"push_size_hard_limit\": \"<integer>\"\n  },\n  \"activity_logs_max_size\": \"<integer>\",\n  \"allow_manual_deployments\": \"<boolean>\",\n  \"allow_rolling_deployments\": \"<boolean>\",\n  \"allow_burst\": \"<boolean>\",\n  \"router_resources\": {\n    \"baseline_cpu\": \"<float>\",\n    \"baseline_memory\": \"<integer>\",\n    \"max_cpu\": \"<float>\",\n    \"max_memory\": \"<integer>\"\n  }\n}",
+                      "createdAt": "2026-07-28T03:25:00.000Z",
+                      "updatedAt": "2026-07-28T03:25:00.000Z",
+                      "uid": "35240-23c4c8c0-628c-4401-8936-a46113d9180c"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:25:00.000Z",
+                  "updatedAt": "2026-07-28T03:25:00.000Z",
+                  "uid": "35240-2e76590d-e994-4627-a3bb-9d7876b407ff"
+                },
+                {
+                  "name": "Update a project setting",
+                  "id": "1801f6ae-f03d-493c-906e-dc18cb8b0a85",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"initialize\": {},\n  \"data_retention\": {\n    \"et_\": {\n      \"default_config\": {\n        \"manual_count\": \"<integer>\",\n        \"schedule\": [\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          },\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          }\n        ]\n      },\n      \"max_backups\": \"<integer>\"\n    },\n    \"laboris_b\": {\n      \"default_config\": {\n        \"manual_count\": \"<integer>\",\n        \"schedule\": [\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          },\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          }\n        ]\n      },\n      \"max_backups\": \"<integer>\"\n    }\n  },\n  \"build_resources\": {\n    \"cpu\": \"<float>\",\n    \"memory\": \"<integer>\"\n  }\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/projects/:projectId/settings",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "projects",
+                        ":projectId",
+                        "settings"
+                      ],
+                      "variable": [
+                        {
+                          "id": "3a96acff-e62e-4cc7-85dc-23b1bd4a0b9f",
+                          "key": "projectId",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    },
+                    "description": "Update one or more project-level settings."
+                  },
+                  "response": [
+                    {
+                      "id": "a88b0ad5-dcc4-4543-9596-ceb7bcbb5403",
+                      "name": "New Response",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"initialize\": {},\n  \"data_retention\": {\n    \"et_\": {\n      \"default_config\": {\n        \"manual_count\": \"<integer>\",\n        \"schedule\": [\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          },\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          }\n        ]\n      },\n      \"max_backups\": \"<integer>\"\n    },\n    \"laboris_b\": {\n      \"default_config\": {\n        \"manual_count\": \"<integer>\",\n        \"schedule\": [\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          },\n          {\n            \"interval\": \"<string>\",\n            \"count\": \"<integer>\"\n          }\n        ]\n      },\n      \"max_backups\": \"<integer>\"\n    }\n  },\n  \"build_resources\": {\n    \"cpu\": \"<float>\",\n    \"memory\": \"<integer>\"\n  }\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/projects/:projectId/settings",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "projects",
+                            ":projectId",
+                            "settings"
+                          ],
+                          "variable": [
+                            {
+                              "key": "projectId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"code\": \"<integer>\"\n}",
+                      "createdAt": "2026-07-28T03:25:00.000Z",
+                      "updatedAt": "2026-07-28T03:25:00.000Z",
+                      "uid": "35240-a88b0ad5-dcc4-4543-9596-ceb7bcbb5403"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:25:00.000Z",
+                  "updatedAt": "2026-07-28T03:25:00.000Z",
+                  "uid": "35240-1801f6ae-f03d-493c-906e-dc18cb8b0a85"
+                }
+              ],
+              "id": "85a56c7b-1a44-4579-be2f-a876dd3df370",
+              "createdAt": "2026-07-28T03:25:00.000Z",
+              "updatedAt": "2026-07-28T03:25:00.000Z",
+              "uid": "35240-85a56c7b-1a44-4579-be2f-a876dd3df370"
+            }
+          ],
+          "id": "2578c49c-3737-4bc5-9e74-c94465b560c6",
+          "createdAt": "2026-07-28T03:25:00.000Z",
+          "updatedAt": "2026-07-28T03:25:00.000Z",
+          "uid": "35240-2578c49c-3737-4bc5-9e74-c94465b560c6"
+        }
+      ],
+      "id": "43b4ce1f-5d8a-4801-b51d-5f5d6244396f",
+      "createdAt": "2026-07-28T03:25:00.000Z",
+      "updatedAt": "2026-07-28T03:25:00.000Z",
+      "uid": "35240-43b4ce1f-5d8a-4801-b51d-5f5d6244396f"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "redirect_uri",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://auth.api.platform.sh/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "schemes",
+      "value": "https"
+    },
+    {
+      "key": "baseUrl",
+      "value": "{{schemes}}://api.upsun.com"
+    }
+  ]
+}

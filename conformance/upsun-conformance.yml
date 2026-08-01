@@ -1,0 +1,35 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/upsun-openapi-original.json + https://auth.upsun.com/.well-known/openid-configuration + https://upsun.com/.well-known/security.txt
+standards:
+  - id: oauth2
+    conforms: true
+    evidence: OpenAPI declares oauth2 securitySchemes (OAuth2 authorizationCode, OAuth2Admin clientCredentials) against auth.api.platform.sh
+  - id: oidc
+    conforms: true
+    evidence: OpenID Connect discovery published at https://auth.upsun.com/.well-known/openid-configuration (ES256 id tokens)
+  - id: oauth2-pkce
+    conforms: true
+    evidence: code_challenge_methods_supported [S256] in OIDC discovery
+  - id: rfc8707-resource-indicators
+    conforms: true
+    evidence: resource_indicators_supported true in OIDC discovery
+  - id: rfc9457-problem-details
+    conforms: true
+    evidence: 167 responses in the OpenAPI use application/problem+json
+  - id: rfc9116-security-txt
+    conforms: true
+    evidence: https://upsun.com/.well-known/security.txt with Contact, Policy, Expires, Canonical
+  - id: rfc9116-well-known
+    conforms: true
+    evidence: security.txt served from /.well-known/ on upsun.com
+  - id: scim
+    conforms: false
+  - id: odata
+    conforms: false
+  - id: fhir
+    conforms: false
+  - id: psd2
+    conforms: false
+  - id: json-api
+    conforms: false

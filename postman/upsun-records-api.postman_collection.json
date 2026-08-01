@@ -1,0 +1,754 @@
+{
+  "info": {
+    "_postman_id": "b46b4aa2-5a39-4d3e-92a5-86d4a2c621c3",
+    "name": "Upsun.com Rest Add-ons Records API",
+    "description": "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n\n\nContact Support:\n Name: Support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T03:25:01.000Z",
+    "updatedAt": "2026-07-28T03:25:02.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-b46b4aa2-5a39-4d3e-92a5-86d4a2c621c3"
+  },
+  "item": [
+    {
+      "name": "organizations",
+      "item": [
+        {
+          "name": "{organization_id}",
+          "item": [
+            {
+              "name": "records",
+              "item": [
+                {
+                  "name": "plan",
+                  "item": [
+                    {
+                      "name": "List plan records",
+                      "id": "3b4fffd6-77fb-412d-b388-6d1c813e53f0",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/records/plan?filter[subscription_id]=<string>&filter[plan]=development&filter[status]=active&filter[start]=<dateTime>&filter[end]=<dateTime>&filter[started_at]=<dateTime>&filter[ended_at]=<dateTime>&page=<integer>",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "records",
+                            "plan"
+                          ],
+                          "query": [
+                            {
+                              "description": "The ID of the subscription",
+                              "key": "filter[subscription_id]",
+                              "value": "<string>"
+                            },
+                            {
+                              "description": "The plan type of the subscription.",
+                              "key": "filter[plan]",
+                              "value": "development"
+                            },
+                            {
+                              "description": "The status of the plan record. ",
+                              "key": "filter[status]",
+                              "value": "active"
+                            },
+                            {
+                              "description": "The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01",
+                              "key": "filter[start]",
+                              "value": "<dateTime>"
+                            },
+                            {
+                              "description": "The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01",
+                              "key": "filter[end]",
+                              "value": "<dateTime>"
+                            },
+                            {
+                              "description": "The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>",
+                              "key": "filter[started_at]",
+                              "value": "<dateTime>"
+                            },
+                            {
+                              "description": "The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>",
+                              "key": "filter[ended_at]",
+                              "value": "<dateTime>"
+                            },
+                            {
+                              "description": "Page to be displayed. Defaults to 1.",
+                              "key": "page",
+                              "value": "<integer>"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "id": "39a15932-599f-4556-bb35-840e2ee7eee7",
+                              "key": "organization_id",
+                              "value": "<string>",
+                              "description": "(Required) The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+                            }
+                          ]
+                        },
+                        "description": "Retrieves plan records for the specified organization."
+                      },
+                      "response": [
+                        {
+                          "id": "16bec797-0417-43eb-add9-6ded9d0fe04a",
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/organizations/:organization_id/records/plan?filter[subscription_id]=<string>&filter[plan]=development&filter[status]=active&filter[start]=<dateTime>&filter[end]=<dateTime>&filter[started_at]=<dateTime>&filter[ended_at]=<dateTime>&page=<integer>",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "organizations",
+                                ":organization_id",
+                                "records",
+                                "plan"
+                              ],
+                              "query": [
+                                {
+                                  "description": "The ID of the subscription",
+                                  "key": "filter[subscription_id]",
+                                  "value": "<string>"
+                                },
+                                {
+                                  "description": "The plan type of the subscription.",
+                                  "key": "filter[plan]",
+                                  "value": "development"
+                                },
+                                {
+                                  "description": "The status of the plan record. ",
+                                  "key": "filter[status]",
+                                  "value": "active"
+                                },
+                                {
+                                  "description": "The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01",
+                                  "key": "filter[start]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01",
+                                  "key": "filter[end]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>",
+                                  "key": "filter[started_at]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>",
+                                  "key": "filter[ended_at]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "Page to be displayed. Defaults to 1.",
+                                  "key": "page",
+                                  "value": "<integer>"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "organization_id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"items\": [\n    {\n      \"id\": \"<string>\",\n      \"owner\": \"<uuid>\",\n      \"subscription_id\": \"<string>\",\n      \"sku\": \"<string>\",\n      \"plan\": \"<string>\",\n      \"options\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"start\": \"<dateTime>\",\n      \"end\": \"<dateTime>\",\n      \"status\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"owner\": \"<uuid>\",\n      \"subscription_id\": \"<string>\",\n      \"sku\": \"<string>\",\n      \"plan\": \"<string>\",\n      \"options\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"start\": \"<dateTime>\",\n      \"end\": \"<dateTime>\",\n      \"status\": \"<string>\"\n    }\n  ],\n  \"_links\": {\n    \"self\": {\n      \"href\": \"<string>\"\n    },\n    \"previous\": {\n      \"href\": \"<string>\"\n    },\n    \"next\": {\n      \"href\": \"<string>\"\n    }\n  }\n}",
+                          "createdAt": "2026-07-28T03:25:02.000Z",
+                          "updatedAt": "2026-07-28T03:25:02.000Z",
+                          "uid": "35240-16bec797-0417-43eb-add9-6ded9d0fe04a"
+                        },
+                        {
+                          "id": "49b88d5d-31f6-41a6-86e2-43043c4d0d85",
+                          "name": "Forbidden",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/problem+json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/organizations/:organization_id/records/plan?filter[subscription_id]=<string>&filter[plan]=development&filter[status]=active&filter[start]=<dateTime>&filter[end]=<dateTime>&filter[started_at]=<dateTime>&filter[ended_at]=<dateTime>&page=<integer>",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "organizations",
+                                ":organization_id",
+                                "records",
+                                "plan"
+                              ],
+                              "query": [
+                                {
+                                  "description": "The ID of the subscription",
+                                  "key": "filter[subscription_id]",
+                                  "value": "<string>"
+                                },
+                                {
+                                  "description": "The plan type of the subscription.",
+                                  "key": "filter[plan]",
+                                  "value": "development"
+                                },
+                                {
+                                  "description": "The status of the plan record. ",
+                                  "key": "filter[status]",
+                                  "value": "active"
+                                },
+                                {
+                                  "description": "The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01",
+                                  "key": "filter[start]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01",
+                                  "key": "filter[end]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>",
+                                  "key": "filter[started_at]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>",
+                                  "key": "filter[ended_at]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "Page to be displayed. Defaults to 1.",
+                                  "key": "page",
+                                  "value": "<integer>"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "organization_id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Forbidden",
+                          "code": 403,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/problem+json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                          "createdAt": "2026-07-28T03:25:02.000Z",
+                          "updatedAt": "2026-07-28T03:25:02.000Z",
+                          "uid": "35240-49b88d5d-31f6-41a6-86e2-43043c4d0d85"
+                        },
+                        {
+                          "id": "b03b336d-c81f-4720-8842-c1767496d55d",
+                          "name": "Not Found",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/problem+json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/organizations/:organization_id/records/plan?filter[subscription_id]=<string>&filter[plan]=development&filter[status]=active&filter[start]=<dateTime>&filter[end]=<dateTime>&filter[started_at]=<dateTime>&filter[ended_at]=<dateTime>&page=<integer>",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "organizations",
+                                ":organization_id",
+                                "records",
+                                "plan"
+                              ],
+                              "query": [
+                                {
+                                  "description": "The ID of the subscription",
+                                  "key": "filter[subscription_id]",
+                                  "value": "<string>"
+                                },
+                                {
+                                  "description": "The plan type of the subscription.",
+                                  "key": "filter[plan]",
+                                  "value": "development"
+                                },
+                                {
+                                  "description": "The status of the plan record. ",
+                                  "key": "filter[status]",
+                                  "value": "active"
+                                },
+                                {
+                                  "description": "The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01",
+                                  "key": "filter[start]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01",
+                                  "key": "filter[end]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>",
+                                  "key": "filter[started_at]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>",
+                                  "key": "filter[ended_at]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "Page to be displayed. Defaults to 1.",
+                                  "key": "page",
+                                  "value": "<integer>"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "organization_id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Not Found",
+                          "code": 404,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/problem+json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                          "createdAt": "2026-07-28T03:25:02.000Z",
+                          "updatedAt": "2026-07-28T03:25:02.000Z",
+                          "uid": "35240-b03b336d-c81f-4720-8842-c1767496d55d"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:25:02.000Z",
+                      "updatedAt": "2026-07-28T03:25:02.000Z",
+                      "uid": "35240-3b4fffd6-77fb-412d-b388-6d1c813e53f0"
+                    }
+                  ],
+                  "id": "b248be0f-3df3-4437-8893-582417b3ae6e",
+                  "createdAt": "2026-07-28T03:25:02.000Z",
+                  "updatedAt": "2026-07-28T03:25:02.000Z",
+                  "uid": "35240-b248be0f-3df3-4437-8893-582417b3ae6e"
+                },
+                {
+                  "name": "usage",
+                  "item": [
+                    {
+                      "name": "List usage records",
+                      "id": "fadd865a-0dff-4b5d-bda6-9b5ce9f58941",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/records/usage?filter[subscription_id]=<string>&filter[usage_group]=storage&filter[start]=<dateTime>&filter[started_at]=<dateTime>&page=<integer>",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "records",
+                            "usage"
+                          ],
+                          "query": [
+                            {
+                              "description": "The ID of the subscription",
+                              "key": "filter[subscription_id]",
+                              "value": "<string>"
+                            },
+                            {
+                              "description": "Filter records by the type of usage.",
+                              "key": "filter[usage_group]",
+                              "value": "storage"
+                            },
+                            {
+                              "description": "The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01",
+                              "key": "filter[start]",
+                              "value": "<dateTime>"
+                            },
+                            {
+                              "description": "The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>",
+                              "key": "filter[started_at]",
+                              "value": "<dateTime>"
+                            },
+                            {
+                              "description": "Page to be displayed. Defaults to 1.",
+                              "key": "page",
+                              "value": "<integer>"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "id": "cc6803ab-6109-4e81-b993-2c473e6758a0",
+                              "key": "organization_id",
+                              "value": "<string>",
+                              "description": "(Required) The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+                            }
+                          ]
+                        },
+                        "description": "Retrieves usage records for the specified organization."
+                      },
+                      "response": [
+                        {
+                          "id": "05231d46-702f-4776-a953-d2d124bdd7ae",
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/organizations/:organization_id/records/usage?filter[subscription_id]=<string>&filter[usage_group]=storage&filter[start]=<dateTime>&filter[started_at]=<dateTime>&page=<integer>",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "organizations",
+                                ":organization_id",
+                                "records",
+                                "usage"
+                              ],
+                              "query": [
+                                {
+                                  "description": "The ID of the subscription",
+                                  "key": "filter[subscription_id]",
+                                  "value": "<string>"
+                                },
+                                {
+                                  "description": "Filter records by the type of usage.",
+                                  "key": "filter[usage_group]",
+                                  "value": "storage"
+                                },
+                                {
+                                  "description": "The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01",
+                                  "key": "filter[start]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>",
+                                  "key": "filter[started_at]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "Page to be displayed. Defaults to 1.",
+                                  "key": "page",
+                                  "value": "<integer>"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "organization_id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"items\": [\n    {\n      \"id\": \"<string>\",\n      \"subscription_id\": \"<string>\",\n      \"usage_group\": \"<string>\",\n      \"quantity\": \"<number>\",\n      \"start\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"subscription_id\": \"<string>\",\n      \"usage_group\": \"<string>\",\n      \"quantity\": \"<number>\",\n      \"start\": \"<dateTime>\"\n    }\n  ],\n  \"_links\": {\n    \"self\": {\n      \"href\": \"<string>\"\n    },\n    \"previous\": {\n      \"href\": \"<string>\"\n    },\n    \"next\": {\n      \"href\": \"<string>\"\n    }\n  }\n}",
+                          "createdAt": "2026-07-28T03:25:02.000Z",
+                          "updatedAt": "2026-07-28T03:25:02.000Z",
+                          "uid": "35240-05231d46-702f-4776-a953-d2d124bdd7ae"
+                        },
+                        {
+                          "id": "d3a83f0b-5bd1-4233-8202-967e5a25e885",
+                          "name": "Forbidden",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/problem+json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/organizations/:organization_id/records/usage?filter[subscription_id]=<string>&filter[usage_group]=storage&filter[start]=<dateTime>&filter[started_at]=<dateTime>&page=<integer>",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "organizations",
+                                ":organization_id",
+                                "records",
+                                "usage"
+                              ],
+                              "query": [
+                                {
+                                  "description": "The ID of the subscription",
+                                  "key": "filter[subscription_id]",
+                                  "value": "<string>"
+                                },
+                                {
+                                  "description": "Filter records by the type of usage.",
+                                  "key": "filter[usage_group]",
+                                  "value": "storage"
+                                },
+                                {
+                                  "description": "The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01",
+                                  "key": "filter[start]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>",
+                                  "key": "filter[started_at]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "Page to be displayed. Defaults to 1.",
+                                  "key": "page",
+                                  "value": "<integer>"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "organization_id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Forbidden",
+                          "code": 403,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/problem+json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                          "createdAt": "2026-07-28T03:25:02.000Z",
+                          "updatedAt": "2026-07-28T03:25:02.000Z",
+                          "uid": "35240-d3a83f0b-5bd1-4233-8202-967e5a25e885"
+                        },
+                        {
+                          "id": "682a2c4c-56f4-4409-86d9-59eb4d9b75ea",
+                          "name": "Not Found",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/problem+json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/organizations/:organization_id/records/usage?filter[subscription_id]=<string>&filter[usage_group]=storage&filter[start]=<dateTime>&filter[started_at]=<dateTime>&page=<integer>",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "organizations",
+                                ":organization_id",
+                                "records",
+                                "usage"
+                              ],
+                              "query": [
+                                {
+                                  "description": "The ID of the subscription",
+                                  "key": "filter[subscription_id]",
+                                  "value": "<string>"
+                                },
+                                {
+                                  "description": "Filter records by the type of usage.",
+                                  "key": "filter[usage_group]",
+                                  "value": "storage"
+                                },
+                                {
+                                  "description": "The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01",
+                                  "key": "filter[start]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>",
+                                  "key": "filter[started_at]",
+                                  "value": "<dateTime>"
+                                },
+                                {
+                                  "description": "Page to be displayed. Defaults to 1.",
+                                  "key": "page",
+                                  "value": "<integer>"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "organization_id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Not Found",
+                          "code": 404,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/problem+json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                          "createdAt": "2026-07-28T03:25:02.000Z",
+                          "updatedAt": "2026-07-28T03:25:02.000Z",
+                          "uid": "35240-682a2c4c-56f4-4409-86d9-59eb4d9b75ea"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:25:02.000Z",
+                      "updatedAt": "2026-07-28T03:25:02.000Z",
+                      "uid": "35240-fadd865a-0dff-4b5d-bda6-9b5ce9f58941"
+                    }
+                  ],
+                  "id": "f3037293-00d6-4fb9-bb76-f1529b37bffb",
+                  "createdAt": "2026-07-28T03:25:02.000Z",
+                  "updatedAt": "2026-07-28T03:25:02.000Z",
+                  "uid": "35240-f3037293-00d6-4fb9-bb76-f1529b37bffb"
+                }
+              ],
+              "id": "09baca74-5e40-4c51-a907-2bc80898036d",
+              "createdAt": "2026-07-28T03:25:02.000Z",
+              "updatedAt": "2026-07-28T03:25:02.000Z",
+              "uid": "35240-09baca74-5e40-4c51-a907-2bc80898036d"
+            }
+          ],
+          "id": "61602d27-8039-4931-bb7e-1f79d4334c85",
+          "createdAt": "2026-07-28T03:25:02.000Z",
+          "updatedAt": "2026-07-28T03:25:02.000Z",
+          "uid": "35240-61602d27-8039-4931-bb7e-1f79d4334c85"
+        }
+      ],
+      "id": "185bcdd1-53a8-4f35-a253-e31ea3cc97e6",
+      "createdAt": "2026-07-28T03:25:02.000Z",
+      "updatedAt": "2026-07-28T03:25:02.000Z",
+      "uid": "35240-185bcdd1-53a8-4f35-a253-e31ea3cc97e6"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "redirect_uri",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://auth.api.platform.sh/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "schemes",
+      "value": "https"
+    },
+    {
+      "key": "baseUrl",
+      "value": "{{schemes}}://api.upsun.com"
+    }
+  ]
+}

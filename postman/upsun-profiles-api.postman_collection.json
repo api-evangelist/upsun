@@ -1,0 +1,1075 @@
+{
+  "info": {
+    "_postman_id": "65772021-4da9-42b8-a65b-3e2555664980",
+    "name": "Upsun.com Rest Add-ons Profiles API",
+    "description": "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n\n\nContact Support:\n Name: Support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T03:24:50.000Z",
+    "updatedAt": "2026-07-28T03:24:51.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-65772021-4da9-42b8-a65b-3e2555664980"
+  },
+  "item": [
+    {
+      "name": "organizations",
+      "item": [
+        {
+          "name": "{organization_id}",
+          "item": [
+            {
+              "name": "address",
+              "item": [
+                {
+                  "name": "Get address",
+                  "id": "28d85a80-0664-4ce8-958f-038db23909fd",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/organizations/:organization_id/address",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        ":organization_id",
+                        "address"
+                      ],
+                      "variable": [
+                        {
+                          "id": "77779d4b-3374-4299-ace4-25b79b226b7a",
+                          "key": "organization_id",
+                          "value": "<string>",
+                          "description": "(Required) The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+                        }
+                      ]
+                    },
+                    "description": "Retrieves the address for the specified organization."
+                  },
+                  "response": [
+                    {
+                      "id": "b536bc8a-6e9c-4674-bd41-0180f5ff58c4",
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/address",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "address"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"country\": \"<string>\",\n  \"name_line\": \"<string>\",\n  \"premise\": \"<string>\",\n  \"sub_premise\": \"<string>\",\n  \"thoroughfare\": \"<string>\",\n  \"administrative_area\": \"<string>\",\n  \"sub_administrative_area\": \"<string>\",\n  \"locality\": \"<string>\",\n  \"dependent_locality\": \"<string>\",\n  \"postal_code\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-b536bc8a-6e9c-4674-bd41-0180f5ff58c4"
+                    },
+                    {
+                      "id": "5b66f712-779b-4853-b1d5-78853d8ffaa4",
+                      "name": "Forbidden",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/problem+json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/address",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "address"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Forbidden",
+                      "code": 403,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/problem+json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-5b66f712-779b-4853-b1d5-78853d8ffaa4"
+                    },
+                    {
+                      "id": "d2dbe637-9668-4dec-94a1-c4d6906e70c7",
+                      "name": "Not Found",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/problem+json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/address",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "address"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/problem+json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-d2dbe637-9668-4dec-94a1-c4d6906e70c7"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:24:51.000Z",
+                  "updatedAt": "2026-07-28T03:24:51.000Z",
+                  "uid": "35240-28d85a80-0664-4ce8-958f-038db23909fd"
+                },
+                {
+                  "name": "Update address",
+                  "id": "3856a58d-0848-4517-92d0-9827d79c3b54",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"country\": \"<string>\",\n  \"name_line\": \"<string>\",\n  \"premise\": \"<string>\",\n  \"sub_premise\": \"<string>\",\n  \"thoroughfare\": \"<string>\",\n  \"administrative_area\": \"<string>\",\n  \"sub_administrative_area\": \"<string>\",\n  \"locality\": \"<string>\",\n  \"dependent_locality\": \"<string>\",\n  \"postal_code\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/organizations/:organization_id/address",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        ":organization_id",
+                        "address"
+                      ],
+                      "variable": [
+                        {
+                          "id": "847541fd-a855-4563-8482-2d60cbad0541",
+                          "key": "organization_id",
+                          "value": "<string>",
+                          "description": "(Required) The ID of the organization."
+                        }
+                      ]
+                    },
+                    "description": "Updates the address for the specified organization."
+                  },
+                  "response": [
+                    {
+                      "id": "e24d67f9-69bb-4709-9f12-a0c4a2163f06",
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"country\": \"<string>\",\n  \"name_line\": \"<string>\",\n  \"premise\": \"<string>\",\n  \"sub_premise\": \"<string>\",\n  \"thoroughfare\": \"<string>\",\n  \"administrative_area\": \"<string>\",\n  \"sub_administrative_area\": \"<string>\",\n  \"locality\": \"<string>\",\n  \"dependent_locality\": \"<string>\",\n  \"postal_code\": \"<string>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/address",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "address"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"country\": \"<string>\",\n  \"name_line\": \"<string>\",\n  \"premise\": \"<string>\",\n  \"sub_premise\": \"<string>\",\n  \"thoroughfare\": \"<string>\",\n  \"administrative_area\": \"<string>\",\n  \"sub_administrative_area\": \"<string>\",\n  \"locality\": \"<string>\",\n  \"dependent_locality\": \"<string>\",\n  \"postal_code\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-e24d67f9-69bb-4709-9f12-a0c4a2163f06"
+                    },
+                    {
+                      "id": "42bb1ca8-27b7-4d3b-8da1-8e7f5f45d332",
+                      "name": "Bad Request",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/problem+json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"country\": \"<string>\",\n  \"name_line\": \"<string>\",\n  \"premise\": \"<string>\",\n  \"sub_premise\": \"<string>\",\n  \"thoroughfare\": \"<string>\",\n  \"administrative_area\": \"<string>\",\n  \"sub_administrative_area\": \"<string>\",\n  \"locality\": \"<string>\",\n  \"dependent_locality\": \"<string>\",\n  \"postal_code\": \"<string>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/address",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "address"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/problem+json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-42bb1ca8-27b7-4d3b-8da1-8e7f5f45d332"
+                    },
+                    {
+                      "id": "1f2a9bd4-06f9-4682-818a-987217fe0143",
+                      "name": "Forbidden",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/problem+json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"country\": \"<string>\",\n  \"name_line\": \"<string>\",\n  \"premise\": \"<string>\",\n  \"sub_premise\": \"<string>\",\n  \"thoroughfare\": \"<string>\",\n  \"administrative_area\": \"<string>\",\n  \"sub_administrative_area\": \"<string>\",\n  \"locality\": \"<string>\",\n  \"dependent_locality\": \"<string>\",\n  \"postal_code\": \"<string>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/address",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "address"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Forbidden",
+                      "code": 403,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/problem+json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-1f2a9bd4-06f9-4682-818a-987217fe0143"
+                    },
+                    {
+                      "id": "fc0bdba2-4da8-4858-af44-f26d511df958",
+                      "name": "Not Found",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/problem+json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"country\": \"<string>\",\n  \"name_line\": \"<string>\",\n  \"premise\": \"<string>\",\n  \"sub_premise\": \"<string>\",\n  \"thoroughfare\": \"<string>\",\n  \"administrative_area\": \"<string>\",\n  \"sub_administrative_area\": \"<string>\",\n  \"locality\": \"<string>\",\n  \"dependent_locality\": \"<string>\",\n  \"postal_code\": \"<string>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/address",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "address"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/problem+json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-fc0bdba2-4da8-4858-af44-f26d511df958"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:24:51.000Z",
+                  "updatedAt": "2026-07-28T03:24:51.000Z",
+                  "uid": "35240-3856a58d-0848-4517-92d0-9827d79c3b54"
+                }
+              ],
+              "id": "738ee6b8-1a1b-4758-aa83-6d52efafd4b4",
+              "createdAt": "2026-07-28T03:24:51.000Z",
+              "updatedAt": "2026-07-28T03:24:51.000Z",
+              "uid": "35240-738ee6b8-1a1b-4758-aa83-6d52efafd4b4"
+            },
+            {
+              "name": "profile",
+              "item": [
+                {
+                  "name": "Get profile",
+                  "id": "e39aa839-7bba-46f0-9a75-a872d307ca25",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/organizations/:organization_id/profile",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        ":organization_id",
+                        "profile"
+                      ],
+                      "variable": [
+                        {
+                          "id": "978b340d-82ad-48e9-b3cb-9c767f20f882",
+                          "key": "organization_id",
+                          "value": "<string>",
+                          "description": "(Required) The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+                        }
+                      ]
+                    },
+                    "description": "Retrieves the profile for the specified organization."
+                  },
+                  "response": [
+                    {
+                      "id": "acc05c01-9ffb-4e92-a0c1-075e22253a47",
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/profile",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "profile"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"id\": \"<uuid>\",\n  \"display_name\": \"<string>\",\n  \"email\": \"<email>\",\n  \"username\": \"<string>\",\n  \"type\": \"organization\",\n  \"picture\": \"<string>\",\n  \"company_type\": \"<string>\",\n  \"company_name\": \"<string>\",\n  \"currency\": \"<string>\",\n  \"vat_number\": \"<string>\",\n  \"company_role\": \"<string>\",\n  \"website_url\": \"<string>\",\n  \"new_ui\": \"<boolean>\",\n  \"ui_colorscheme\": \"<string>\",\n  \"default_catalog\": \"<string>\",\n  \"project_options_url\": \"<string>\",\n  \"marketing\": \"<boolean>\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"billing_contact\": \"<email>\",\n  \"current_trial\": {\n    \"active\": \"<boolean>\",\n    \"created\": \"<dateTime>\",\n    \"description\": \"<string>\",\n    \"expiration\": \"<dateTime>\",\n    \"current\": {\n      \"formatted\": \"<string>\",\n      \"amount\": \"<string>\",\n      \"currency\": \"<string>\",\n      \"currency_symbol\": \"<string>\"\n    },\n    \"spend\": {\n      \"formatted\": \"<string>\",\n      \"amount\": \"<string>\",\n      \"currency\": \"<string>\",\n      \"currency_symbol\": \"<string>\"\n    },\n    \"spend_remaining\": {\n      \"formatted\": \"<string>\",\n      \"amount\": \"<string>\",\n      \"currency\": \"<string>\",\n      \"currency_symbol\": \"<string>\",\n      \"unlimited\": \"<boolean>\"\n    },\n    \"projects\": {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"total\": {\n        \"amount\": \"<integer>\",\n        \"currency_code\": \"<string>\",\n        \"currency_symbol\": \"<string>\",\n        \"formatted\": \"<string>\"\n      }\n    },\n    \"pending_verification\": \"credit-card\",\n    \"model\": \"<string>\",\n    \"days_remaining\": \"<integer>\"\n  },\n  \"invoiced\": \"<boolean>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-acc05c01-9ffb-4e92-a0c1-075e22253a47"
+                    },
+                    {
+                      "id": "974dcd6f-9d7b-4a84-aa3e-80f0d163ab42",
+                      "name": "Forbidden",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/problem+json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/profile",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "profile"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Forbidden",
+                      "code": 403,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/problem+json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-974dcd6f-9d7b-4a84-aa3e-80f0d163ab42"
+                    },
+                    {
+                      "id": "0a39bb15-e3c2-4c3a-8d66-d3bb6f262dc3",
+                      "name": "Not Found",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/problem+json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/profile",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "profile"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/problem+json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-0a39bb15-e3c2-4c3a-8d66-d3bb6f262dc3"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:24:51.000Z",
+                  "updatedAt": "2026-07-28T03:24:51.000Z",
+                  "uid": "35240-e39aa839-7bba-46f0-9a75-a872d307ca25"
+                },
+                {
+                  "name": "Update profile",
+                  "id": "d23ec1df-4cd0-467c-85f8-8cae35ec5da0",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"default_catalog\": \"<string>\",\n  \"project_options_url\": \"<uri>\",\n  \"company_name\": \"<string>\",\n  \"vat_number\": \"<string>\",\n  \"billing_contact\": \"<email>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/organizations/:organization_id/profile",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        ":organization_id",
+                        "profile"
+                      ],
+                      "variable": [
+                        {
+                          "id": "b52ac02b-8d8f-4c24-af92-6de2ca5e61b8",
+                          "key": "organization_id",
+                          "value": "<string>",
+                          "description": "(Required) The ID of the organization."
+                        }
+                      ]
+                    },
+                    "description": "Updates the profile for the specified organization."
+                  },
+                  "response": [
+                    {
+                      "id": "cab7d5b9-0962-4370-be1e-b56861dab3b1",
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"default_catalog\": \"<string>\",\n  \"project_options_url\": \"<uri>\",\n  \"company_name\": \"<string>\",\n  \"vat_number\": \"<string>\",\n  \"billing_contact\": \"<email>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/profile",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "profile"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"id\": \"<uuid>\",\n  \"display_name\": \"<string>\",\n  \"email\": \"<email>\",\n  \"username\": \"<string>\",\n  \"type\": \"organization\",\n  \"picture\": \"<string>\",\n  \"company_type\": \"<string>\",\n  \"company_name\": \"<string>\",\n  \"currency\": \"<string>\",\n  \"vat_number\": \"<string>\",\n  \"company_role\": \"<string>\",\n  \"website_url\": \"<string>\",\n  \"new_ui\": \"<boolean>\",\n  \"ui_colorscheme\": \"<string>\",\n  \"default_catalog\": \"<string>\",\n  \"project_options_url\": \"<string>\",\n  \"marketing\": \"<boolean>\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"billing_contact\": \"<email>\",\n  \"current_trial\": {\n    \"active\": \"<boolean>\",\n    \"created\": \"<dateTime>\",\n    \"description\": \"<string>\",\n    \"expiration\": \"<dateTime>\",\n    \"current\": {\n      \"formatted\": \"<string>\",\n      \"amount\": \"<string>\",\n      \"currency\": \"<string>\",\n      \"currency_symbol\": \"<string>\"\n    },\n    \"spend\": {\n      \"formatted\": \"<string>\",\n      \"amount\": \"<string>\",\n      \"currency\": \"<string>\",\n      \"currency_symbol\": \"<string>\"\n    },\n    \"spend_remaining\": {\n      \"formatted\": \"<string>\",\n      \"amount\": \"<string>\",\n      \"currency\": \"<string>\",\n      \"currency_symbol\": \"<string>\",\n      \"unlimited\": \"<boolean>\"\n    },\n    \"projects\": {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"total\": {\n        \"amount\": \"<integer>\",\n        \"currency_code\": \"<string>\",\n        \"currency_symbol\": \"<string>\",\n        \"formatted\": \"<string>\"\n      }\n    },\n    \"pending_verification\": \"credit-card\",\n    \"model\": \"<string>\",\n    \"days_remaining\": \"<integer>\"\n  },\n  \"invoiced\": \"<boolean>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-cab7d5b9-0962-4370-be1e-b56861dab3b1"
+                    },
+                    {
+                      "id": "6ef59fba-6d89-4b52-bf3c-ceeaa85e83e8",
+                      "name": "Bad Request",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/problem+json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"default_catalog\": \"<string>\",\n  \"project_options_url\": \"<uri>\",\n  \"company_name\": \"<string>\",\n  \"vat_number\": \"<string>\",\n  \"billing_contact\": \"<email>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/profile",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "profile"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/problem+json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-6ef59fba-6d89-4b52-bf3c-ceeaa85e83e8"
+                    },
+                    {
+                      "id": "19711a1d-cc2f-4c16-885d-851461b42c0b",
+                      "name": "Forbidden",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/problem+json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"default_catalog\": \"<string>\",\n  \"project_options_url\": \"<uri>\",\n  \"company_name\": \"<string>\",\n  \"vat_number\": \"<string>\",\n  \"billing_contact\": \"<email>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/profile",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "profile"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Forbidden",
+                      "code": 403,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/problem+json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-19711a1d-cc2f-4c16-885d-851461b42c0b"
+                    },
+                    {
+                      "id": "54de9230-f7d0-4add-8aa4-6c7e8a1dfceb",
+                      "name": "Not Found",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/problem+json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"default_catalog\": \"<string>\",\n  \"project_options_url\": \"<uri>\",\n  \"company_name\": \"<string>\",\n  \"vat_number\": \"<string>\",\n  \"billing_contact\": \"<email>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/organizations/:organization_id/profile",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "organizations",
+                            ":organization_id",
+                            "profile"
+                          ],
+                          "variable": [
+                            {
+                              "key": "organization_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/problem+json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"status\": \"<string>\",\n  \"message\": \"<string>\",\n  \"code\": \"<number>\",\n  \"detail\": {},\n  \"title\": \"<string>\"\n}",
+                      "createdAt": "2026-07-28T03:24:51.000Z",
+                      "updatedAt": "2026-07-28T03:24:51.000Z",
+                      "uid": "35240-54de9230-f7d0-4add-8aa4-6c7e8a1dfceb"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:24:51.000Z",
+                  "updatedAt": "2026-07-28T03:24:51.000Z",
+                  "uid": "35240-d23ec1df-4cd0-467c-85f8-8cae35ec5da0"
+                }
+              ],
+              "id": "7564a01d-03ff-4944-b1ae-d8b978d4a615",
+              "createdAt": "2026-07-28T03:24:51.000Z",
+              "updatedAt": "2026-07-28T03:24:51.000Z",
+              "uid": "35240-7564a01d-03ff-4944-b1ae-d8b978d4a615"
+            }
+          ],
+          "id": "db1e00ab-8f77-40ee-9311-0084579ee37e",
+          "createdAt": "2026-07-28T03:24:51.000Z",
+          "updatedAt": "2026-07-28T03:24:51.000Z",
+          "uid": "35240-db1e00ab-8f77-40ee-9311-0084579ee37e"
+        }
+      ],
+      "id": "0ac098b7-a459-4b16-9a5a-6d93388be9a0",
+      "createdAt": "2026-07-28T03:24:51.000Z",
+      "updatedAt": "2026-07-28T03:24:51.000Z",
+      "uid": "35240-0ac098b7-a459-4b16-9a5a-6d93388be9a0"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "redirect_uri",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.api.platform.sh/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://auth.api.platform.sh/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "schemes",
+      "value": "https"
+    },
+    {
+      "key": "baseUrl",
+      "value": "{{schemes}}://api.upsun.com"
+    }
+  ]
+}
