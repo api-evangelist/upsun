@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons System Information API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "System Information",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get information about the Git server.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/system",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Output information for the project."
+        },
+        {
+          "info": {
+            "name": "Restart the Git server",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/system/restart",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Force the Git server to restart."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

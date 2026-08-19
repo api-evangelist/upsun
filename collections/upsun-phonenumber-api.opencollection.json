@@ -1,0 +1,82 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons PhoneNumber API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "PhoneNumber",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Verify phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/users/:user_id/phonenumber",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Starts a phone number verification session."
+        },
+        {
+          "info": {
+            "name": "Confirm phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/users/:user_id/phonenumber/:sid",
+            "params": [
+              {
+                "name": "sid",
+                "value": "",
+                "type": "path",
+                "description": "The session ID obtained from `POST /users/{user_id}/phonenumber`."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Confirms phone number using a verification code."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

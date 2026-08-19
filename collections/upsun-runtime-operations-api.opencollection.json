@@ -1,0 +1,62 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Runtime Operations API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Runtime Operations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Execute a runtime operation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/deployments/:deploymentId/operations",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "deploymentId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Execute a runtime operation on a currently deployed environment. This allows you to run one-off commands, such as rebuilding static assets on demand, by defining an `operations` key in a project's `.upsun/config.yaml` configuration. More information on runtime operations is [available in our user documentation](https://docs.upsun.com/anchors/app/runtime-operations/)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

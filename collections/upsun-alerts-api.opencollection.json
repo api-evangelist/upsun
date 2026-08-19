@@ -1,0 +1,72 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Alerts API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Alerts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get usage alerts for a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/alerts/subscriptions/:subscriptionId/usage",
+            "params": [
+              {
+                "name": "subscriptionId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the subscription"
+              }
+            ]
+          },
+          "docs": "Get usage alerts for a subscription"
+        },
+        {
+          "info": {
+            "name": "Update usage alerts.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/alerts/subscriptions/:subscriptionId/usage",
+            "params": [
+              {
+                "name": "subscriptionId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the subscription"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update usage alerts."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

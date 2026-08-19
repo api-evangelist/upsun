@@ -1,0 +1,143 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Deployment Target API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Deployment Target",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get project deployment target info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/deployments",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "The deployment target information for the project.\n"
+        },
+        {
+          "info": {
+            "name": "Create a project deployment target",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/deployments",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Set the deployment target information for a project.\n"
+        },
+        {
+          "info": {
+            "name": "Get a single project deployment target",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/deployments/:deploymentTargetConfigurationId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "deploymentTargetConfigurationId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a single deployment target configuration of a project.\n"
+        },
+        {
+          "info": {
+            "name": "Update a project deployment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/deployments/:deploymentTargetConfigurationId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "deploymentTargetConfigurationId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a project deployment"
+        },
+        {
+          "info": {
+            "name": "Delete a single project deployment target",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/deployments/:deploymentTargetConfigurationId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "deploymentTargetConfigurationId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a single deployment target configuration associated with a specific project.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,146 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Records API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Records",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List plan records",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/records/plan",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              },
+              {
+                "name": "filter[subscription_id]",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the subscription"
+              },
+              {
+                "name": "filter[plan]",
+                "value": "",
+                "type": "query",
+                "description": "The plan type of the subscription."
+              },
+              {
+                "name": "filter[status]",
+                "value": "",
+                "type": "query",
+                "description": "The status of the plan record. "
+              },
+              {
+                "name": "filter[start]",
+                "value": "",
+                "type": "query",
+                "description": "The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01"
+              },
+              {
+                "name": "filter[end]",
+                "value": "",
+                "type": "query",
+                "description": "The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01"
+              },
+              {
+                "name": "filter[started_at]",
+                "value": "",
+                "type": "query",
+                "description": "The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>"
+              },
+              {
+                "name": "filter[ended_at]",
+                "value": "",
+                "type": "query",
+                "description": "The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page to be displayed. Defaults to 1."
+              }
+            ]
+          },
+          "docs": "Retrieves plan records for the specified organization."
+        },
+        {
+          "info": {
+            "name": "List usage records",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/records/usage",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              },
+              {
+                "name": "filter[subscription_id]",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the subscription"
+              },
+              {
+                "name": "filter[usage_group]",
+                "value": "",
+                "type": "query",
+                "description": "Filter records by the type of usage."
+              },
+              {
+                "name": "filter[start]",
+                "value": "",
+                "type": "query",
+                "description": "The start of the observation period for the record. E.g. filter[start]=2018-01-01 will display all records that were active (i.e. did not end) on 2018-01-01"
+              },
+              {
+                "name": "filter[started_at]",
+                "value": "",
+                "type": "query",
+                "description": "The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page to be displayed. Defaults to 1."
+              }
+            ]
+          },
+          "docs": "Retrieves usage records for the specified organization."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

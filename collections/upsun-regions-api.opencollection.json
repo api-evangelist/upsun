@@ -1,0 +1,104 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Regions API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Regions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List regions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/regions",
+            "params": [
+              {
+                "name": "filter[available]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `available` using one or more operators."
+              },
+              {
+                "name": "filter[private]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `private` using one or more operators."
+              },
+              {
+                "name": "filter[zone]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `zone` using one or more operators."
+              },
+              {
+                "name": "page[size]",
+                "value": "",
+                "type": "query",
+                "description": "Determines the number of items to show."
+              },
+              {
+                "name": "page[before]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "page[after]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Allows sorting by a single field.<br>\nUse a dash (\"-\") to sort descending.<br>\nSupported fields: `id`, `created_at`, `updated_at`.\n"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of available regions."
+        },
+        {
+          "info": {
+            "name": "Get region",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/regions/:region_id",
+            "params": [
+              {
+                "name": "region_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the region."
+              }
+            ]
+          },
+          "docs": "Retrieves the specified region."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

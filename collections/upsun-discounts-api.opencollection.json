@@ -1,0 +1,79 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Discounts API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Discounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get an organization discount",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/discounts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization discount"
+              }
+            ]
+          },
+          "docs": "Get an organization discount"
+        },
+        {
+          "info": {
+            "name": "Get the value of the First Project Incentive discount",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/discounts/types/allowance"
+          },
+          "docs": "Get the value of the First Project Incentive discount"
+        },
+        {
+          "info": {
+            "name": "List organization discounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/discounts",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              }
+            ]
+          },
+          "docs": "Retrieves all applicable discounts granted to the specified organization."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

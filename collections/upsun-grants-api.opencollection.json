@@ -1,0 +1,67 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Grants API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Grants",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List extended access of a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/users/:user_id/extended-access",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              },
+              {
+                "name": "filter[resource_type]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `resource_type` (project or organization) using one or more operators."
+              },
+              {
+                "name": "filter[organization_id]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `organization_id` using one or more operators."
+              },
+              {
+                "name": "filter[permissions]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `permissions` using one or more operators."
+              }
+            ]
+          },
+          "docs": "List extended access of the given user, which includes both individual and team access to project and organization."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,94 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Project Activity API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Project Activity",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get project activity log",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/activities",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a project's activity log including logging actions in all\nenvironments within a project. This returns a list of objects\nwith records of actions such as:\n\n- Commits being pushed to the repository\n- A new environment being branched out from the specified environment\n- A snapshot being created of the specified environment\n\nThe object includes a timestamp of when the action occurred\n(`created_at`), when the action concluded (`updated_at`),\nthe current `state` of the action, the action's com"
+        },
+        {
+          "info": {
+            "name": "Get a project activity log entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/activities/:activityId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "activityId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single activity log entry as specified by an\n`id` returned by the\n[Get project activity log](#tag/Project-Activity%2Fpaths%2F~1projects~1%7BprojectId%7D~1activities%2Fget)\nendpoint. See the documentation on that endpoint for details about\nthe information this endpoint can return.\n"
+        },
+        {
+          "info": {
+            "name": "Cancel a project activity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/activities/:activityId/cancel",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "activityId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Cancel a single activity as specified by an `id` returned by the\n[Get project activity log](#tag/Project-Activity%2Fpaths%2F~1projects~1%7BprojectId%7D~1activities%2Fget)\nendpoint.\n\nPlease note that not all activities are cancelable.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

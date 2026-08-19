@@ -1,0 +1,181 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Organization Members API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Organization Members",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List organization members",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/members",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              },
+              {
+                "name": "filter[permissions]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `permissions` using one or more operators."
+              },
+              {
+                "name": "page[size]",
+                "value": "",
+                "type": "query",
+                "description": "Determines the number of items to show."
+              },
+              {
+                "name": "page[before]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "page[after]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Allows sorting by a single field.<br>\nUse a dash (\"-\") to sort descending.<br>\nSupported fields: `created_at`, `updated_at`.\n"
+              }
+            ]
+          },
+          "docs": "Accessible to organization owners and members with the \"manage members\" permission."
+        },
+        {
+          "info": {
+            "name": "Create organization member",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/members",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new organization member."
+        },
+        {
+          "info": {
+            "name": "Get organization member",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/members/:user_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Retrieves the specified organization member."
+        },
+        {
+          "info": {
+            "name": "Update organization member",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/members/:user_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the specified organization member."
+        },
+        {
+          "info": {
+            "name": "Delete organization member",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/members/:user_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Deletes the specified organization member."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

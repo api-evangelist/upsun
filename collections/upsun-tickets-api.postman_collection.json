@@ -1,0 +1,289 @@
+{
+  "item": [
+    {
+      "id": "60506145-7be4-4565-a0f7-81137f29436f",
+      "name": "Tickets",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "37883219-9f21-4a46-bff7-90ce87cc6c25",
+          "name": "List support tickets",
+          "request": {
+            "name": "List support tickets",
+            "description": {},
+            "url": {
+              "path": [
+                "tickets"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "filter[ticket_id]",
+                  "value": "<integer>",
+                  "description": "The ID of the ticket."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[created]",
+                  "value": "<dateTime>",
+                  "description": "ISO dateformat expected. The time when the support ticket was created."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[updated]",
+                  "value": "<dateTime>",
+                  "description": "ISO dateformat expected. The time when the support ticket was updated."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[type]",
+                  "value": "<string>",
+                  "description": "The type of the support ticket."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[priority]",
+                  "value": "<string>",
+                  "description": "The priority of the support ticket."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[status]",
+                  "value": "<string>",
+                  "description": "The status of the support ticket."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[requester_id]",
+                  "value": "<uuid>",
+                  "description": "UUID of the ticket requester. Converted from the ZID value."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[submitter_id]",
+                  "value": "<uuid>",
+                  "description": "UUID of the ticket submitter. Converted from the ZID value."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[assignee_id]",
+                  "value": "<uuid>",
+                  "description": "UUID of the ticket assignee. Converted from the ZID value."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[has_incidents]",
+                  "value": "<boolean>",
+                  "description": "Whether or not this ticket has incidents."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[due]",
+                  "value": "<dateTime>",
+                  "description": "ISO dateformat expected. A time that the ticket is due at."
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Search string for the ticket subject and description."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "Page to be displayed. Defaults to 1."
+                }
+              ],
+              "variable": [
+                {
+                  "description": {
+                    "content": "",
+                    "type": "text/plain"
+                  },
+                  "type": "any",
+                  "value": "{{schemes}}",
+                  "key": "schemes"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a5e4a832-c2ba-4184-84b7-a0991df91220",
+              "name": "The list of tickets.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tickets"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[ticket_id]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[created]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filter[updated]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filter[type]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[priority]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[status]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[requester_id]",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "filter[submitter_id]",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "filter[assignee_id]",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "filter[has_incidents]",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "filter[due]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 1440,\n  \"tickets\": [\n    {\n      \"ticket_id\": 1253,\n      \"created\": \"1969-06-30T01:26:30.114Z\",\n      \"updated\": \"1982-02-06T18:25:16.037Z\",\n      \"type\": \"incident\",\n      \"subject\": \"string\",\n      \"description\": \"string\",\n      \"priority\": \"normal\",\n      \"followup_tid\": \"string\",\n      \"status\": \"deleted\",\n      \"recipient\": \"string\",\n      \"requester_id\": \"b80c5788-fa03-9dea-da4b-f68522affdb9\",\n      \"submitter_id\": \"99d53b15-86f4-6af2-c153-43a0d932c34d\",\n      \"assignee_id\": \"0744077a-7d24-c9f3-c289-cbce1dff7844\",\n      \"organization_id\": \"string\",\n      \"collaborator_ids\": [\n        \"string\",\n        \"string\"\n      ],\n      \"has_incidents\": true,\n      \"due\": \"2017-10-12T01:51:14.125Z\",\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"subscription_id\": \"string\",\n      \"ticket_group\": \"string\",\n      \"support_plan\": \"string\",\n      \"affected_url\": \"string\",\n      \"queue\": \"string\",\n      \"issue_type\": \"string\",\n      \"resolution_time\": \"1949-09-02T04:05:01.222Z\",\n      \"response_time\": \"1995-03-10T22:34:41.028Z\",\n      \"project_url\": \"string\",\n      \"region\": \"string\",\n      \"category\": \"configuration_change\",\n      \"environment\": \"env_production\",\n      \"ticket_sharing_status\": \"ts_solved_by_platform\",\n      \"application_ticket_url\": \"string\",\n      \"infrastructure_ticket_url\": \"string\",\n      \"jira\": [\n        {\n          \"id\": 6409,\n          \"ticket_id\": 2396,\n          \"issue_id\": 3642,\n          \"issue_key\": \"string\",\n          \"created_at\": 870.1685170250029,\n          \"updated_at\": 8053.75903482547\n        },\n        {\n          \"id\": 7703,\n          \"ticket_id\": 4616,\n          \"issue_id\": 7924,\n          \"issue_key\": \"string\",\n          \"created_at\": 6484.906861047515,\n          \"updated_at\": 1196.4620958320727\n        }\n      ],\n      \"zd_ticket_url\": \"string\"\n    },\n    {\n      \"ticket_id\": 4122,\n      \"created\": \"2020-03-12T16:26:43.518Z\",\n      \"updated\": \"1990-08-23T03:40:47.120Z\",\n      \"type\": \"question\",\n      \"subject\": \"string\",\n      \"description\": \"string\",\n      \"priority\": \"normal\",\n      \"followup_tid\": \"string\",\n      \"status\": \"open\",\n      \"recipient\": \"string\",\n      \"requester_id\": \"aa57c3eb-f88c-b930-4abb-63efa26e6592\",\n      \"submitter_id\": \"ef447bff-b22a-c222-ea64-18bfe7e80dc2\",\n      \"assignee_id\": \"98d8a793-5c78-b91a-87fa-7fc03819ade3\",\n      \"organization_id\": \"string\",\n      \"collaborator_ids\": [\n        \"string\",\n        \"string\"\n      ],\n      \"has_incidents\": false,\n      \"due\": \"2016-02-23T23:39:29.922Z\",\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"subscription_id\": \"string\",\n      \"ticket_group\": \"string\",\n      \"support_plan\": \"string\",\n      \"affected_url\": \"string\",\n      \"queue\": \"string\",\n      \"issue_type\": \"string\",\n      \"resolution_time\": \"1956-07-10T16:20:50.985Z\",\n      \"response_time\": \"1985-04-15T04:18:38.049Z\",\n      \"project_url\": \"string\",\n      \"region\": \"string\",\n      \"category\": \"general_question\",\n      \"environment\": \"env_staging\",\n      \"ticket_sharing_status\": \"ts_rejected_by_platform\",\n      \"application_ticket_url\": \"string\",\n      \"infrastructure_ticket_url\": \"string\",\n      \"jira\": [\n        {\n          \"id\": 3294,\n          \"ticket_id\": 7602,\n          \"issue_id\": 7832,\n          \"issue_key\": \"string\",\n          \"created_at\": 9985.025454374947,\n          \"updated_at\": 4624.975947783843\n        },\n        {\n          \"id\": 1743,\n          \"ticket_id\": 5910,\n          \"issue_id\": 4699,\n          \"issue_key\": \"string\",\n          \"created_at\": 7615.248918751554,\n          \"updated_at\": 4712.3582840055915\n        }\n      ],\n      \"zd_ticket_url\": \"string\"\n    }\n  ],\n  \"_links\": {\n    \"self\": {\n      \"title\": \"string\",\n      \"href\": \"string\"\n    },\n    \"previous\": {\n      \"title\": \"string\",\n      \"href\": \"string\"\n    },\n    \"next\": {\n      \"title\": \"string\",\n      \"href\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "https",
+      "key": "schemes"
+    },
+    {
+      "type": "string",
+      "value": "{{schemes}}://api.upsun.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "redirect_uri",
+        "value": "https://auth.api.platform.sh/oauth2/token"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.api.platform.sh/oauth2/token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://auth.api.platform.sh/oauth2/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "843acbc0-377d-4db4-b410-013eaff0df26",
+    "name": "Upsun.com Rest Add-ons Tickets API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n\n\nContact Support:\n Name: Support",
+      "type": "text/plain"
+    }
+  }
+}

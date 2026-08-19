@@ -1,0 +1,190 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons MFA API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "MFA",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get information about TOTP enrollment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/users/:user_id/totp",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Retrieves TOTP enrollment information."
+        },
+        {
+          "info": {
+            "name": "Confirm TOTP enrollment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/users/:user_id/totp",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Confirms the given TOTP enrollment."
+        },
+        {
+          "info": {
+            "name": "Withdraw TOTP enrollment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/users/:user_id/totp",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Withdraws from the TOTP enrollment."
+        },
+        {
+          "info": {
+            "name": "Re-create recovery codes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/users/:user_id/codes",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Re-creates recovery codes for the MFA enrollment."
+        },
+        {
+          "info": {
+            "name": "Get organization MFA settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/mfa-enforcement",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              }
+            ]
+          },
+          "docs": "Retrieves MFA settings for the specified organization."
+        },
+        {
+          "info": {
+            "name": "Enable organization MFA enforcement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/mfa-enforcement/enable",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ]
+          },
+          "docs": "Enables MFA enforcement for the specified organization."
+        },
+        {
+          "info": {
+            "name": "Disable organization MFA enforcement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/mfa-enforcement/disable",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ]
+          },
+          "docs": "Disables MFA enforcement for the specified organization."
+        },
+        {
+          "info": {
+            "name": "Send MFA reminders to organization members",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/mfa/remind",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sends a reminder about setting up MFA to the specified organization members."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

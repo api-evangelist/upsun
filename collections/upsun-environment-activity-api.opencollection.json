@@ -1,0 +1,109 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Environment Activity API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Environment Activity",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get environment activity log",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/activities",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve an environment's activity log. This returns a list of object\nwith records of actions such as:\n\n- Commits being pushed to the repository\n- A new environment being branched out from the specified environment\n- A snapshot being created of the specified environment\n\nThe object includes a timestamp of when the action occurred\n(`created_at`), when the action concluded (`updated_at`),\nthe current `state` of the action, the action's completion\npercentage (`completion_percent`), and other relate"
+        },
+        {
+          "info": {
+            "name": "Get an environment activity log entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/activities/:activityId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "activityId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single environment activity entry as specified by an\n`id` returned by the\n[Get environment activities list](#tag/Environment-Activity%2Fpaths%2F~1projects~1%7BprojectId%7D~1environments~1%7BenvironmentId%7D~1activities%2Fget)\nendpoint. See the documentation on that endpoint for details about\nthe information this endpoint can return.\n"
+        },
+        {
+          "info": {
+            "name": "Cancel an environment activity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/activities/:activityId/cancel",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "activityId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Cancel a single activity as specified by an `id` returned by the\n[Get environment activities list](#tag/Environment-Activity%2Fpaths%2F~1projects~1%7BprojectId%7D~1environments~1%7BenvironmentId%7D~1activities%2Fget)\nendpoint.\n\nPlease note that not all activities are cancelable.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

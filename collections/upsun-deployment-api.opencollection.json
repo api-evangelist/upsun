@@ -1,0 +1,81 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Deployment API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Deployment",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get an environment's deployment information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/deployments",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve the read-only configuration of an environment's deployment.\nThe returned information is everything required to\nrecreate a project's current deployment.\n\nMore specifically, the objects\nreturned by this endpoint contain the configuration derived from the\nrepository's YAML configuration file: `.upsun/config.yaml`.\n\nAdditionally, any values deriving from environment variables, the\ndomains attached to a project, project access settings, etc. are\nincluded here.\n\nThis endpoint currently return"
+        },
+        {
+          "info": {
+            "name": "Get a single environment deployment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/deployments/:deploymentId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "deploymentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single deployment configuration with an id of `current`. This may be subject to change in the future.\nOnly `current` can be queried.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

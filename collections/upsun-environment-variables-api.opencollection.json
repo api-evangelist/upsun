@@ -1,0 +1,168 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Environment Variables API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Environment Variables",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of environment variables",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/variables",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a list of objects representing the user-defined variables\nwithin an environment.\n"
+        },
+        {
+          "info": {
+            "name": "Add an environment variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/variables",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a variable to an environment. The `value` can be either a string or a JSON\nobject (default: string), as specified by the `is_json` boolean flag.\nAdditionally, the inheritability of an environment variable can be\ndetermined through the `is_inheritable` flag (default: true).\nSee the [Environment Variables](https://docs.upsun.com/anchors/variables/set/environment/create/)\nsection in our documentation for more information.\n"
+        },
+        {
+          "info": {
+            "name": "Get an environment variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/variables/:variableId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "variableId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single user-defined environment variable."
+        },
+        {
+          "info": {
+            "name": "Update an environment variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/variables/:variableId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "variableId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a single user-defined environment variable.\nThe `value` can be either a string or a JSON\nobject (default: string), as specified by the `is_json` boolean flag.\nAdditionally, the inheritability of an environment variable can be\ndetermined through the `is_inheritable` flag (default: true).\nSee the [Variables](https://docs.upsun.com/anchors/variables/)\nsection in our documentation for more information.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an environment variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/variables/:variableId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "variableId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a single user-defined environment variable."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,148 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Orders API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Orders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Download an invoice.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/orders/download",
+            "params": [
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "JWT for invoice."
+              }
+            ]
+          },
+          "docs": "Download an invoice."
+        },
+        {
+          "info": {
+            "name": "List orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/orders",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              },
+              {
+                "name": "filter[status]",
+                "value": "",
+                "type": "query",
+                "description": "The status of the order."
+              },
+              {
+                "name": "filter[total]",
+                "value": "",
+                "type": "query",
+                "description": "The total of the order."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page to be displayed. Defaults to 1."
+              },
+              {
+                "name": "mode",
+                "value": "",
+                "type": "query",
+                "description": "The output mode."
+              }
+            ]
+          },
+          "docs": "Retrieves orders for the specified organization."
+        },
+        {
+          "info": {
+            "name": "Get order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/orders/:order_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              },
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the order."
+              },
+              {
+                "name": "mode",
+                "value": "",
+                "type": "query",
+                "description": "The output mode."
+              }
+            ]
+          },
+          "docs": "Retrieves an order for the specified organization."
+        },
+        {
+          "info": {
+            "name": "Create confirmation credentials for for 3D-Secure",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/orders/:order_id/authorize",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              },
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the order."
+              }
+            ]
+          },
+          "docs": "Creates confirmation credentials for payments that require online authorization"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

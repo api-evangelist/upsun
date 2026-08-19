@@ -1,0 +1,140 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Repository API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Repository",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a blob object",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/git/blobs/:repositoryBlobId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repositoryBlobId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve, by hash, an object representing a blob in the repository\nbacking a project. This endpoint allows direct read-only access\nto the contents of files in a repo. It returns the file in the\n`content` field of the response object, encoded according to the\nformat in the `encoding` field, e.g. `base64`.\n"
+        },
+        {
+          "info": {
+            "name": "Get a commit object",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/git/commits/:repositoryCommitId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repositoryCommitId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve, by hash, an object representing a commit in the repository backing\na project. This endpoint functions similarly to `git cat-file -p <commit-id>`.\nThe returned object contains the hash of the Git tree that it\nbelongs to, as well as the ID of parent commits.\n\nThe commit represented by a parent ID can be retrieved using this\nendpoint, while the tree state represented by this commit can\nbe retrieved using the\n[Get a tree object](#tag/Git-Repo%2Fpaths%2F~1projects~1%7BprojectId%7D~1git~1tre"
+        },
+        {
+          "info": {
+            "name": "Get list of repository refs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/git/refs",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a list of `refs/*` in the repository backing a project.\nThis endpoint functions similarly to `git show-ref`, with each\nreturned object containing a `ref` field with the ref's name,\nand an object containing the associated commit ID.\n\nThe returned commit ID can be used with the\n[Get a commit object](#tag/Git-Repo%2Fpaths%2F~1projects~1%7BprojectId%7D~1git~1commits~1%7BrepositoryCommitId%7D%2Fget)\nendpoint to retrieve information about that specific commit.\n"
+        },
+        {
+          "info": {
+            "name": "Get a ref object",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/git/refs/:repositoryRefId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repositoryRefId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve the details of a single `refs` object in the repository\nbacking a project. This endpoint functions similarly to\n`git show-ref <pattern>`, although the pattern must be a full ref `id`,\nrather than a matching pattern.\n\n*NOTE: The `{repositoryRefId}` must be properly escaped.*\nThat is, the ref `refs/heads/master` is accessible via\n`/projects/{projectId}/git/refs/heads%2Fmaster`.\n"
+        },
+        {
+          "info": {
+            "name": "Get a tree object",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/git/trees/:repositoryTreeId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repositoryTreeId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve, by hash, the tree state represented by a commit.\nThe returned object's `tree` field contains a list of files and\ndirectories present in the tree.\n\nDirectories in the tree can be recursively retrieved by this endpoint\nthrough their hashes. Files in the tree can be retrieved by the\n[Get a blob object](#tag/Git-Repo%2Fpaths%2F~1projects~1%7BprojectId%7D~1git~1blobs~1%7BrepositoryBlobId%7D%2Fget)\nendpoint.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

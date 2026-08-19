@@ -1,0 +1,513 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Environment API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Environment",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of project environments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a list of a project's existing environments and the\ninformation associated with each environment.\n"
+        },
+        {
+          "info": {
+            "name": "Get an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve the details of a single existing environment."
+        },
+        {
+          "info": {
+            "name": "Update an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the details of a single existing environment."
+        },
+        {
+          "info": {
+            "name": "Delete an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a specified environment."
+        },
+        {
+          "info": {
+            "name": "Activate an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/activate",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Set the specified environment's status to active"
+        },
+        {
+          "info": {
+            "name": "Branch an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/branch",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new environment as a branch of the current environment.\n"
+        },
+        {
+          "info": {
+            "name": "Deactivate an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/deactivate",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Destroy all services and data running on this environment so that\nonly the Git branch remains. The environment can be reactivated\nlater at any time; reactivating an environment will sync data\nfrom the parent environment and redeploy.\n\n**NOTE: ALL DATA IN THIS ENVIRONMENT WILL BE IRREVOCABLY LOST**\n"
+        },
+        {
+          "info": {
+            "name": "Deploy an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/deploy",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Trigger a controlled [manual deployment](https://docs.upsun.com/learn/overview/build-deploy.html#manual-deployment)\nto release all the staged changes\n"
+        },
+        {
+          "info": {
+            "name": "Initialize a new environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/initialize",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initialize and configure a new environment with an existing repository.\nThe payload is the url of a git repository with a profile name:\n\n```\n{\n    \"repository\": \"git@github.com:platformsh/a-project-template.git@master\",\n    \"profile\": \"Example Project\",\n    \"files\": [\n      {\n        \"mode\": 0600,\n        \"path\": \"config.json\",\n        \"contents\": \"XXXXXXXX\"\n      }\n    ]\n}\n```\nIt can optionally carry additional files that will be committed to the\nrepository, the POSIX file mode to set on each f"
+        },
+        {
+          "info": {
+            "name": "Merge an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/merge",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Merge an environment into its parent. This means that code changes\nfrom the branch environment will be merged into the parent branch, and\nthe parent branch will be rebuilt and deployed with the new code changes,\nretaining the existing data in the parent environment.\n"
+        },
+        {
+          "info": {
+            "name": "Pause an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/pause",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Pause an environment, stopping all services and applications (except the router).\n\nDevelopment environments are often used for a limited time and then abandoned.\nTo prevent unnecessary consumption of resources, development environments that\nhaven't been redeployed in 14 days are automatically paused.\n\nYou can pause an environment manually at any time using this endpoint. Further\ninformation is available in our [public documentation](https://docs.upsun.com/anchors/environments/paused/).\n"
+        },
+        {
+          "info": {
+            "name": "Redeploy an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/redeploy",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Trigger the redeployment sequence of an environment."
+        },
+        {
+          "info": {
+            "name": "Resume a paused environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/resume",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Resume a paused environment, restarting all services and applications.\n\nDevelopment environments that haven't been used for 14 days will be paused\nautomatically. They can be resumed via a redeployment or manually using this\nendpoint or the CLI as described in the [public documentation](https://docs.upsun.com/anchors/environments/paused/).\n"
+        },
+        {
+          "info": {
+            "name": "Synchronize a child environment with its parent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/synchronize",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This synchronizes the code and/or data of an environment with that of\nits parent, then redeploys the environment. Synchronization is only\npossible if a branch has no unmerged commits and it can be fast-forwarded.\n\nIf data synchronization is specified, the data in the environment will\nbe overwritten with that of its parent.\n"
+        },
+        {
+          "info": {
+            "name": "List versions associated with the environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/versions",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List versions associated with the `{environmentId}` environment.\nAt least one version always exists.\nWhen multiple versions exist, it means that multiple versions of an app are deployed.\nThe deployment target type denotes whether staged deployment is supported.\n"
+        },
+        {
+          "info": {
+            "name": "Create versions associated with the environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/versions",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create versions associated with the `{environmentId}` environment.\nAt least one version always exists.\nWhen multiple versions exist, it means that multiple versions of an app are deployed.\nThe deployment target type denotes whether staged deployment is supported.\n"
+        },
+        {
+          "info": {
+            "name": "List the version",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/versions/:versionId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "versionId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List the `{versionId}` version.\nA routing percentage for this version may be specified for staged rollouts\n(if the deployment target supports it).\n"
+        },
+        {
+          "info": {
+            "name": "Update the version",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/versions/:versionId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "versionId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the `{versionId}` version.\nA routing percentage for this version may be specified for staged rollouts\n(if the deployment target supports it).\n"
+        },
+        {
+          "info": {
+            "name": "Delete the version",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/versions/:versionId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "versionId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete the `{versionId}` version.\nA routing percentage for this version may be specified for staged rollouts\n(if the deployment target supports it).\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

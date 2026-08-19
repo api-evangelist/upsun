@@ -1,0 +1,127 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Project Invitations API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Project Invitations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List invitations to a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:project_id/invitations",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the project."
+              },
+              {
+                "name": "filter[state]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `state` of the invtations: \"pending\" (default), \"error\"."
+              },
+              {
+                "name": "page[size]",
+                "value": "",
+                "type": "query",
+                "description": "Determines the number of items to show."
+              },
+              {
+                "name": "page[before]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "page[after]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Allows sorting by a single field.<br>\nUse a dash (\"-\") to sort descending.\n"
+              }
+            ]
+          },
+          "docs": "Returns a list of invitations to a project."
+        },
+        {
+          "info": {
+            "name": "Invite user to a project by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:project_id/invitations",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the project."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates an invitation to a project for a user with the specified email address."
+        },
+        {
+          "info": {
+            "name": "Cancel a pending invitation to a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/projects/:project_id/invitations/:invitation_id",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the project."
+              },
+              {
+                "name": "invitation_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invitation."
+              }
+            ]
+          },
+          "docs": "Cancels the specified invitation."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

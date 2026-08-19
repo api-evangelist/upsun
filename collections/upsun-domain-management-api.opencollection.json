@@ -1,0 +1,281 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Domain Management API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Domain Management",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of project domains",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/domains",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a list of objects representing the user-specified domains\nassociated with a project. Note that this does *not* return the\ndomains automatically assigned to a project that appear under\n\"Access site\" on the user interface.\n"
+        },
+        {
+          "info": {
+            "name": "Add a project domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/domains",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a single domain to a project.\nIf the `ssl` field is left blank without an object containing\na PEM-encoded SSL certificate, a certificate will\n[be provisioned for you via Let's Encrypt.](https://docs.upsun.com/anchors/routes/https/certificates/)\n"
+        },
+        {
+          "info": {
+            "name": "Get a project domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/domains/:domainId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "domainId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve information about a single user-specified domain\nassociated with a project.\n"
+        },
+        {
+          "info": {
+            "name": "Update a project domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/domains/:domainId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "domainId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the information associated with a single user-specified\ndomain associated with a project.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a project domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/domains/:domainId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "domainId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a single user-specified domain associated with a project.\n"
+        },
+        {
+          "info": {
+            "name": "Get a list of environment domains",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/domains",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a list of objects representing the user-specified domains\nassociated with an environment. Note that this does *not* return the\n`.platformsh.site` subdomains, which are automatically assigned to\nthe environment.\n"
+        },
+        {
+          "info": {
+            "name": "Add an environment domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/domains",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a single domain to an environment.\nIf the environment is not production, the `replacement_for` field\nis required, which binds a new domain to an existing one from a\nproduction environment.\nIf the `ssl` field is left blank without an object containing\na PEM-encoded SSL certificate, a certificate will\n[be provisioned for you via Let's Encrypt](https://docs.upsun.com/anchors/routes/https/certificates/).\n"
+        },
+        {
+          "info": {
+            "name": "Get an environment domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/domains/:domainId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "domainId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve information about a single user-specified domain\nassociated with an environment.\n"
+        },
+        {
+          "info": {
+            "name": "Update an environment domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/domains/:domainId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "domainId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the information associated with a single user-specified\ndomain associated with an environment.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an environment domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/domains/:domainId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "domainId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a single user-specified domain associated with an environment.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

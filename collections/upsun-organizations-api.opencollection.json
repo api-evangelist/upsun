@@ -1,0 +1,307 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Organizations API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Organizations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "User organizations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/users/:user_id/organizations",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              },
+              {
+                "name": "filter[id]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `id` using one or more operators."
+              },
+              {
+                "name": "filter[type]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `type` using one or more operators."
+              },
+              {
+                "name": "filter[vendor]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `vendor` using one or more operators.\n"
+              },
+              {
+                "name": "filter[status]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `status` using one or more operators.<br>\nDefaults to `filter[status][in]=active,restricted,suspended`.\n"
+              },
+              {
+                "name": "filter[updated_at]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `updated_at` using one or more operators."
+              },
+              {
+                "name": "page[size]",
+                "value": "",
+                "type": "query",
+                "description": "Determines the number of items to show."
+              },
+              {
+                "name": "page[before]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "page[after]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Allows sorting by a single field.<br>\nUse a dash (\"-\") to sort descending.<br>\nSupported fields: `name`, `label`, `created_at`, `updated_at`.\n"
+              }
+            ]
+          },
+          "docs": "Retrieves organizations that the specified user is a member of."
+        },
+        {
+          "info": {
+            "name": "List organizations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations",
+            "params": [
+              {
+                "name": "filter[id]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `id` using one or more operators."
+              },
+              {
+                "name": "filter[type]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `type` using one or more operators.\n"
+              },
+              {
+                "name": "filter[owner_id]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `owner_id` using one or more operators."
+              },
+              {
+                "name": "filter[name]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `name` using one or more operators."
+              },
+              {
+                "name": "filter[label]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `label` using one or more operators."
+              },
+              {
+                "name": "filter[vendor]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `vendor` using one or more operators.\n"
+              },
+              {
+                "name": "filter[capabilities]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `capabilites` using one or more operators."
+              },
+              {
+                "name": "filter[status]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `status` using one or more operators.<br>\nDefaults to `filter[status][in]=active,restricted,suspended`.\n"
+              },
+              {
+                "name": "filter[updated_at]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `updated_at` using one or more operators."
+              },
+              {
+                "name": "page[size]",
+                "value": "",
+                "type": "query",
+                "description": "Determines the number of items to show."
+              },
+              {
+                "name": "page[before]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "page[after]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Allows sorting by a single field.<br>\nUse a dash (\"-\") to sort descending.<br>\nSupported fields: `name`, `label`, `created_at`, `updated_at`.\n"
+              }
+            ]
+          },
+          "docs": "Non-admin users will only see organizations they are members of."
+        },
+        {
+          "info": {
+            "name": "Create organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/organizations",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new organization."
+        },
+        {
+          "info": {
+            "name": "Get organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              }
+            ]
+          },
+          "docs": "Retrieves the specified organization."
+        },
+        {
+          "info": {
+            "name": "Update organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the specified organization."
+        },
+        {
+          "info": {
+            "name": "Delete organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ]
+          },
+          "docs": "Deletes the specified organization."
+        },
+        {
+          "info": {
+            "name": "Query project carbon emissions metrics for an entire organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/metrics/carbon",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "The start of the time frame for the query. Inclusive."
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query",
+                "description": "The end of the time frame for the query. Exclusive."
+              },
+              {
+                "name": "interval",
+                "value": "",
+                "type": "query",
+                "description": "The interval by which the query groups the results. of the time frame for the query. Exclusive."
+              }
+            ]
+          },
+          "docs": "Queries the carbon emission data for all projects owned by the specified organiation."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

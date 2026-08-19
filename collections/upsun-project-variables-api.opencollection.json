@@ -1,0 +1,143 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Project Variables API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Project Variables",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of project variables",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/variables",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a list of objects representing the user-defined variables\nwithin a project.\n"
+        },
+        {
+          "info": {
+            "name": "Add a project variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/variables",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a variable to a project. The `value` can be either a string or a JSON\nobject (default: string), as specified by the `is_json` boolean flag.\nSee the [Variables](https://docs.upsun.com/anchors/variables/set/project/create/)\nsection in our documentation for more information.\n"
+        },
+        {
+          "info": {
+            "name": "Get a project variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/variables/:projectVariableId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "projectVariableId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single user-defined project variable."
+        },
+        {
+          "info": {
+            "name": "Update a project variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/variables/:projectVariableId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "projectVariableId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a single user-defined project variable.\nThe `value` can be either a string or a JSON\nobject (default: string), as specified by the `is_json` boolean flag.\nSee the [Variables](https://docs.upsun.com/anchors/variables/set/project/create/)\nsection in our documentation for more information.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a project variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/variables/:projectVariableId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "projectVariableId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a single user-defined project variable."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

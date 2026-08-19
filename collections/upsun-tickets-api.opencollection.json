@@ -1,0 +1,121 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Tickets API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tickets",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List support tickets",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/tickets",
+            "params": [
+              {
+                "name": "filter[ticket_id]",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the ticket."
+              },
+              {
+                "name": "filter[created]",
+                "value": "",
+                "type": "query",
+                "description": "ISO dateformat expected. The time when the support ticket was created."
+              },
+              {
+                "name": "filter[updated]",
+                "value": "",
+                "type": "query",
+                "description": "ISO dateformat expected. The time when the support ticket was updated."
+              },
+              {
+                "name": "filter[type]",
+                "value": "",
+                "type": "query",
+                "description": "The type of the support ticket."
+              },
+              {
+                "name": "filter[priority]",
+                "value": "",
+                "type": "query",
+                "description": "The priority of the support ticket."
+              },
+              {
+                "name": "filter[status]",
+                "value": "",
+                "type": "query",
+                "description": "The status of the support ticket."
+              },
+              {
+                "name": "filter[requester_id]",
+                "value": "",
+                "type": "query",
+                "description": "UUID of the ticket requester. Converted from the ZID value."
+              },
+              {
+                "name": "filter[submitter_id]",
+                "value": "",
+                "type": "query",
+                "description": "UUID of the ticket submitter. Converted from the ZID value."
+              },
+              {
+                "name": "filter[assignee_id]",
+                "value": "",
+                "type": "query",
+                "description": "UUID of the ticket assignee. Converted from the ZID value."
+              },
+              {
+                "name": "filter[has_incidents]",
+                "value": "",
+                "type": "query",
+                "description": "Whether or not this ticket has incidents."
+              },
+              {
+                "name": "filter[due]",
+                "value": "",
+                "type": "query",
+                "description": "ISO dateformat expected. A time that the ticket is due at."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Search string for the ticket subject and description."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page to be displayed. Defaults to 1."
+              }
+            ]
+          },
+          "docs": "List support tickets"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

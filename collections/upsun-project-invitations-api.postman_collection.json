@@ -1,0 +1,1273 @@
+{
+  "item": [
+    {
+      "id": "8931b7d0-cd27-4334-9193-58e2eeebf809",
+      "name": "Project Invitations",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "76fda9cd-de81-45a9-a5e7-5a45ce839641",
+          "name": "Invite user to a project by email",
+          "request": {
+            "name": "Invite user to a project by email",
+            "description": {
+              "content": "Creates an invitation to a project for a user with the specified email address.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":project_id",
+                "invitations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "project_id",
+                  "description": "(Required) The ID of the project."
+                },
+                {
+                  "description": {
+                    "content": "",
+                    "type": "text/plain"
+                  },
+                  "type": "any",
+                  "value": "{{schemes}}",
+                  "key": "schemes"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"<email>\",\n  \"role\": null,\n  \"permissions\": [\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"environments\": [\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"force\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4d0fbae8-10bb-466d-bdde-436aa7c3234c",
+              "name": "Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"<email>\",\n  \"role\": null,\n  \"permissions\": [\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"environments\": [\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"force\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"b0e3cb4c-98b8-6f2d-13d0-2420bd06fba9\",\n  \"state\": \"processing\",\n  \"project_id\": \"string\",\n  \"role\": \"admin\",\n  \"email\": \"BY4ijc4qJcKCDTH@NUe.tirl\",\n  \"owner\": {\n    \"id\": \"a988197c-06d3-dfc1-c9a5-948b812e996d\",\n    \"display_name\": \"string\"\n  },\n  \"created_at\": \"2026-04-06T05:55:57.525Z\",\n  \"updated_at\": \"1985-03-03T08:46:43.795Z\",\n  \"finished_at\": \"1966-05-23T15:10:46.233Z\",\n  \"environments\": [\n    {\n      \"id\": \"string\",\n      \"type\": \"string\",\n      \"role\": \"contributor\",\n      \"title\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"type\": \"string\",\n      \"role\": \"viewer\",\n      \"title\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a241898c-08c4-4fe6-8858-f840eb194c5e",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"<email>\",\n  \"role\": null,\n  \"permissions\": [\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"environments\": [\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"force\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"message\": \"string\",\n  \"code\": 9811.702267163557,\n  \"detail\": {},\n  \"title\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bdfbce0a-2fef-4c23-8a21-4fffa467f3d0",
+              "name": "Payment Required when the number of users exceeds the subscription limit",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"<email>\",\n  \"role\": null,\n  \"permissions\": [\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"environments\": [\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"force\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"message\": \"string\",\n  \"code\": 9811.702267163557,\n  \"detail\": {},\n  \"title\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4de128a0-94d5-409e-a01d-319752ed5379",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"<email>\",\n  \"role\": null,\n  \"permissions\": [\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"environments\": [\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"force\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"message\": \"string\",\n  \"code\": 9811.702267163557,\n  \"detail\": {},\n  \"title\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3ae29d66-ee11-4c39-9e36-16953d638211",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"<email>\",\n  \"role\": null,\n  \"permissions\": [\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"environments\": [\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"force\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"message\": \"string\",\n  \"code\": 9811.702267163557,\n  \"detail\": {},\n  \"title\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8397b82c-174f-41bd-b2dd-940bd9f3e0d6",
+              "name": "Conflict when there already is a pending invitation for the invitee",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"<email>\",\n  \"role\": null,\n  \"permissions\": [\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"environments\": [\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"role\": \"<string>\"\n    }\n  ],\n  \"force\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"message\": \"string\",\n  \"code\": 9811.702267163557,\n  \"detail\": {},\n  \"title\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e442f9fa-462c-4def-9a90-d3e6dfb6110e",
+          "name": "List invitations to a project",
+          "request": {
+            "name": "List invitations to a project",
+            "description": {
+              "content": "Returns a list of invitations to a project.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":project_id",
+                "invitations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "filter[state][eq]",
+                  "value": "<string>",
+                  "description": "Allows filtering by `state` of the invtations: \"pending\" (default), \"error\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[state][ne]",
+                  "value": "<string>",
+                  "description": "Allows filtering by `state` of the invtations: \"pending\" (default), \"error\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[state][in]",
+                  "value": "<string>",
+                  "description": "Allows filtering by `state` of the invtations: \"pending\" (default), \"error\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[state][nin]",
+                  "value": "<string>",
+                  "description": "Allows filtering by `state` of the invtations: \"pending\" (default), \"error\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[state][between]",
+                  "value": "<string>",
+                  "description": "Allows filtering by `state` of the invtations: \"pending\" (default), \"error\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[state][contains]",
+                  "value": "<string>",
+                  "description": "Allows filtering by `state` of the invtations: \"pending\" (default), \"error\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[state][starts]",
+                  "value": "<string>",
+                  "description": "Allows filtering by `state` of the invtations: \"pending\" (default), \"error\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[state][ends]",
+                  "value": "<string>",
+                  "description": "Allows filtering by `state` of the invtations: \"pending\" (default), \"error\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "page[size]",
+                  "value": "",
+                  "description": "Determines the number of items to show."
+                },
+                {
+                  "disabled": false,
+                  "key": "page[before]",
+                  "value": "<string>",
+                  "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+                },
+                {
+                  "disabled": false,
+                  "key": "page[after]",
+                  "value": "<string>",
+                  "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort",
+                  "value": "<string>",
+                  "description": "Allows sorting by a single field.<br>\nUse a dash (\"-\") to sort descending.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "project_id",
+                  "description": "(Required) The ID of the project."
+                },
+                {
+                  "description": {
+                    "content": "",
+                    "type": "text/plain"
+                  },
+                  "type": "any",
+                  "value": "{{schemes}}",
+                  "key": "schemes"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6f82050a-457d-471f-b8bb-06dee183c10b",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[state][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][ne]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][in]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][nin]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][between]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][contains]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][starts]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][ends]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page[size]",
+                      "value": ""
+                    },
+                    {
+                      "key": "page[before]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page[after]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"1d4edac0-45fc-d3c1-2dd3-dd8890c9471c\",\n    \"state\": \"accepted\",\n    \"project_id\": \"string\",\n    \"role\": \"viewer\",\n    \"email\": \"3wHbppiI@RUHgHJNnboJHBzUcW.uhh\",\n    \"owner\": {\n      \"id\": \"e1371186-995d-90bd-5e5c-88afe1c955d8\",\n      \"display_name\": \"string\"\n    },\n    \"created_at\": \"1960-01-02T16:27:38.085Z\",\n    \"updated_at\": \"1999-02-19T05:33:33.861Z\",\n    \"finished_at\": \"2026-08-04T13:12:21.459Z\",\n    \"environments\": [\n      {\n        \"id\": \"string\",\n        \"type\": \"string\",\n        \"role\": \"admin\",\n        \"title\": \"string\"\n      },\n      {\n        \"id\": \"string\",\n        \"type\": \"string\",\n        \"role\": \"contributor\",\n        \"title\": \"string\"\n      }\n    ]\n  },\n  {\n    \"id\": \"3468a7e6-6b27-a0d9-4b3e-ee95a8903bef\",\n    \"state\": \"accepted\",\n    \"project_id\": \"string\",\n    \"role\": \"admin\",\n    \"email\": \"i4LJtMTgLhw2mju@KZbJnmIEevrOA.uxs\",\n    \"owner\": {\n      \"id\": \"f3258cae-1f56-72a4-649f-65008fa8f995\",\n      \"display_name\": \"string\"\n    },\n    \"created_at\": \"1987-04-19T07:49:31.301Z\",\n    \"updated_at\": \"1958-12-12T10:48:49.107Z\",\n    \"finished_at\": \"1967-11-29T10:43:20.557Z\",\n    \"environments\": [\n      {\n        \"id\": \"string\",\n        \"type\": \"string\",\n        \"role\": \"admin\",\n        \"title\": \"string\"\n      },\n      {\n        \"id\": \"string\",\n        \"type\": \"string\",\n        \"role\": \"contributor\",\n        \"title\": \"string\"\n      }\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3c6f9998-f1bc-4851-bfad-33e3819f1818",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[state][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][ne]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][in]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][nin]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][between]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][contains]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][starts]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][ends]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page[size]",
+                      "value": ""
+                    },
+                    {
+                      "key": "page[before]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page[after]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"message\": \"string\",\n  \"code\": 9811.702267163557,\n  \"detail\": {},\n  \"title\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "54c918fe-1019-4b66-b353-248e913f59ac",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[state][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][ne]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][in]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][nin]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][between]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][contains]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][starts]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[state][ends]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page[size]",
+                      "value": ""
+                    },
+                    {
+                      "key": "page[before]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page[after]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"message\": \"string\",\n  \"code\": 9811.702267163557,\n  \"detail\": {},\n  \"title\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "be4b8213-5dd2-486e-a9b7-5c0dade63e6d",
+          "name": "Cancel a pending invitation to a project",
+          "request": {
+            "name": "Cancel a pending invitation to a project",
+            "description": {
+              "content": "Cancels the specified invitation.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":project_id",
+                "invitations",
+                ":invitation_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "project_id",
+                  "description": "(Required) The ID of the project."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "invitation_id",
+                  "description": "(Required) The ID of the invitation."
+                },
+                {
+                  "description": {
+                    "content": "",
+                    "type": "text/plain"
+                  },
+                  "type": "any",
+                  "value": "{{schemes}}",
+                  "key": "schemes"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0c172e44-0aa9-40ee-bf06-a79dc97fe12c",
+              "name": "No Content",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations",
+                    ":invitation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "invitation_id",
+                      "description": "(Required) The ID of the invitation."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "78143654-95b7-445d-b054-9305f692687b",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations",
+                    ":invitation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "invitation_id",
+                      "description": "(Required) The ID of the invitation."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"message\": \"string\",\n  \"code\": 9811.702267163557,\n  \"detail\": {},\n  \"title\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b252121a-8f8e-474f-afd4-8da4ff19193d",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":project_id",
+                    "invitations",
+                    ":invitation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "project_id",
+                      "description": "(Required) The ID of the project."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "invitation_id",
+                      "description": "(Required) The ID of the invitation."
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "type": "any",
+                      "value": "{{schemes}}",
+                      "key": "schemes"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "https",
+      "key": "schemes"
+    },
+    {
+      "type": "string",
+      "value": "{{schemes}}://api.upsun.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "redirect_uri",
+        "value": "https://auth.api.platform.sh/oauth2/token"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.api.platform.sh/oauth2/token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://auth.api.platform.sh/oauth2/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "1c08198a-0e24-4af7-9e4c-dbc1dd05ae6d",
+    "name": "Upsun.com Rest Add-ons Project Invitations API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n\n\nContact Support:\n Name: Support",
+      "type": "text/plain"
+    }
+  }
+}

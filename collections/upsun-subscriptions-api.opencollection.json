@@ -1,0 +1,493 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Subscriptions API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Subscriptions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Checks if the user is able to update a project.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/subscriptions/:subscriptionId/can-update",
+            "params": [
+              {
+                "name": "subscriptionId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the subscription"
+              },
+              {
+                "name": "plan",
+                "value": "",
+                "type": "query",
+                "description": "The plan type of the subscription."
+              },
+              {
+                "name": "environments",
+                "value": "",
+                "type": "query",
+                "description": "The number of environments which can be provisioned on the project."
+              },
+              {
+                "name": "storage",
+                "value": "",
+                "type": "query",
+                "description": "The total storage available to each environment, in MiB. Only multiples of 1024 are accepted as legal values."
+              },
+              {
+                "name": "user_licenses",
+                "value": "",
+                "type": "query",
+                "description": "The number of user licenses."
+              }
+            ]
+          },
+          "docs": "Checks if the user is able to update a project."
+        },
+        {
+          "info": {
+            "name": "Estimate the price of a new subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/subscriptions/estimate",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "plan",
+                "value": "",
+                "type": "query",
+                "description": "The plan type of the subscription."
+              },
+              {
+                "name": "environments",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of environments which can be provisioned on the project."
+              },
+              {
+                "name": "storage",
+                "value": "",
+                "type": "query",
+                "description": "The total storage available to each environment, in MiB."
+              },
+              {
+                "name": "user_licenses",
+                "value": "",
+                "type": "query",
+                "description": "The number of user licenses."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "The format of the estimation output."
+              }
+            ]
+          },
+          "docs": "Estimate the price of a new subscription"
+        },
+        {
+          "info": {
+            "name": "Checks if the user is able to create a new project.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/subscriptions/can-create",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ]
+          },
+          "docs": "Checks if the user is able to create a new project."
+        },
+        {
+          "info": {
+            "name": "Estimate the price of a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/subscriptions/:subscription_id/estimate",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the subscription."
+              },
+              {
+                "name": "plan",
+                "value": "",
+                "type": "query",
+                "description": "The plan type of the subscription."
+              },
+              {
+                "name": "environments",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of environments which can be provisioned on the project."
+              },
+              {
+                "name": "storage",
+                "value": "",
+                "type": "query",
+                "description": "The total storage available to each environment, in MiB."
+              },
+              {
+                "name": "user_licenses",
+                "value": "",
+                "type": "query",
+                "description": "The number of user licenses."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "The format of the estimation output."
+              }
+            ]
+          },
+          "docs": "Estimate the price of a subscription"
+        },
+        {
+          "info": {
+            "name": "Get current usage for a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/subscriptions/:subscription_id/current_usage",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the subscription."
+              },
+              {
+                "name": "usage_groups",
+                "value": "",
+                "type": "query",
+                "description": "A list of usage groups to retrieve current usage for."
+              },
+              {
+                "name": "include_not_charged",
+                "value": "",
+                "type": "query",
+                "description": "Whether to include not charged usage groups."
+              }
+            ]
+          },
+          "docs": "Get current usage for a subscription"
+        },
+        {
+          "info": {
+            "name": "List addons for a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/subscriptions/:subscription_id/addons",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the subscription."
+              }
+            ]
+          },
+          "docs": "List addons for a subscription"
+        },
+        {
+          "info": {
+            "name": "Get usage alerts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/alerts/subscriptions/:subscription_id/usage",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the subscription."
+              }
+            ]
+          },
+          "docs": "Retrieves current and available usage alerts."
+        },
+        {
+          "info": {
+            "name": "Update usage alerts.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/alerts/subscriptions/:subscription_id/usage",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization.<br>\nPrefix with name= to retrieve the organization by name instead.\n"
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the subscription."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates usage alerts for a subscription."
+        },
+        {
+          "info": {
+            "name": "List subscriptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/subscriptions",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "filter[status]",
+                "value": "",
+                "type": "query",
+                "description": "The status of the subscription. "
+              },
+              {
+                "name": "filter[id]",
+                "value": "",
+                "type": "query",
+                "description": "Machine name of the region."
+              },
+              {
+                "name": "filter[project_id]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `project_id` using one or more operators."
+              },
+              {
+                "name": "filter[project_title]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `project_title` using one or more operators."
+              },
+              {
+                "name": "filter[region]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `region` using one or more operators."
+              },
+              {
+                "name": "filter[updated_at]",
+                "value": "",
+                "type": "query",
+                "description": "Allows filtering by `updated_at` using one or more operators."
+              },
+              {
+                "name": "page[size]",
+                "value": "",
+                "type": "query",
+                "description": "Determines the number of items to show."
+              },
+              {
+                "name": "page[before]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "page[after]",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor. This is automatically generated as necessary and provided in HAL links (_links); it should not be constructed externally."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Allows sorting by a single field.<br>\nUse a dash (\"-\") to sort descending.<br>\nSupported fields: `region`, `project_title`, `type`, `plan`, `status`, `created_at`, `updated_at`.\n"
+              }
+            ]
+          },
+          "docs": "Retrieves subscriptions for the specified organization."
+        },
+        {
+          "info": {
+            "name": "Create subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/subscriptions",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a subscription for the specified organization."
+        },
+        {
+          "info": {
+            "name": "Get subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/subscriptions/:subscription_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the subscription."
+              }
+            ]
+          },
+          "docs": "Retrieves a subscription for the specified organization."
+        },
+        {
+          "info": {
+            "name": "Update subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/subscriptions/:subscription_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the subscription."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates a subscription for the specified organization."
+        },
+        {
+          "info": {
+            "name": "Delete subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{schemes}://api.upsun.com/organizations/:organization_id/subscriptions/:subscription_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the subscription."
+              }
+            ]
+          },
+          "docs": "Deletes a subscription for the specified organization."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

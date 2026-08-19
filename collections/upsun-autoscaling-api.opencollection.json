@@ -1,0 +1,113 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Upsun.com Rest Add-ons Autoscaling API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://auth.api.platform.sh/oauth2/authorize",
+      "accessTokenUrl": "https://auth.api.platform.sh/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Autoscaling",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieves Autoscaler settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/autoscaling/settings",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "A string that uniquely identifies the project"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path",
+                "description": "A string that uniquely identifies the project environment"
+              }
+            ]
+          },
+          "docs": "Retrieves Autoscaler settings"
+        },
+        {
+          "info": {
+            "name": "Updates Autoscaler settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/autoscaling/settings",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "A string that uniquely identifies the project"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path",
+                "description": "A string that uniquely identifies the project environment"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates Autoscaler settings"
+        },
+        {
+          "info": {
+            "name": "Modifies Autoscaler settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{schemes}://api.upsun.com/projects/:projectId/environments/:environmentId/autoscaling/settings",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "A string that uniquely identifies the project"
+              },
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path",
+                "description": "A string that uniquely identifies the project environment"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies Autoscaler settings"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
