@@ -36,6 +36,16 @@ tags:
 - Company
 - Infrastructure Saas
 - Cloud
+- Platform-as-a-Service
+- Hosting
+- Deployment
+- DevOps
+- Containers
+- Observability
+tags_raw:
+- Company
+- Infrastructure Saas
+- Cloud
 - PaaS
 - Hosting
 - Deployment
@@ -49,6 +59,8 @@ apis:
   humanURL: https://developer.upsun.com/api-reference
   baseURL: https://api.upsun.com
   tags:
+  - Addons
+  tags_raw:
   - Add-ons
   properties:
   - type: OpenAPI
@@ -94,6 +106,8 @@ apis:
   humanURL: https://developer.upsun.com/api-reference
   baseURL: https://api.upsun.com
   tags:
+  - Auto-Scaling
+  tags_raw:
   - Autoscaling
   properties:
   - type: OpenAPI
@@ -401,6 +415,8 @@ apis:
   humanURL: https://developer.upsun.com/api-reference
   baseURL: https://api.upsun.com
   tags:
+  - Order
+  tags_raw:
   - Orders
   properties:
   - type: OpenAPI
@@ -462,6 +478,8 @@ apis:
   humanURL: https://developer.upsun.com/api-reference
   baseURL: https://api.upsun.com
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -474,6 +492,8 @@ apis:
   humanURL: https://developer.upsun.com/api-reference
   baseURL: https://api.upsun.com
   tags:
+  - Phone Number
+  tags_raw:
   - PhoneNumber
   properties:
   - type: OpenAPI
@@ -755,6 +775,8 @@ apis:
   humanURL: https://developer.upsun.com/api-reference
   baseURL: https://api.upsun.com
   tags:
+  - Subscription
+  tags_raw:
   - Subscriptions
   properties:
   - type: OpenAPI
@@ -812,6 +834,8 @@ apis:
   humanURL: https://developer.upsun.com/api-reference
   baseURL: https://api.upsun.com
   tags:
+  - Team
+  tags_raw:
   - Teams
   properties:
   - type: OpenAPI
@@ -892,6 +916,8 @@ apis:
   humanURL: https://developer.upsun.com/api-reference
   baseURL: https://api.upsun.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
