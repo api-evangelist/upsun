@@ -16,6 +16,18 @@ x-backed-by:
 - partech
 x-tier: full
 x-tier-reason: enriched from stub via enrichment pipeline
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
@@ -940,6 +952,9 @@ apis:
   - type: Documentation
     url: https://developer.upsun.com/api-reference
 common:
+- type: CapabilityMap
+  url: capabilities/upsun-capability-edges.yml
+  name: Upsun Business Capability Map
 - type: PostmanWorkspace
   url: https://www.postman.com/kinlaneapi/upsun/overview
 - type: Website
