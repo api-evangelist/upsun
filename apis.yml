@@ -498,20 +498,6 @@ apis:
     url: openapi/upsun-organizations-api-openapi.yml
   - type: Documentation
     url: https://developer.upsun.com/api-reference
-- aid: upsun:upsun-phonenumber-api
-  name: Upsun PhoneNumber API
-  description: The PhoneNumber API from Upsun — 2 operation(s) for phonenumber.
-  humanURL: https://developer.upsun.com/api-reference
-  baseURL: https://api.upsun.com
-  tags:
-  - Phone Number
-  tags_raw:
-  - PhoneNumber
-  properties:
-  - type: OpenAPI
-    url: openapi/upsun-phonenumber-api-openapi.yml
-  - type: Documentation
-    url: https://developer.upsun.com/api-reference
 - aid: upsun:upsun-profiles-api
   name: Upsun Profiles API
   description: The Profiles API from Upsun — 2 operation(s) for profiles.
@@ -949,6 +935,18 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/upsun-vouchers-api-openapi.yml
+  - type: Documentation
+    url: https://developer.upsun.com/api-reference
+- aid: upsun:upsun-phone-number-api
+  name: Upsun Phone Number API
+  description: The Phone Number API from Upsun — 2 operation(s) for phone number.
+  humanURL: https://developer.upsun.com/api-reference
+  baseURL: https://api.upsun.com
+  tags:
+  - Phone Number
+  properties:
+  - type: OpenAPI
+    url: openapi/upsun-phone-number-api-openapi.yml
   - type: Documentation
     url: https://developer.upsun.com/api-reference
 common:
