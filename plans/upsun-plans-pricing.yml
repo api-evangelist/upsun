@@ -10,6 +10,11 @@ provenance:
   grounding: every price_text was found verbatim in the fetched page text
 audience: developer-api
 pricing_basis: usage-other
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-09-20'
+  managed_tier: Project fee €9.00 /project/month
 published: true
 note: Upsun Cloud resource-based pricing page; currency selector defaults to EUR. Many add-ons priced
   as percentages of spend/project value; professional services are quote-only.
