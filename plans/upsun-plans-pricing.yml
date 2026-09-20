@@ -1,0 +1,179 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-09-20'
+method: searched
+source: https://upsun.com/pricing/
+sources:
+- https://upsun.com/pricing/
+provenance:
+  tool: planning/api-economics/harvest_pricing.py
+  run: 20260920T120546
+  grounding: every price_text was found verbatim in the fetched page text
+audience: developer-api
+pricing_basis: usage-other
+published: true
+note: Upsun Cloud resource-based pricing page; currency selector defaults to EUR. Many add-ons priced
+  as percentages of spend/project value; professional services are quote-only.
+plan_count: 26
+currency: EUR
+plans:
+- name: Free trial
+  price_text: €0 to begin
+  price: 0
+  currency: EUR
+  period: none
+  included_quota: 15-day free trial; Monthly credit covering 1 project fee + 1 user license
+- name: Project fee
+  price_text: €9.00 /project/month
+  price: 9
+  currency: EUR
+  period: month
+  unit: project
+  included_quota: On-demand preview environments, 30 days of infrastructure metrics, 15 minutes of continuous
+    profiling, 2.5 hours of build CPU, 5 hours of build memory, 10 GB egress bandwidth, 500,000 ingress
+    requests included
+  overage: 'Additional egress transfer: €0.03 /GB; Additional ingress requests: €1.00 /100,000 requests'
+- name: User licenses
+  price_text: €10.00 /user/month
+  price: 10
+  currency: EUR
+  period: month
+  unit: user
+  included_quota: Custom project and environment-type permissions
+- name: Advanced user management
+  price_text: + €9.00 /user/month
+  price: 9
+  currency: EUR
+  period: month
+  unit: user
+  included_quota: Teams management, MFA enforcement, SSO
+- name: Application Shared CPU
+  price_text: €0.033*
+  price: 0.033
+  currency: EUR
+  period: per-use
+  unit: hour (billed per second)
+- name: Application Guaranteed CPU
+  price_text: €0.100*
+  price: 0.1
+  currency: EUR
+  period: per-use
+  unit: hour
+- name: Application Memory (1 GB)
+  price_text: €0.013*
+  price: 0.013
+  currency: EUR
+  period: per-use
+  unit: GB-hour
+- name: Services Shared CPU
+  price_text: €0.049*
+  price: 0.049
+  currency: EUR
+  period: per-use
+  unit: hour
+- name: Services Guaranteed CPU
+  price_text: €0.120*
+  price: 0.12
+  currency: EUR
+  period: per-use
+  unit: hour
+- name: Services Memory (1 GB)
+  price_text: €0.020*
+  price: 0.02
+  currency: EUR
+  period: per-use
+  unit: GB-hour
+- name: Memory (1 GB) - MongoDB (Premium)
+  price_text: €0.05*
+  price: 0.05
+  currency: EUR
+  period: per-use
+  unit: GB-hour
+- name: Memory (1 GB) - Elasticsearch (Premium)
+  price_text: €0.19*
+  price: 0.19
+  currency: EUR
+  period: per-use
+  unit: GB-hour
+- name: Disk storage
+  price_text: €0.49 /GB
+  price: 0.49
+  currency: EUR
+  period: month
+  unit: GB/month
+- name: Backups
+  price_text: €0.10 /GB
+  price: 0.1
+  currency: EUR
+  period: month
+  unit: GB/month
+- name: Standard support
+  price_text: +10% global spend
+  price: 10
+  period: month
+  unit: '% of global spend'
+  included_quota: 4-hour best effort urgent-ticket response time
+- name: Advanced support
+  price_text: +15% global spend
+  price: 15
+  period: month
+  unit: '% of global spend'
+  included_quota: 1-hour guaranteed urgent-ticket response time
+- name: Premium support
+  price_text: +19% global spend
+  price: 19
+  period: month
+  unit: '% of global spend'
+  included_quota: 30-min guaranteed urgent-ticket response time
+- name: Advanced uptime SLA
+  price_text: +20% project value
+  price: 20
+  period: month
+  unit: '% of project value'
+  included_quota: 99.9% uptime SLA
+- name: Premium uptime SLA
+  price_text: +45% project value
+  price: 45
+  period: month
+  unit: '% of project value'
+  included_quota: 99.99% uptime SLA
+- name: HIPAA
+  price_text: +25% project value
+  price: 25
+  period: month
+  unit: '% of project value'
+- name: Fastly CDN Transfer
+  price_text: €0.094 /GB
+  price: 0.094
+  currency: EUR
+  period: per-use
+  unit: GB
+- name: Fastly CDN Requests
+  price_text: €0.188 /100,000 requests
+  price: 0.188
+  currency: EUR
+  period: per-use
+  unit: 100,000 requests
+- name: Logs forwarding (real-time)
+  price_text: €0.10 per GB
+  price: 0.1
+  currency: EUR
+  period: per-use
+  unit: GB
+- name: Extended continuous profiling add-on
+  price_text: €4.89 /month
+  price: 4.89
+  currency: EUR
+  period: month
+  unit: project add-on
+  included_quota: Past 30 days profiling
+- name: DDoS protection
+  price_text: €169.00
+  price: 169
+  currency: EUR
+  period: none
+- name: Onboarding / Expert / Application services
+  price_text: Contact sales
+  period: none
+rate_limit_statements:
+- 'Included ingress requests: 500,000 requests/month'
+- Environments will pause automatically after 15 days of inactivity
