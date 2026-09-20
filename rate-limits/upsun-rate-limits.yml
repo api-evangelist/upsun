@@ -1,0 +1,19 @@
+# Rate limits transcribed from the provider's own documentation — see provenance. Quoted, not derived.
+generated: '2026-09-20'
+method: searched
+source: https://developer.upsun.com/posts/hands-on/varnish-102-protecting-your-application-with-rate-limiting-on-upsun
+sources:
+- https://developer.upsun.com/posts/hands-on/varnish-102-protecting-your-application-with-rate-limiting-on-upsun
+provenance:
+  tool: planning/api-economics/harvest_ratelimits.py
+  run: 20260920T133210
+  grounding: every limit_text was found verbatim in the fetched page text
+published: false
+note: Tutorial/blog post showing how users can configure their own rate limiting in Varnish VCL with the
+  vsthrottle VMOD on Upsun (e.g. example values like 30 requests per 15s, 5 POST/PUT per 10s). These are
+  illustrative user-defined configuration examples, not rate limits imposed by Upsun's API, so no provider
+  limits are catalogued. The examples return HTTP 429 synth responses; no rate-limit response headers
+  are documented.
+limit_count: 0
+limits: []
+exceeded_status: 429
