@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Upsun.com Rest Connections API
+  title: Upsun.com Rest Phone Number API
   version: '1.0'
   contact:
     name: Support
@@ -23,116 +23,114 @@ servers:
 security:
 - OAuth2: []
 tags:
-- name: Connections
+- name: Phone Number
 paths:
-  /users/{user_id}/connections:
+  /users/{user_id}/phonenumber:
     parameters:
     - $ref: '#/components/parameters/UserID'
-    get:
-      summary: List federated login connections
-      description: Retrieves a list of connections associated with a single user.
-      operationId: list-login-connections
+    post:
+      summary: Verify phone number
+      description: Starts a phone number verification session.
+      operationId: verify-phone-number
       tags:
-      - Connections
+      - Phone Number
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Connection'
+                type: object
+                properties:
+                  sid:
+                    type: string
+                    description: Session ID of the verification.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /users/{user_id}/connections/{provider}:
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channel:
+                  type: string
+                  description: The channel used to receive the verification code.
+                  enum:
+                  - sms
+                  - whatsapp
+                  - call
+                phone_number:
+                  type: string
+                  description: The phone number used to receive the verification code.
+              required:
+              - channel
+              - phone_number
+  /users/{user_id}/phonenumber/{sid}:
     parameters:
     - schema:
         type: string
-      name: provider
+      name: sid
       in: path
       required: true
-      description: The name of the federation provider.
+      description: The session ID obtained from `POST /users/{user_id}/phonenumber`.
     - $ref: '#/components/parameters/UserID'
-    get:
-      summary: Get a federated login connection
-      description: Retrieves the specified connection.
-      operationId: get-login-connection
+    post:
+      summary: Confirm phone number
+      description: Confirms phone number using a verification code.
+      operationId: confirm-phone-number
       tags:
-      - Connections
+      - Phone Number
       responses:
         '200':
           description: OK
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Connection'
+                $ref: '#/components/schemas/Error'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '404':
-          description: Not Found
-    delete:
-      summary: Delete a federated login connection
-      description: Deletes the specified connection.
-      operationId: delete-login-connection
-      tags:
-      - Connections
-      responses:
-        '204':
-          description: No Content
-        '403':
-          description: Forbidden
+        '409':
+          description: Conflict
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '404':
-          description: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: The verification code received on your phone.
+              required:
+              - code
 components:
   schemas:
-    Connection:
-      description: ''
-      type: object
-      properties:
-        provider:
-          type: string
-          description: The name of the federation provider.
-        provider_type:
-          type: string
-          description: The type of the federation provider.
-        is_mandatory:
-          type: boolean
-          description: Whether the federated login connection is mandatory.
-        subject:
-          type: string
-          description: The identity on the federation provider.
-        email_address:
-          type: string
-          description: The email address presented on the federated login connection.
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time when the connection was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time when the connection was last updated.
-      x-examples:
-        example-1:
-          created_at: '2021-05-24T07:20:35.683264Z'
-          provider: acme-inc-oidc
-          provider_type: okta
-          subject: '1621840835647277693'
-          email_address: name@example.com
-          updated_at: '2021-05-24T07:20:35.683264Z'
     Error:
       description: ''
       type: object

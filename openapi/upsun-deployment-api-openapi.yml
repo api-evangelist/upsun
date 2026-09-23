@@ -1,12 +1,15 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Upsun.com Rest Add-ons Deployment API
+  title: Upsun.com Rest Deployment API
   version: '1.0'
   contact:
     name: Support
     url: https://upsun.com/contact-us/
   termsOfService: https://upsun.com/trust-center/legal/tos/
-  description: "# Introduction\n\nUpsun, formerly Platform.sh, is a container-based Platform-as-a-Service. Our main API\nis simply Git. With a single `git push` and a couple of YAML files in\nyour repository you can deploy an arbitrarily complex cluster.\nEvery [**Project**](#tag/Project) can have multiple applications (PHP,\nNode.js, Python, Ruby, Go, etc.) and managed, automatically\nprovisioned services (databases, message queues, etc.).\n\nEach project also comes with multiple concurrent\nlive staging/development [**Environments**](#tag/Environment).\nThese ephemeral development environments\nare automatically created every time you push a new branch or create a\npull request, and each has a full copy of the data of its parent branch,\nwhich is created on-the-fly in seconds.\n\nOur Git implementation supports integrations with third party Git\nproviders such as GitHub, Bitbucket, or GitLab, allowing you to simply\nintegrate Upsun into your existing workflow.\n\n## Using the REST API\n\nIn addition to the Git API, we also offer a REST API that allows you to manage\nevery aspect of the platform, from managing projects and environments,\nto accessing accounts and subscriptions, to creating robust workflows\nand integrations with your CI systems and internal services.\n\nThese API docs are generated from a standard **OpenAPI (Swagger)** Specification document\nwhich you can find here in [YAML](openapispec-upsun.yaml) and in [JSON](openapispec-upsun.json) formats.\n\nThis RESTful API consumes and produces HAL-style JSON over HTTPS,\nand any REST library can be used to access it. On GitHub, we also host\na few API libraries that you can use to make API access easier, such as our\n[PHP API client](https://github.com/upsun/upsun-sdk-php).\n\nIn order to use the API you will first need to have an [Upsun account](https://auth.upsun.com/register/) \nand [create an API Token](https://docs.upsun.com/anchors/cli/api-token/).\n\n# Authentication\n\n## OAuth2\n\nAPI authentication is done with OAuth2 access tokens.\n\n### API tokens\n\nYou can use an API token as one way to get an OAuth2 access token. This\nis particularly useful in scripts, e.g. for CI pipelines.\n\nTo create an API token, go to the \"API Tokens\" section\nof the \"Account Settings\" tab on the [Console](https://console.upsun.com).\n\nTo exchange this API token for an access token, a `POST` request\nmust be made to `https://auth.upsun.com/oauth2/token`.\n\nThe request will look like this in cURL:\n\n<pre>\ncurl -u platform-api-user: \\\n    -d 'grant_type=api_token&amp;api_token=<em><b>API_TOKEN</b></em>' \\\n    https://auth.upsun.com/oauth2/token\n</pre>\n\nThis will return a \"Bearer\" access token that\ncan be used to authenticate further API requests, for example:\n\n<pre>\n{\n    \"access_token\": \"<em><b>abcdefghij1234567890</b></em>\",\n    \"expires_in\": 900,\n    \"token_type\": \"bearer\"\n}\n</pre>\n\n### Using the Access Token\n\nTo authenticate further API requests, include this returned bearer token\nin the `Authorization` header. For example, to retrieve a list of\n[Projects](#tag/Project)\naccessible by the current user, you can make the following request\n(substituting the dummy token for your own):\n\n<pre>\ncurl -H \"Authorization: Bearer <em><b>abcdefghij1234567890</b></em>\" \\\n    https://api.upsun.com/projects\n</pre>\n\n# HAL Links\n\nMost endpoints in the API return fields which defines a HAL\n(Hypertext Application Language) schema for the requested endpoint.\nThe particular objects returns and their contents can vary by endpoint.\nThe payload examples we give here for the requests do not show these\nelements. These links can allow you to create a fully dynamic API client\nthat does not need to hardcode any method or schema.\n\nUnless they are used for pagination we do not show the HAL links in the\npayload examples in this documentation for brevity and as their content\nis contextual (based on the permissions of the user).\n\n## _links Objects\n\nMost endpoints that respond to `GET` requests will include a `_links` object\nin their response. The `_links` object contains a key-object pair labelled `self`, which defines\ntwo further key-value pairs:\n\n* `href` - A URL string referring to the fully qualified name of the returned object. For many endpoints, this will be the direct link to the API endpoint on the region gateway, rather than on the general API gateway. This means it may reference a host of, for example, `eu-2.platform.sh` rather than `api.upsun.com`.\n* `meta` - An object defining the OpenAPI Specification (OAS) [schema object](https://swagger.io/specification/#schemaObject) of the component returned by the endpoint.\n\nThere may be zero or more other fields in the `_links` object resembling fragment identifiers\nbeginning with a hash mark, e.g. `#edit` or `#delete`. Each of these keys\nrefers to a JSON object containing two key-value pairs:\n\n* `href` - A URL string referring to the path name of endpoint which can perform the action named in the key.\n* `meta` - An object defining the OAS schema of the endpoint. This consists of a key-value pair, with the key defining an HTTP method and the value defining the [operation object](https://swagger.io/specification/#operationObject) of the endpoint.\n\nTo use one of these HAL links, you must send a new request to the URL defined\nin the `href` field which contains a body defined the schema object in the `meta` field.\n\nFor example, if you make a request such as `GET /projects/abcdefghij1234567890`, the `_links`\nobject in the returned response will include the key `#delete`. That object\nwill look something like this fragment:\n\n```\n\"#delete\": {\n    \"href\": \"/api/projects/abcdefghij1234567890\",\n    \"meta\": {\n        \"delete\": {\n            \"responses\": {\n                . . . // Response definition omitted for space\n            },\n            \"parameters\": []\n        }\n    }\n}\n```\n\nTo use this information to delete a project, you would then send a `DELETE`\nrequest to the endpoint `https://api.upsun.com/api/projects/abcdefghij1234567890`\nwith no body or parameters to delete the project that was originally requested.\n\n## _embedded Objects\n\nRequests to endpoints which create or modify objects, such as `POST`, `PATCH`, or `DELETE`\nrequests, will include an `_embedded` key in their response. The object\nrepresented by this key will contain the created or modified object. This\nobject is identical to what would be returned by a subsequent `GET` request\nfor the object referred to by the endpoint.\n"
+  description: '# Introduction
+
+
+    Upsun, formerly Platform.sh, is a container-based Platform-as-a-Service.'
   x-logo:
     url: https://docs.upsun.com/images/upsun-api.svg
     href: https://upsun.com/#section/Introduction
@@ -71,9 +74,7 @@ paths:
 
         configuration with an `id` of `current`. This may be subject to change
 
-        in the future.
-
-        '
+        in the future.'
   /projects/{projectId}/environments/{environmentId}/deployments/{deploymentId}:
     get:
       parameters:
@@ -105,26 +106,26 @@ paths:
       summary: Get a single environment deployment
       description: 'Retrieve a single deployment configuration with an id of `current`. This may be subject to change in the future.
 
-        Only `current` can be queried.
-
-        '
+        Only `current` can be queried.'
 components:
   schemas:
-    RedirectRoute:
+    ProxyRoute:
       type: object
       properties:
         id:
           type: string
-          title: RedirectRoute Identifier
-          description: The identifier of RedirectRoute
+          title: ProxyRoute Identifier
+          description: The identifier of ProxyRoute
         primary:
-          type: boolean
-          nullable: true
+          type:
+          - boolean
+          - 'null'
           title: Is primary
           description: This route is the primary route of the environment
         production_url:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           title: Production URL
           description: How this URL route would look on production environment
         attributes:
@@ -148,18 +149,21 @@ components:
               type: object
               properties:
                 enabled:
-                  type: boolean
-                  nullable: true
+                  type:
+                  - boolean
+                  - 'null'
                   title: Is enabled
                   description: Whether strict transport security is enabled or not.
                 include_subdomains:
-                  type: boolean
-                  nullable: true
+                  type:
+                  - boolean
+                  - 'null'
                   title: Is subdomains included
                   description: Whether the strict transport security policy should include all subdomains.
                 preload:
-                  type: boolean
-                  nullable: true
+                  type:
+                  - boolean
+                  - 'null'
                   title: Is strict transport security preloaded
                   description: Whether the strict transport security policy should be preloaded in browsers.
               required:
@@ -170,21 +174,138 @@ components:
               title: Strict-Transport-Security options.
               description: ''
             min_version:
-              type: string
+              type:
+              - string
+              - 'null'
               enum:
               - TLSv1.0
               - TLSv1.1
               - TLSv1.2
               - TLSv1.3
-              nullable: true
               title: Minimum TLS version
               description: The minimum TLS version to support.
             client_authentication:
-              type: string
+              type:
+              - string
+              - 'null'
               enum:
               - request
               - require
-              nullable: true
+              title: Client authentication
+              description: The type of client authentication to request.
+            client_certificate_authorities:
+              type: array
+              items:
+                type: string
+              title: Client certificate authorities
+              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
+          required:
+          - strict_transport_security
+          - min_version
+          - client_authentication
+          - client_certificate_authorities
+          additionalProperties: false
+          title: TLS settings
+          description: TLS settings for the route.
+        to:
+          type: string
+          title: Proxy destination
+          description: ''
+      required:
+      - primary
+      - id
+      - production_url
+      - attributes
+      - type
+      - tls
+      - to
+      additionalProperties: false
+    DeploymentCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Deployment'
+    RedirectRoute:
+      type: object
+      properties:
+        id:
+          type: string
+          title: RedirectRoute Identifier
+          description: The identifier of RedirectRoute
+        primary:
+          type:
+          - boolean
+          - 'null'
+          title: Is primary
+          description: This route is the primary route of the environment
+        production_url:
+          type:
+          - string
+          - 'null'
+          title: Production URL
+          description: How this URL route would look on production environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - proxy
+          - redirect
+          - upstream
+          title: Route type
+          description: Route type.
+        tls:
+          type: object
+          properties:
+            strict_transport_security:
+              type: object
+              properties:
+                enabled:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is enabled
+                  description: Whether strict transport security is enabled or not.
+                include_subdomains:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is subdomains included
+                  description: Whether the strict transport security policy should include all subdomains.
+                preload:
+                  type:
+                  - boolean
+                  - 'null'
+                  title: Is strict transport security preloaded
+                  description: Whether the strict transport security policy should be preloaded in browsers.
+              required:
+              - enabled
+              - include_subdomains
+              - preload
+              additionalProperties: false
+              title: Strict-Transport-Security options.
+              description: ''
+            min_version:
+              type:
+              - string
+              - 'null'
+              enum:
+              - TLSv1.0
+              - TLSv1.1
+              - TLSv1.2
+              - TLSv1.3
+              title: Minimum TLS version
+              description: The minimum TLS version to support.
+            client_authentication:
+              type:
+              - string
+              - 'null'
+              enum:
+              - request
+              - require
               title: Client authentication
               description: The type of client authentication to request.
             client_certificate_authorities:
@@ -226,13 +347,15 @@ components:
                     title: Redirect URL
                     description: The URL to redirect to.
                   prefix:
-                    type: boolean
-                    nullable: true
+                    type:
+                    - boolean
+                    - 'null'
                     title: Is prefix
                     description: Whether to redirect all the paths that start with the path.
                   append_suffix:
-                    type: boolean
-                    nullable: true
+                    type:
+                    - boolean
+                    - 'null'
                     title: Append suffix
                     description: Whether to append the incoming suffix to the redirected URL.
                   code:
@@ -245,8 +368,9 @@ components:
                     title: Redirect code
                     description: The redirect code to use.
                   expires:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Expires
                     description: The amount of time, in seconds, to cache the redirects.
                 required:
@@ -275,233 +399,6 @@ components:
       - to
       - redirects
       additionalProperties: false
-    DeploymentCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Deployment'
-    UpstreamRoute:
-      type: object
-      properties:
-        id:
-          type: string
-          title: UpstreamRoute Identifier
-          description: The identifier of UpstreamRoute
-        primary:
-          type: boolean
-          nullable: true
-          title: Is primary
-          description: This route is the primary route of the environment
-        production_url:
-          type: string
-          nullable: true
-          title: Production URL
-          description: How this URL route would look on production environment
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        type:
-          type: string
-          enum:
-          - proxy
-          - redirect
-          - upstream
-          title: Route type
-          description: Route type.
-        tls:
-          type: object
-          properties:
-            strict_transport_security:
-              type: object
-              properties:
-                enabled:
-                  type: boolean
-                  nullable: true
-                  title: Is enabled
-                  description: Whether strict transport security is enabled or not.
-                include_subdomains:
-                  type: boolean
-                  nullable: true
-                  title: Is subdomains included
-                  description: Whether the strict transport security policy should include all subdomains.
-                preload:
-                  type: boolean
-                  nullable: true
-                  title: Is strict transport security preloaded
-                  description: Whether the strict transport security policy should be preloaded in browsers.
-              required:
-              - enabled
-              - include_subdomains
-              - preload
-              additionalProperties: false
-              title: Strict-Transport-Security options.
-              description: ''
-            min_version:
-              type: string
-              enum:
-              - TLSv1.0
-              - TLSv1.1
-              - TLSv1.2
-              - TLSv1.3
-              nullable: true
-              title: Minimum TLS version
-              description: The minimum TLS version to support.
-            client_authentication:
-              type: string
-              enum:
-              - request
-              - require
-              nullable: true
-              title: Client authentication
-              description: The type of client authentication to request.
-            client_certificate_authorities:
-              type: array
-              items:
-                type: string
-              title: Client certificate authorities
-              description: Certificate authorities to validate the client certificate against. If not specified, a default set of trusted CAs will be used.
-          required:
-          - strict_transport_security
-          - min_version
-          - client_authentication
-          - client_certificate_authorities
-          additionalProperties: false
-          title: TLS settings
-          description: TLS settings for the route.
-        cache:
-          type: object
-          properties:
-            enabled:
-              type: boolean
-              title: Is enabled
-              description: Whether the cache is enabled.
-            default_ttl:
-              type: integer
-              title: Default TTL
-              description: The TTL to apply when the response doesn't specify one. Only applies to static files.
-            cookies:
-              type: array
-              items:
-                type: string
-              title: Cookies
-              description: The cookies to take into account for the cache key.
-            headers:
-              type: array
-              items:
-                type: string
-              title: Headers
-              description: The headers to take into account for the cache key.
-          required:
-          - enabled
-          - default_ttl
-          - cookies
-          - headers
-          additionalProperties: false
-          title: Cache configuration
-          description: Cache configuration.
-        ssi:
-          type: object
-          properties:
-            enabled:
-              type: boolean
-              title: Is enabled
-              description: Whether SSI include is enabled.
-          required:
-          - enabled
-          additionalProperties: false
-          title: SSI configuration
-          description: Server-Side Include configuration.
-        upstream:
-          type: string
-          title: Upstream
-          description: The upstream to use for this route.
-        redirects:
-          type: object
-          properties:
-            expires:
-              type: string
-              title: Expires
-              description: The amount of time, in seconds, to cache the redirects.
-            paths:
-              type: object
-              additionalProperties:
-                type: object
-                properties:
-                  regexp:
-                    type: boolean
-                    title: Is regexp
-                    description: Whether the path is a regular expression.
-                  to:
-                    type: string
-                    title: Redirect URL
-                    description: The URL to redirect to.
-                  prefix:
-                    type: boolean
-                    nullable: true
-                    title: Is prefix
-                    description: Whether to redirect all the paths that start with the path.
-                  append_suffix:
-                    type: boolean
-                    nullable: true
-                    title: Append suffix
-                    description: Whether to append the incoming suffix to the redirected URL.
-                  code:
-                    type: integer
-                    enum:
-                    - 301
-                    - 302
-                    - 307
-                    - 308
-                    title: Redirect code
-                    description: The redirect code to use.
-                  expires:
-                    type: string
-                    nullable: true
-                    title: Expires
-                    description: The amount of time, in seconds, to cache the redirects.
-                required:
-                - regexp
-                - to
-                - prefix
-                - append_suffix
-                - code
-                - expires
-                additionalProperties: false
-              title: Path
-              description: The paths to redirect
-          required:
-          - expires
-          - paths
-          additionalProperties: false
-          title: Redirect configuration
-          description: The configuration of the redirects.
-        sticky:
-          type: object
-          properties:
-            enabled:
-              type: boolean
-              title: Is enabled
-              description: Whether sticky routing is enabled.
-          required:
-          - enabled
-          additionalProperties: false
-          title: Sticky configuration
-          description: Sticky routing configuration.
-      required:
-      - primary
-      - id
-      - production_url
-      - attributes
-      - type
-      - tls
-      - cache
-      - ssi
-      - upstream
-      - redirects
-      - sticky
-      additionalProperties: false
     Deployment:
       type: object
       properties:
@@ -510,15 +407,17 @@ components:
           title: Deployment Identifier
           description: The identifier of Deployment
         created_at:
-          type: string
+          type:
+          - string
+          - 'null'
           format: date-time
-          nullable: true
           title: Creation date
           description: The creation date of the deployment
         updated_at:
-          type: string
+          type:
+          - string
+          - 'null'
           format: date-time
-          nullable: true
           title: Update date
           description: The update date of the deployment
         fingerprint:
@@ -541,13 +440,15 @@ components:
               title: Name
               description: ''
             namespace:
-              type: string
-              nullable: true
+              type:
+              - string
+              - 'null'
               title: Namespace
               description: ''
             organization:
-              type: string
-              nullable: true
+              type:
+              - string
+              - 'null'
               title: Organization
               description: ''
             capabilities:
@@ -625,7 +526,9 @@ components:
           title: Deployment target
           description: The deployment target
         vpn:
-          type: object
+          type:
+          - object
+          - 'null'
           properties:
             version:
               type: integer
@@ -657,18 +560,21 @@ components:
               title: Remote gateway IP
               description: ''
             identity:
-              type: string
-              nullable: true
+              type:
+              - string
+              - 'null'
               title: Identity
               description: The identity of the ipsec participant
             second_identity:
-              type: string
-              nullable: true
+              type:
+              - string
+              - 'null'
               title: Second Identity
               description: The second identity of the ipsec participant
             remote_identity:
-              type: string
-              nullable: true
+              type:
+              - string
+              - 'null'
               title: Remote Identity
               description: The identity of the remote ipsec participant
             remote_subnets:
@@ -713,7 +619,6 @@ components:
           - lifetime
           - margintime
           additionalProperties: false
-          nullable: true
           title: VPN configuration
           description: The configuration of the VPN
         http_access:
@@ -895,19 +800,22 @@ components:
                       title: Legacy development sizing
                       description: Enable legacy development sizing for this environment type.
                     max_cpu:
-                      type: number
+                      type:
+                      - number
+                      - 'null'
                       format: float
-                      nullable: true
                       title: Maximum CPU units
                       description: Maximum number of allocated CPU units.
                     max_memory:
-                      type: integer
-                      nullable: true
+                      type:
+                      - integer
+                      - 'null'
                       title: Maximum RAM
                       description: Maximum amount of allocated RAM.
                     max_environments:
-                      type: integer
-                      nullable: true
+                      type:
+                      - integer
+                      - 'null'
                       title: Maximum environments
                       description: Maximum number of environments
                   required:
@@ -926,19 +834,22 @@ components:
                       title: Legacy development sizing
                       description: Enable legacy development sizing for this environment type.
                     max_cpu:
-                      type: number
+                      type:
+                      - number
+                      - 'null'
                       format: float
-                      nullable: true
                       title: Maximum CPU units
                       description: Maximum number of allocated CPU units.
                     max_memory:
-                      type: integer
-                      nullable: true
+                      type:
+                      - integer
+                      - 'null'
                       title: Maximum RAM
                       description: Maximum amount of allocated RAM.
                     max_environments:
-                      type: integer
-                      nullable: true
+                      type:
+                      - integer
+                      - 'null'
                       title: Maximum environments
                       description: Maximum number of environments
                   required:
@@ -1011,8 +922,9 @@ components:
                 title: Service size
                 description: The service size.
               disk:
-                type: integer
-                nullable: true
+                type:
+                - integer
+                - 'null'
                 title: The size of the disk.
                 description: ''
               access:
@@ -1030,7 +942,9 @@ components:
                 title: Service relationships
                 description: The relationships of the service to other services.
               firewall:
-                type: object
+                type:
+                - object
+                - 'null'
                 properties:
                   outbound:
                     type: array
@@ -1072,29 +986,35 @@ components:
                 required:
                 - outbound
                 additionalProperties: false
-                nullable: true
                 title: Firewall
                 description: ''
               resources:
-                type: object
+                type:
+                - object
+                - 'null'
                 properties:
                   base_memory:
-                    type: integer
-                    nullable: true
+                    type:
+                    - integer
+                    - 'null'
                     title: Base memory
                     description: The base memory for the container
                   memory_ratio:
-                    type: integer
-                    nullable: true
+                    type:
+                    - integer
+                    - 'null'
                     title: Memory ratio
                     description: The amount of memory to allocate per units of CPU
                   profile_size:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Profile size
                     description: Selected size from container profile
                   minimum:
-                    type: object
+                    type:
+                    - object
+                    - 'null'
                     properties:
                       cpu:
                         type: number
@@ -1113,13 +1033,15 @@ components:
                         title: Type
                         description: resource type
                       disk:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Disk size
                         description: Disk size in MB
                       profile_size:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         title: Profile size
                         description: The closest profile size that matches the resources
                     required:
@@ -1129,11 +1051,12 @@ components:
                     - disk
                     - profile_size
                     additionalProperties: false
-                    nullable: true
                     title: Minimum resources
                     description: The minimum resources for this service
                   default:
-                    type: object
+                    type:
+                    - object
+                    - 'null'
                     properties:
                       cpu:
                         type: number
@@ -1152,13 +1075,15 @@ components:
                         title: Type
                         description: resource type
                       disk:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Disk size
                         description: Disk size in MB
                       profile_size:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         title: Profile size
                         description: The closest profile size that matches the resources
                     required:
@@ -1168,25 +1093,29 @@ components:
                     - disk
                     - profile_size
                     additionalProperties: false
-                    nullable: true
                     title: Default resources
                     description: The default resources for this service
                   disk:
-                    type: object
+                    type:
+                    - object
+                    - 'null'
                     properties:
                       temporary:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Temporary
                         description: ''
                       instance:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Instance
                         description: ''
                       storage:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Storage
                         description: ''
                     required:
@@ -1194,7 +1123,6 @@ components:
                     - instance
                     - storage
                     additionalProperties: false
-                    nullable: true
                     title: Disk resources
                     description: The disks resources
                 required:
@@ -1205,22 +1133,24 @@ components:
                 - default
                 - disk
                 additionalProperties: false
-                nullable: true
                 title: Resources
                 description: ''
               container_profile:
-                type: string
-                nullable: true
+                type:
+                - string
+                - 'null'
                 title: Container profile
                 description: Selected container profile for the service
               endpoints:
-                type: object
-                nullable: true
+                type:
+                - object
+                - 'null'
                 title: Endpoints
                 description: ''
               instance_count:
-                type: integer
-                nullable: true
+                type:
+                - integer
+                - 'null'
                 title: Instance count
                 description: Instance replication count of this service
             required:
@@ -1253,25 +1183,32 @@ components:
             type: object
             properties:
               resources:
-                type: object
+                type:
+                - object
+                - 'null'
                 properties:
                   base_memory:
-                    type: integer
-                    nullable: true
+                    type:
+                    - integer
+                    - 'null'
                     title: Base memory
                     description: The base memory for the container
                   memory_ratio:
-                    type: integer
-                    nullable: true
+                    type:
+                    - integer
+                    - 'null'
                     title: Memory ratio
                     description: The amount of memory to allocate per units of CPU
                   profile_size:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Profile size
                     description: Selected size from container profile
                   minimum:
-                    type: object
+                    type:
+                    - object
+                    - 'null'
                     properties:
                       cpu:
                         type: number
@@ -1290,13 +1227,15 @@ components:
                         title: Type
                         description: resource type
                       disk:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Disk size
                         description: Disk size in MB
                       profile_size:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         title: Profile size
                         description: The closest profile size that matches the resources
                     required:
@@ -1306,11 +1245,12 @@ components:
                     - disk
                     - profile_size
                     additionalProperties: false
-                    nullable: true
                     title: Minimum resources
                     description: The minimum resources for this service
                   default:
-                    type: object
+                    type:
+                    - object
+                    - 'null'
                     properties:
                       cpu:
                         type: number
@@ -1329,13 +1269,15 @@ components:
                         title: Type
                         description: resource type
                       disk:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Disk size
                         description: Disk size in MB
                       profile_size:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         title: Profile size
                         description: The closest profile size that matches the resources
                     required:
@@ -1345,25 +1287,29 @@ components:
                     - disk
                     - profile_size
                     additionalProperties: false
-                    nullable: true
                     title: Default resources
                     description: The default resources for this service
                   disk:
-                    type: object
+                    type:
+                    - object
+                    - 'null'
                     properties:
                       temporary:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Temporary
                         description: ''
                       instance:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Instance
                         description: ''
                       storage:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Storage
                         description: ''
                     required:
@@ -1371,7 +1317,6 @@ components:
                     - instance
                     - storage
                     additionalProperties: false
-                    nullable: true
                     title: Disk resources
                     description: The disks resources
                 required:
@@ -1382,7 +1327,6 @@ components:
                 - default
                 - disk
                 additionalProperties: false
-                nullable: true
                 title: Resources
                 description: ''
               size:
@@ -1399,8 +1343,9 @@ components:
                 title: Container Size
                 description: The container size for this application in production. Leave blank to allow it to be set dynamically.
               disk:
-                type: integer
-                nullable: true
+                type:
+                - integer
+                - 'null'
                 title: Disk size
                 description: The size of the disk.
               access:
@@ -1416,23 +1361,26 @@ components:
               relationships:
                 type: object
                 additionalProperties:
-                  type: object
+                  type:
+                  - object
+                  - 'null'
                   properties:
                     service:
-                      type: string
-                      nullable: true
+                      type:
+                      - string
+                      - 'null'
                       title: Service Name
                       description: The name of the service.
                     endpoint:
-                      type: string
-                      nullable: true
+                      type:
+                      - string
+                      - 'null'
                       title: Endpoint Name
                       description: The name of the endpoint on the service.
                   required:
                   - service
                   - endpoint
                   additionalProperties: false
-                  nullable: true
                 title: Service Relationships
                 description: The relationships of the application to defined services.
               additional_hosts:
@@ -1462,8 +1410,9 @@ components:
                       title: Source Path
                       description: The path to be mounted, relative to the root directory of the volume that's being mounted from.
                     service:
-                      type: string
-                      nullable: true
+                      type:
+                      - string
+                      - 'null'
                       title: Service Name
                       description: The name of the service that the volume will be mounted from. Must be a service in `services.yaml` of type `network-storage`.
                   required:
@@ -1473,8 +1422,9 @@ components:
                 title: Mounts
                 description: Filesystem mounts of this application.  If not specified the application will have no writeable disk space.
               timezone:
-                type: string
-                nullable: true
+                type:
+                - string
+                - 'null'
                 title: Timezone
                 description: The timezone of the application.  This primarily affects the timezone in which cron tasks will run.  It will not affect the application itself. Defaults to UTC if not specified.
               variables:
@@ -1485,7 +1435,9 @@ components:
                 title: Environment Variables
                 description: Variables provide environment-sensitive information to control how your application behaves.  To set a Unix environment variable, specify a key of `env:`, and then each sub-item of that is a key/value pair that will be injected into the environment.
               firewall:
-                type: object
+                type:
+                - object
+                - 'null'
                 properties:
                   outbound:
                     type: array
@@ -1527,12 +1479,12 @@ components:
                 required:
                 - outbound
                 additionalProperties: false
-                nullable: true
                 title: Firewall
                 description: ''
               container_profile:
-                type: string
-                nullable: true
+                type:
+                - string
+                - 'null'
                 title: Container Profile
                 description: Selected container profile for the application
               operations:
@@ -1548,8 +1500,9 @@ components:
                           title: Start Command
                           description: The command used to start the operation.
                         stop:
-                          type: string
-                          nullable: true
+                          type:
+                          - string
+                          - 'null'
                           title: Stop Command
                           description: The command used to stop the operation.
                       required:
@@ -1558,8 +1511,9 @@ components:
                       title: Commands
                       description: The commands definition.
                     timeout:
-                      type: integer
-                      nullable: true
+                      type:
+                      - integer
+                      - 'null'
                       title: Timeout
                       description: The maximum timeout in seconds after which the operation will be forcefully killed.
                     role:
@@ -1613,8 +1567,9 @@ components:
                 title: Application Directory
                 description: The path of the application in the container
               endpoints:
-                type: object
-                nullable: true
+                type:
+                - object
+                - 'null'
                 title: Endpoints
                 description: ''
               runtime:
@@ -1630,8 +1585,9 @@ components:
                       type: object
                       properties:
                         root:
-                          type: string
-                          nullable: true
+                          type:
+                          - string
+                          - 'null'
                           title: Document Root
                           description: The folder from which to serve static assets for this location relative to the application root.
                         expires:
@@ -1647,10 +1603,11 @@ components:
                           title: Scripts
                           description: Whether to execute scripts in this location (for script based runtimes).
                         index:
-                          type: array
+                          type:
+                          - array
+                          - 'null'
                           items:
                             type: string
-                          nullable: true
                           title: Index Files
                           description: Files to look for to serve directories.
                         allow:
@@ -1669,8 +1626,9 @@ components:
                             type: object
                             properties:
                               expires:
-                                type: string
-                                nullable: true
+                                type:
+                                - string
+                                - 'null'
                                 title: Expires
                                 description: Amount of time to cache static assets.
                               passthru:
@@ -1702,8 +1660,9 @@ components:
                               title: Enable Request Buffering
                               description: Enable request buffering.
                             max_request_size:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               title: Maximum request size
                               description: The maximum size request that can be buffered. Supports K, M, and G suffixes.
                           required:
@@ -1727,18 +1686,21 @@ components:
                     type: object
                     properties:
                       pre_start:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         title: Pre-start Command
                         description: A command executed before the application is started
                       start:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         title: Start Command
                         description: The command used to start the application.  It will be restarted if it terminates. Do not use on PHP unless using a custom persistent process like React PHP.
                       post_start:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         title: Post-start Command
                         description: A command executed after the application is started
                     additionalProperties: false
@@ -1755,11 +1717,12 @@ components:
                         title: Socket Family
                         description: If `tcp`, check the PORT environment variable on application startup. If `unix`, check SOCKET.
                       protocol:
-                        type: string
+                        type:
+                        - string
+                        - 'null'
                         enum:
                         - fastcgi
                         - http
-                        nullable: true
                         title: Protocol
                         description: ''
                     required:
@@ -1769,39 +1732,45 @@ components:
                     title: Upstream Configuration
                     description: Configuration on how the web server communicates with the application.
                   document_root:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Document Root
                     description: The document root of this application, relative to its root.
                   passthru:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Passthru
                     description: The URL to use as a passthru if a file doesn't match the whitelist.
                   index_files:
-                    type: array
+                    type:
+                    - array
+                    - 'null'
                     items:
                       type: string
-                    nullable: true
                     title: Index Files
                     description: Files to look for to serve directories.
                   whitelist:
-                    type: array
+                    type:
+                    - array
+                    - 'null'
                     items:
                       type: string
-                    nullable: true
                     title: Whitelisted entries
                     description: Whitelisted entries.
                   blacklist:
-                    type: array
+                    type:
+                    - array
+                    - 'null'
                     items:
                       type: string
-                    nullable: true
                     title: Blacklisted entries
                     description: Blacklisted entries.
                   expires:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Expires
                     description: Amount of time to cache static assets.
                   move_to_root:
@@ -1818,18 +1787,21 @@ components:
                 type: object
                 properties:
                   build:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Build Hook
                     description: Hook executed after the build process.
                   deploy:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Deploy Hook
                     description: Hook executed after the deployment of new code.
                   post_deploy:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Post-deploy Hook
                     description: Hook executed after an environment is fully deployed.
                 required:
@@ -1856,8 +1828,9 @@ components:
                           title: Start Command
                           description: The command used to start the operation.
                         stop:
-                          type: string
-                          nullable: true
+                          type:
+                          - string
+                          - 'null'
                           title: Stop Command
                           description: The command used to stop the operation.
                       required:
@@ -1866,8 +1839,9 @@ components:
                       title: Commands
                       description: The commands definition.
                     shutdown_timeout:
-                      type: integer
-                      nullable: true
+                      type:
+                      - integer
+                      - 'null'
                       title: Shutdown Timeout
                       description: The timeout in seconds after which the cron job will be forcefully killed.
                     timeout:
@@ -1889,8 +1863,9 @@ components:
                 type: object
                 properties:
                   root:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Application Source Root
                     description: The root of the application relative to the repository root.
                   operations:
@@ -1899,8 +1874,9 @@ components:
                       type: object
                       properties:
                         command:
-                          type: string
-                          nullable: true
+                          type:
+                          - string
+                          - 'null'
                           title: Update Command
                           description: The command to use to update this application.
                       required:
@@ -1918,8 +1894,9 @@ components:
                 type: object
                 properties:
                   flavor:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Build Flavor
                     description: The pre-set build tasks to use for this application.
                   caches:
@@ -1928,8 +1905,9 @@ components:
                       type: object
                       properties:
                         directory:
-                          type: string
-                          nullable: true
+                          type:
+                          - string
+                          - 'null'
                           title: Cache Directory
                           description: The directory, relative to the application root, that should be cached.
                         watch:
@@ -1967,10 +1945,11 @@ components:
                 title: Dependencies
                 description: External global dependencies of this application. They will be downloaded by the language's package manager.
               stack:
-                type: array
+                type:
+                - array
+                - 'null'
                 items:
                   type: object
-                nullable: true
                 title: Composable images
                 description: ''
               is_across_submodule:
@@ -1978,8 +1957,9 @@ components:
                 title: Is Across Submodule
                 description: Is this application coming from a submodule
               instance_count:
-                type: integer
-                nullable: true
+                type:
+                - integer
+                - 'null'
                 title: Instance replication count
                 description: Instance replication count of this application
               config_id:
@@ -2030,25 +2010,32 @@ components:
             type: object
             properties:
               resources:
-                type: object
+                type:
+                - object
+                - 'null'
                 properties:
                   base_memory:
-                    type: integer
-                    nullable: true
+                    type:
+                    - integer
+                    - 'null'
                     title: Base memory
                     description: The base memory for the container
                   memory_ratio:
-                    type: integer
-                    nullable: true
+                    type:
+                    - integer
+                    - 'null'
                     title: Memory ratio
                     description: The amount of memory to allocate per units of CPU
                   profile_size:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                     title: Profile size
                     description: Selected size from container profile
                   minimum:
-                    type: object
+                    type:
+                    - object
+                    - 'null'
                     properties:
                       cpu:
                         type: number
@@ -2067,13 +2054,15 @@ components:
                         title: Type
                         description: resource type
                       disk:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Disk size
                         description: Disk size in MB
                       profile_size:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         title: Profile size
                         description: The closest profile size that matches the resources
                     required:
@@ -2083,11 +2072,12 @@ components:
                     - disk
                     - profile_size
                     additionalProperties: false
-                    nullable: true
                     title: Minimum resources
                     description: The minimum resources for this service
                   default:
-                    type: object
+                    type:
+                    - object
+                    - 'null'
                     properties:
                       cpu:
                         type: number
@@ -2106,13 +2096,15 @@ components:
                         title: Type
                         description: resource type
                       disk:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Disk size
                         description: Disk size in MB
                       profile_size:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         title: Profile size
                         description: The closest profile size that matches the resources
                     required:
@@ -2122,25 +2114,29 @@ components:
                     - disk
                     - profile_size
                     additionalProperties: false
-                    nullable: true
                     title: Default resources
                     description: The default resources for this service
                   disk:
-                    type: object
+                    type:
+                    - object
+                    - 'null'
                     properties:
                       temporary:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Temporary
                         description: ''
                       instance:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Instance
                         description: ''
                       storage:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         title: Storage
                         description: ''
                     required:
@@ -2148,7 +2144,6 @@ components:
                     - instance
                     - storage
                     additionalProperties: false
-                    nullable: true
                     title: Disk resources
                     description: The disks resources
                 required:
@@ -2159,7 +2154,6 @@ components:
                 - default
                 - disk
                 additionalProperties: false
-                nullable: true
                 title: Resources
                 description: ''
               size:
@@ -2176,8 +2170,9 @@ components:
                 title: Container Size
                 description: The container size for this application in production. Leave blank to allow it to be set dynamically.
               disk:
-                type: integer
-                nullable: true
+                type:
+                - integer
+                - 'null'
                 title: Disk size
                 description: The writeable disk size to reserve on this application container.
               access:
@@ -2193,23 +2188,26 @@ components:
               relationships:
                 type: object
                 additionalProperties:
-                  type: object
+                  type:
+                  - object
+                  - 'null'
                   properties:
                     service:
-                      type: string
-                      nullable: true
+                      type:
+                      - string
+                      - 'null'
                       title: Service Name
                       description: The name of the service.
                     endpoint:
-                      type: string
-                      nullable: true
+                      type:
+                      - string
+                      - 'null'
                       title: Endpoint Name
                       description: The name of the endpoint on the service.
                   required:
                   - service
                   - endpoint
                   additionalProperties: false
-                  nullable: true
                 title: Service Relationships
                 description: The relationships of the application to defined services.
               additional_hosts:
@@ -2239,8 +2237,9 @@ components:
                       title: Source Path
                       description: The path to be mounted, relative to the root directory of the volume that's being mounted from.
                     service:
-                      type: string
-                      nullable: true
+                      type:
+                      - string
+                      - 'null'
                       title: Service Name
                       description: The name of the service that the volume will be mounted from. Must be a service in `services.yaml` of type `network-storage`.
                   required:
@@ -2250,8 +2249,9 @@ components:
                 title: Mounts
                 description: Filesystem mounts of this application.  If not specified the application will have no writeable disk space.
               timezone:
-                type: string
-                nullable: true
+                type:
+                - string
+                - 'null'
                 title: Timezone
                 description: The timezone of the application.  This primarily affects the timezone in which cron tasks will run.  It will not affect the application itself. Defaults to UTC if not specified.
               variables:
@@ -2262,7 +2262,9 @@ components:
                 title: Environment Variables
                 description: Variables provide environment-sensitive information to control how your application behaves.  To set a Unix environment variable, specify a key of `env:`, and then each sub-item of that is a key/value pair that will be injected into the environment.
               firewall:
-                type: object
+                type:
+                - object
+                - 'null'
                 properties:
                   outbound:
                     type: array
@@ -2304,12 +2306,12 @@ components:
                 required:
                 - outbound
                 additionalProperties: false
-                nullable: true
                 title: Firewall
                 description: ''
               container_profile:
-                type: string
-                nullable: true
+                type:
+                - string
+                - 'null'
                 title: Container Profile
                 description: Selected container profile for the application
               operations:
@@ -2325,8 +2327,9 @@ components:
                           title: Start Command
                           description: The command used to start the operation.
                         stop:
-                          type: string
-                          nullable: true
+                          type:
+                          - string
+                          - 'null'
                           title: Stop Command
                           description: The command used to stop the operation.
                       required:
@@ -2335,8 +2338,9 @@ components:
                       title: Commands
                       description: The commands definition.
                     timeout:
-                      type: integer
-                      nullable: true
+                      type:
+                      - integer
+                      - 'null'
                       title: Timeout
                       description: The maximum timeout in seconds after which the operation will be forcefully killed.
                     role:
@@ -2390,8 +2394,9 @@ components:
                 title: Application Directory
                 description: The path of the application in the container
               endpoints:
-                type: object
-                nullable: true
+                type:
+                - object
+                - 'null'
                 title: Endpoints
                 description: ''
               runtime:
@@ -2405,8 +2410,9 @@ components:
                     type: object
                     properties:
                       pre_start:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         title: Pre-start Command
                         description: A command executed before the worker is started
                       start:
@@ -2414,8 +2420,9 @@ components:
                         title: Start Command
                         description: The command used to start the worker.
                       post_start:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         title: Post-start Command
                         description: A command executed after the worker is started
                     required:
@@ -2424,8 +2431,9 @@ components:
                     title: Commands
                     description: The commands to manage the worker.
                   disk:
-                    type: integer
-                    nullable: true
+                    type:
+                    - integer
+                    - 'null'
                     title: Disk Size
                     description: The writeable disk size to reserve on this application container.
                 required:
@@ -2438,15 +2446,17 @@ components:
                 title: App
                 description: ''
               stack:
-                type: array
+                type:
+                - array
+                - 'null'
                 items:
                   type: object
-                nullable: true
                 title: Composable images
                 description: ''
               instance_count:
-                type: integer
-                nullable: true
+                type:
+                - integer
+                - 'null'
                 title: Instance replication count
                 description: Instance replication count of this worker
               slug_id:
@@ -2530,21 +2540,23 @@ components:
       - workers
       - container_profiles
       additionalProperties: false
-    ProxyRoute:
+    UpstreamRoute:
       type: object
       properties:
         id:
           type: string
-          title: ProxyRoute Identifier
-          description: The identifier of ProxyRoute
+          title: UpstreamRoute Identifier
+          description: The identifier of UpstreamRoute
         primary:
-          type: boolean
-          nullable: true
+          type:
+          - boolean
+          - 'null'
           title: Is primary
           description: This route is the primary route of the environment
         production_url:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           title: Production URL
           description: How this URL route would look on production environment
         attributes:
@@ -2568,18 +2580,21 @@ components:
               type: object
               properties:
                 enabled:
-                  type: boolean
-                  nullable: true
+                  type:
+                  - boolean
+                  - 'null'
                   title: Is enabled
                   description: Whether strict transport security is enabled or not.
                 include_subdomains:
-                  type: boolean
-                  nullable: true
+                  type:
+                  - boolean
+                  - 'null'
                   title: Is subdomains included
                   description: Whether the strict transport security policy should include all subdomains.
                 preload:
-                  type: boolean
-                  nullable: true
+                  type:
+                  - boolean
+                  - 'null'
                   title: Is strict transport security preloaded
                   description: Whether the strict transport security policy should be preloaded in browsers.
               required:
@@ -2590,21 +2605,23 @@ components:
               title: Strict-Transport-Security options.
               description: ''
             min_version:
-              type: string
+              type:
+              - string
+              - 'null'
               enum:
               - TLSv1.0
               - TLSv1.1
               - TLSv1.2
               - TLSv1.3
-              nullable: true
               title: Minimum TLS version
               description: The minimum TLS version to support.
             client_authentication:
-              type: string
+              type:
+              - string
+              - 'null'
               enum:
               - request
               - require
-              nullable: true
               title: Client authentication
               description: The type of client authentication to request.
             client_certificate_authorities:
@@ -2621,10 +2638,128 @@ components:
           additionalProperties: false
           title: TLS settings
           description: TLS settings for the route.
-        to:
+        cache:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether the cache is enabled.
+            default_ttl:
+              type: integer
+              title: Default TTL
+              description: The TTL to apply when the response doesn't specify one. Only applies to static files.
+            cookies:
+              type: array
+              items:
+                type: string
+              title: Cookies
+              description: The cookies to take into account for the cache key.
+            headers:
+              type: array
+              items:
+                type: string
+              title: Headers
+              description: The headers to take into account for the cache key.
+          required:
+          - enabled
+          - default_ttl
+          - cookies
+          - headers
+          additionalProperties: false
+          title: Cache configuration
+          description: Cache configuration.
+        ssi:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether SSI include is enabled.
+          required:
+          - enabled
+          additionalProperties: false
+          title: SSI configuration
+          description: Server-Side Include configuration.
+        upstream:
           type: string
-          title: Proxy destination
-          description: ''
+          title: Upstream
+          description: The upstream to use for this route.
+        redirects:
+          type: object
+          properties:
+            expires:
+              type: string
+              title: Expires
+              description: The amount of time, in seconds, to cache the redirects.
+            paths:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  regexp:
+                    type: boolean
+                    title: Is regexp
+                    description: Whether the path is a regular expression.
+                  to:
+                    type: string
+                    title: Redirect URL
+                    description: The URL to redirect to.
+                  prefix:
+                    type:
+                    - boolean
+                    - 'null'
+                    title: Is prefix
+                    description: Whether to redirect all the paths that start with the path.
+                  append_suffix:
+                    type:
+                    - boolean
+                    - 'null'
+                    title: Append suffix
+                    description: Whether to append the incoming suffix to the redirected URL.
+                  code:
+                    type: integer
+                    enum:
+                    - 301
+                    - 302
+                    - 307
+                    - 308
+                    title: Redirect code
+                    description: The redirect code to use.
+                  expires:
+                    type:
+                    - string
+                    - 'null'
+                    title: Expires
+                    description: The amount of time, in seconds, to cache the redirects.
+                required:
+                - regexp
+                - to
+                - prefix
+                - append_suffix
+                - code
+                - expires
+                additionalProperties: false
+              title: Path
+              description: The paths to redirect
+          required:
+          - expires
+          - paths
+          additionalProperties: false
+          title: Redirect configuration
+          description: The configuration of the redirects.
+        sticky:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether sticky routing is enabled.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Sticky configuration
+          description: Sticky routing configuration.
       required:
       - primary
       - id
@@ -2632,7 +2767,11 @@ components:
       - attributes
       - type
       - tls
-      - to
+      - cache
+      - ssi
+      - upstream
+      - redirects
+      - sticky
       additionalProperties: false
   securitySchemes:
     OAuth2:
