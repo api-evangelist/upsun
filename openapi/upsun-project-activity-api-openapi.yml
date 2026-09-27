@@ -162,10 +162,6 @@ paths:
         Please note that not all activities are cancelable.'
 components:
   schemas:
-    ActivityCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Activity'
     Activity:
       type: object
       properties:
@@ -350,6 +346,10 @@ components:
       - status
       - code
       additionalProperties: false
+    ActivityCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Activity'
   securitySchemes:
     OAuth2:
       type: oauth2

@@ -356,6 +356,15 @@ components:
       schema:
         type: string
   schemas:
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
     Error:
       description: ''
       type: object
@@ -380,14 +389,6 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
     TeamProjectAccess:
       type: object
       properties:
@@ -443,15 +444,14 @@ components:
                 method:
                   type: string
                   description: The HTTP method to use.
-    ListLinks:
+    Link:
       type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
       properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
+        href:
+          type: string
+          description: URL of the link
   securitySchemes:
     OAuth2:
       type: oauth2

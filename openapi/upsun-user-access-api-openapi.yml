@@ -429,6 +429,15 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
     ProjectPermissions:
       type: array
       description: An array of project permissions.
@@ -470,23 +479,6 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
     UserProjectAccess:
       type: object
       properties:
@@ -544,6 +536,14 @@ components:
                 method:
                   type: string
                   description: The HTTP method to use.
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
   parameters:
     ProjectID:
       name: project_id

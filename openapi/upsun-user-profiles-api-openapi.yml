@@ -251,25 +251,6 @@ components:
               type: string
           type: object
       type: object
-    AddressMetadata:
-      description: Information about fields required to express an address.
-      properties:
-        metadata:
-          description: Address field metadata.
-          properties:
-            required_fields:
-              description: Fields required to express the address.
-              type: array
-              items:
-                type: string
-            field_labels:
-              description: Localized labels for address fields.
-              type: object
-            show_vat:
-              description: Whether this country supports a VAT number.
-              type: boolean
-          type: object
-      type: object
     Profile:
       description: The user profile.
       properties:
@@ -453,6 +434,25 @@ components:
         invoiced:
           description: The customer is invoiced.
           type: boolean
+      type: object
+    AddressMetadata:
+      description: Information about fields required to express an address.
+      properties:
+        metadata:
+          description: Address field metadata.
+          properties:
+            required_fields:
+              description: Fields required to express the address.
+              type: array
+              items:
+                type: string
+            field_labels:
+              description: Localized labels for address fields.
+              type: object
+            show_vat:
+              description: Whether this country supports a VAT number.
+              type: boolean
+          type: object
       type: object
     Address:
       description: The address of the user.

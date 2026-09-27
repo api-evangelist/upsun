@@ -690,6 +690,209 @@ paths:
         (if the deployment target supports it).'
 components:
   schemas:
+    EnvironmentMergeInput:
+      type: object
+      properties:
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - child
+              - default
+              - manual
+              - minimum
+              title: Init Resources
+              description: The resources used when merging an environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - resources
+      additionalProperties: false
+    VersionCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Version'
+    VersionPatch:
+      type: object
+      properties:
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    EnvironmentActivateInput:
+      type: object
+      properties:
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when activating an environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - resources
+      additionalProperties: false
+    EnvironmentPatch:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: The name of the environment
+        title:
+          type: string
+          title: Title
+          description: The title of the environment
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        type:
+          type: string
+          enum:
+          - development
+          - production
+          - staging
+          title: Type
+          description: The type of environment (`production`, `staging` or `development`), if not provided, a default will be calculated
+        parent:
+          type:
+          - string
+          - 'null'
+          title: Parent environment
+          description: The name of the parent environment
+        clone_parent_on_create:
+          type: boolean
+          title: Clone parent on create
+          description: Clone data when creating that environment
+        http_access:
+          type: object
+          properties:
+            is_enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether http_access control is enabled
+            addresses:
+              type: array
+              items:
+                type: object
+                properties:
+                  permission:
+                    type: string
+                    enum:
+                    - allow
+                    - deny
+                    title: Permission
+                    description: ''
+                  address:
+                    type: string
+                    title: Address
+                    description: IP address or CIDR
+                required:
+                - permission
+                - address
+                additionalProperties: false
+              title: Address grants
+              description: ''
+            basic_auth:
+              type: object
+              additionalProperties:
+                type: string
+              title: Basic auth grants
+              description: ''
+          additionalProperties: false
+          title: HTTP access permissions
+          description: The HTTP access permissions for this environment
+        enable_smtp:
+          type: boolean
+          title: Enable SMTP
+          description: Whether to configure SMTP for this environment
+        restrict_robots:
+          type: boolean
+          title: Restrict robots
+          description: Whether to restrict robots for this environment
+      additionalProperties: false
+    Version:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Version Identifier
+          description: The identifier of Version
+        commit:
+          type:
+          - string
+          - 'null'
+          title: Commit SHA
+          description: The SHA of the commit of this version
+        locked:
+          type: boolean
+          title: Is locked
+          description: Whether this version is locked and cannot be modified
+        routing:
+          type: object
+          properties:
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
+          required:
+          - percentage
+          additionalProperties: false
+          title: Routing
+          description: Configuration about the traffic routed to this version
+      required:
+      - id
+      - commit
+      - locked
+      - routing
+      additionalProperties: false
     EnvironmentBranchInput:
       type: object
       properties:
@@ -738,6 +941,44 @@ components:
       - clone_parent
       - type
       - resources
+      additionalProperties: false
+    EnvironmentSynchronizeInput:
+      type: object
+      properties:
+        synchronize_code:
+          type: boolean
+          title: Is code synchronized
+          description: Synchronize code?
+        rebase:
+          type: boolean
+          title: Is code rebased
+          description: Synchronize code by rebasing instead of merging
+        synchronize_data:
+          type: boolean
+          title: Is data synchronized
+          description: Synchronize data?
+        synchronize_resources:
+          type: boolean
+          title: Are resources synchronized
+          description: Synchronize resources?
+      required:
+      - synchronize_code
+      - rebase
+      - synchronize_data
+      - synchronize_resources
+      additionalProperties: false
+    EnvironmentDeployInput:
+      type: object
+      properties:
+        strategy:
+          type: string
+          enum:
+          - rolling
+          - stopstart
+          title: Deployment strategy
+          description: The deployment strategy (`rolling` or `stopstart`)
+      required:
+      - strategy
       additionalProperties: false
     Environment:
       type: object
@@ -1272,188 +1513,10 @@ components:
       - has_deployment
       - supports_restrict_robots
       additionalProperties: false
-    VersionCreateInput:
-      type: object
-      properties:
-        routing:
-          type: object
-          properties:
-            percentage:
-              type: integer
-              title: Traffic percentage
-              description: The percentage of traffic routed to this version
-          additionalProperties: false
-          title: Routing
-          description: Configuration about the traffic routed to this version
-      additionalProperties: false
-    VersionCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Version'
-    EnvironmentMergeInput:
-      type: object
-      properties:
-        resources:
-          type:
-          - object
-          - 'null'
-          properties:
-            init:
-              type:
-              - string
-              - 'null'
-              enum:
-              - child
-              - default
-              - manual
-              - minimum
-              title: Init Resources
-              description: The resources used when merging an environment
-          required:
-          - init
-          additionalProperties: false
-          title: Resources
-          description: ''
-      required:
-      - resources
-      additionalProperties: false
-    EnvironmentActivateInput:
-      type: object
-      properties:
-        resources:
-          type:
-          - object
-          - 'null'
-          properties:
-            init:
-              type:
-              - string
-              - 'null'
-              enum:
-              - default
-              - minimum
-              - parent
-              title: Init Resources
-              description: The resources used when activating an environment
-          required:
-          - init
-          additionalProperties: false
-          title: Resources
-          description: ''
-      required:
-      - resources
-      additionalProperties: false
     EnvironmentCollection:
       type: array
       items:
         $ref: '#/components/schemas/Environment'
-    EnvironmentPatch:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Name
-          description: The name of the environment
-        title:
-          type: string
-          title: Title
-          description: The title of the environment
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        type:
-          type: string
-          enum:
-          - development
-          - production
-          - staging
-          title: Type
-          description: The type of environment (`production`, `staging` or `development`), if not provided, a default will be calculated
-        parent:
-          type:
-          - string
-          - 'null'
-          title: Parent environment
-          description: The name of the parent environment
-        clone_parent_on_create:
-          type: boolean
-          title: Clone parent on create
-          description: Clone data when creating that environment
-        http_access:
-          type: object
-          properties:
-            is_enabled:
-              type: boolean
-              title: Is enabled
-              description: Whether http_access control is enabled
-            addresses:
-              type: array
-              items:
-                type: object
-                properties:
-                  permission:
-                    type: string
-                    enum:
-                    - allow
-                    - deny
-                    title: Permission
-                    description: ''
-                  address:
-                    type: string
-                    title: Address
-                    description: IP address or CIDR
-                required:
-                - permission
-                - address
-                additionalProperties: false
-              title: Address grants
-              description: ''
-            basic_auth:
-              type: object
-              additionalProperties:
-                type: string
-              title: Basic auth grants
-              description: ''
-          additionalProperties: false
-          title: HTTP access permissions
-          description: The HTTP access permissions for this environment
-        enable_smtp:
-          type: boolean
-          title: Enable SMTP
-          description: Whether to configure SMTP for this environment
-        restrict_robots:
-          type: boolean
-          title: Restrict robots
-          description: Whether to restrict robots for this environment
-      additionalProperties: false
-    EnvironmentSynchronizeInput:
-      type: object
-      properties:
-        synchronize_code:
-          type: boolean
-          title: Is code synchronized
-          description: Synchronize code?
-        rebase:
-          type: boolean
-          title: Is code rebased
-          description: Synchronize code by rebasing instead of merging
-        synchronize_data:
-          type: boolean
-          title: Is data synchronized
-          description: Synchronize data?
-        synchronize_resources:
-          type: boolean
-          title: Are resources synchronized
-          description: Synchronize resources?
-      required:
-      - synchronize_code
-      - rebase
-      - synchronize_data
-      - synchronize_resources
-      additionalProperties: false
     EnvironmentInitializeInput:
       type: object
       properties:
@@ -1521,22 +1584,7 @@ components:
       - files
       - resources
       additionalProperties: false
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
-    VersionPatch:
+    VersionCreateInput:
       type: object
       properties:
         routing:
@@ -1549,54 +1597,6 @@ components:
           additionalProperties: false
           title: Routing
           description: Configuration about the traffic routed to this version
-      additionalProperties: false
-    EnvironmentDeployInput:
-      type: object
-      properties:
-        strategy:
-          type: string
-          enum:
-          - rolling
-          - stopstart
-          title: Deployment strategy
-          description: The deployment strategy (`rolling` or `stopstart`)
-      required:
-      - strategy
-      additionalProperties: false
-    Version:
-      type: object
-      properties:
-        id:
-          type: string
-          title: Version Identifier
-          description: The identifier of Version
-        commit:
-          type:
-          - string
-          - 'null'
-          title: Commit SHA
-          description: The SHA of the commit of this version
-        locked:
-          type: boolean
-          title: Is locked
-          description: Whether this version is locked and cannot be modified
-        routing:
-          type: object
-          properties:
-            percentage:
-              type: integer
-              title: Traffic percentage
-              description: The percentage of traffic routed to this version
-          required:
-          - percentage
-          additionalProperties: false
-          title: Routing
-          description: Configuration about the traffic routed to this version
-      required:
-      - id
-      - commit
-      - locked
-      - routing
       additionalProperties: false
   securitySchemes:
     OAuth2:

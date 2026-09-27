@@ -94,14 +94,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   parameters:
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
     OrganizationIDName:
       in: path
       name: organization_id
@@ -113,6 +105,14 @@ components:
       required: true
       schema:
         type: string
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
   schemas:
     Error:
       description: ''

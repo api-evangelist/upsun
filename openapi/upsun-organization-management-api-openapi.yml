@@ -248,91 +248,55 @@ paths:
                 $ref: '#/components/schemas/Error'
       x-vendor: upsun
 components:
-  parameters:
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
-      schema:
-        type: string
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
   schemas:
-    PrepaymentObject:
+    OrganizationAlertConfig:
       type: object
-      description: Prepayment information for an organization.
+      description: The alert configuration for an organization.
       properties:
-        prepayment:
-          type: object
-          description: Prepayment information for an organization.
+        id:
+          type: string
+          description: Type of alert (e.g. "billing")
+        active:
+          type: boolean
+          description: Whether the billing alert should be active or not.
+        alerts_sent:
+          type: number
+          description: Number of alerts sent.
+        last_alert_at:
+          type:
+          - string
+          - 'null'
+          description: The datetime the alert was last sent.
+        updated_at:
+          type:
+          - string
+          - 'null'
+          description: The datetime the alert was last updated.
+        config:
+          type:
+          - object
+          - 'null'
+          description: Configuration for threshold and mode.
           properties:
-            organization_id:
-              type: string
-              description: Organization ID
-            balance:
+            threshold:
               type: object
-              description: The prepayment balance in complex format.
+              description: Data regarding threshold spend.
               properties:
                 formatted:
                   type: string
-                  description: Formatted balance.
+                  description: Formatted threshold value.
                 amount:
                   type: number
-                  description: The balance amount.
+                  description: Threshold value.
                 currency_code:
                   type: string
-                  description: The balance currency code.
+                  description: Threshold currency code.
                 currency_symbol:
                   type: string
-                  description: The balance currency symbol.
-            last_updated_at:
-              type:
-              - string
-              - 'null'
-              description: The date the prepayment balance was last updated.
-            sufficient:
-              type: boolean
-              description: Whether the prepayment balance is enough to cover the upcoming order.
-            fallback:
-              type:
-              - string
-              - 'null'
-              description: The fallback payment method, if any, to be used in case prepayment balance is not enough to cover an order.
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
+                  description: Threshold currency symbol.
+            mode:
+              type: string
+              description: The mode of alert.
     PrepaymentTransactionObject:
       type: object
       description: Prepayment transaction for an organization.
@@ -375,6 +339,30 @@ components:
           - string
           - 'null'
           description: The expiration date of the transaction (deposits only).
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     OrganizationEstimationObject:
       type: object
       description: An estimation of all organization spend.
@@ -501,54 +489,66 @@ components:
                       environments:
                         type: integer
                         description: The total environments for this subsciption.
-    OrganizationAlertConfig:
+    PrepaymentObject:
       type: object
-      description: The alert configuration for an organization.
+      description: Prepayment information for an organization.
       properties:
-        id:
-          type: string
-          description: Type of alert (e.g. "billing")
-        active:
-          type: boolean
-          description: Whether the billing alert should be active or not.
-        alerts_sent:
-          type: number
-          description: Number of alerts sent.
-        last_alert_at:
-          type:
-          - string
-          - 'null'
-          description: The datetime the alert was last sent.
-        updated_at:
-          type:
-          - string
-          - 'null'
-          description: The datetime the alert was last updated.
-        config:
-          type:
-          - object
-          - 'null'
-          description: Configuration for threshold and mode.
+        prepayment:
+          type: object
+          description: Prepayment information for an organization.
           properties:
-            threshold:
+            organization_id:
+              type: string
+              description: Organization ID
+            balance:
               type: object
-              description: Data regarding threshold spend.
+              description: The prepayment balance in complex format.
               properties:
                 formatted:
                   type: string
-                  description: Formatted threshold value.
+                  description: Formatted balance.
                 amount:
                   type: number
-                  description: Threshold value.
+                  description: The balance amount.
                 currency_code:
                   type: string
-                  description: Threshold currency code.
+                  description: The balance currency code.
                 currency_symbol:
                   type: string
-                  description: Threshold currency symbol.
-            mode:
-              type: string
-              description: The mode of alert.
+                  description: The balance currency symbol.
+            last_updated_at:
+              type:
+              - string
+              - 'null'
+              description: The date the prepayment balance was last updated.
+            sufficient:
+              type: boolean
+              description: Whether the prepayment balance is enough to cover the upcoming order.
+            fallback:
+              type:
+              - string
+              - 'null'
+              description: The fallback payment method, if any, to be used in case prepayment balance is not enough to cover an order.
+  parameters:
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
   securitySchemes:
     OAuth2:
       type: oauth2

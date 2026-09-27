@@ -157,6 +157,27 @@ paths:
       summary: Delete an existing third-party integration
 components:
   schemas:
+    HealthWebHookIntegrationPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        shared_key:
+          type:
+          - string
+          - 'null'
+          title: Shared Key
+          description: The JWS shared secret key
+        url:
+          type: string
+          title: WebHook URL
+          description: The URL of the webhook
+      required:
+      - type
+      - url
+      additionalProperties: false
     NewRelicIntegrationPatch:
       type: object
       properties:
@@ -193,262 +214,6 @@ components:
       - url
       - license_key
       additionalProperties: false
-    BlackfireIntegrationPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-      required:
-      - type
-      additionalProperties: false
-    BitbucketServerIntegrationPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        fetch_branches:
-          type: boolean
-          title: Fetch Branches
-          description: Whether or not to fetch branches.
-        prune_branches:
-          type: boolean
-          title: Prune Branches
-          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
-        environment_init_resources:
-          type: string
-          enum:
-          - default
-          - manual
-          - minimum
-          - parent
-          title: Environment Init Resources
-          description: The resources used when initializing a new service
-        url:
-          type: string
-          title: URL
-          description: The base URL of the Bitbucket Server installation.
-        username:
-          type: string
-          title: Username
-          description: The Bitbucket Server user.
-        token:
-          type: string
-          title: Token
-          description: The Bitbucket Server personal access token.
-        project:
-          type: string
-          title: Project
-          description: The Bitbucket Server project
-        repository:
-          type: string
-          title: Repository
-          description: The Bitbucket Server repository
-        build_pull_requests:
-          type: boolean
-          title: Build Pull Requests
-          description: Whether or not to build pull requests.
-        pull_requests_clone_parent_data:
-          type: boolean
-          title: Clone Parent Data
-          description: Whether or not to clone parent data when building merge requests.
-      required:
-      - type
-      - url
-      - username
-      - token
-      - project
-      - repository
-      additionalProperties: false
-    EmailIntegrationPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        from_address:
-          type:
-          - string
-          - 'null'
-          title: From Address
-          description: The email address to use
-        recipients:
-          type: array
-          items:
-            type: string
-          title: Recipients
-          description: Recipients of the email
-      required:
-      - type
-      - recipients
-      additionalProperties: false
-    BitbucketServerIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: BitbucketServerIntegration Identifier
-          description: The identifier of BitbucketServerIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        fetch_branches:
-          type: boolean
-          title: Fetch Branches
-          description: Whether or not to fetch branches.
-        prune_branches:
-          type: boolean
-          title: Prune Branches
-          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
-        environment_init_resources:
-          type: string
-          enum:
-          - default
-          - manual
-          - minimum
-          - parent
-          title: Environment Init Resources
-          description: The resources used when initializing a new service
-        url:
-          type: string
-          title: URL
-          description: The base URL of the Bitbucket Server installation.
-        username:
-          type: string
-          title: Username
-          description: The Bitbucket Server user.
-        project:
-          type: string
-          title: Project
-          description: The Bitbucket Server project
-        repository:
-          type: string
-          title: Repository
-          description: The Bitbucket Server repository
-        build_pull_requests:
-          type: boolean
-          title: Build Pull Requests
-          description: Whether or not to build pull requests.
-        pull_requests_clone_parent_data:
-          type: boolean
-          title: Clone Parent Data
-          description: Whether or not to clone parent data when building merge requests.
-      required:
-      - created_at
-      - updated_at
-      - type
-      - fetch_branches
-      - prune_branches
-      - environment_init_resources
-      - url
-      - username
-      - project
-      - repository
-      - build_pull_requests
-      - pull_requests_clone_parent_data
-      additionalProperties: false
-    IntegrationCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Integration'
-    WebHookIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: WebHookIntegration Identifier
-          description: The identifier of WebHookIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        events:
-          type: array
-          items:
-            type: string
-          title: Events
-          description: Events to execute the hook on
-        environments:
-          type: array
-          items:
-            type: string
-          title: Environments
-          description: The environments to execute the hook on
-        excluded_environments:
-          type: array
-          items:
-            type: string
-          title: Excluded Environments
-          description: The environments to not execute the hook on
-        states:
-          type: array
-          items:
-            type: string
-          title: States
-          description: Events to execute the hook on
-        result:
-          type: string
-          enum:
-          - '*'
-          - failure
-          - success
-          title: Result
-          description: Result to execute the hook on
-        shared_key:
-          type:
-          - string
-          - 'null'
-          title: Shared Key
-          description: The JWS shared secret key
-        url:
-          type: string
-          title: URL
-          description: The URL of the webhook
-      required:
-      - created_at
-      - updated_at
-      - type
-      - events
-      - environments
-      - excluded_environments
-      - states
-      - result
-      - shared_key
-      - url
-      additionalProperties: false
     IntegrationPatch:
       oneOf:
       - $ref: '#/components/schemas/BitbucketIntegrationPatch'
@@ -469,148 +234,7 @@ components:
       - $ref: '#/components/schemas/SumologicIntegrationPatch'
       - $ref: '#/components/schemas/SyslogIntegrationPatch'
       - $ref: '#/components/schemas/WebHookIntegrationPatch'
-    GithubIntegrationPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        fetch_branches:
-          type: boolean
-          title: Fetch Branches
-          description: Whether or not to fetch branches.
-        prune_branches:
-          type: boolean
-          title: Prune Branches
-          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
-        environment_init_resources:
-          type: string
-          enum:
-          - default
-          - manual
-          - minimum
-          - parent
-          title: Environment Init Resources
-          description: The resources used when initializing a new service
-        token:
-          type: string
-          title: Token
-          description: The GitHub token.
-        base_url:
-          type:
-          - string
-          - 'null'
-          title: Base URL
-          description: The base URL of the Github API endpoint.
-        repository:
-          type: string
-          title: Repository
-          description: The GitHub repository (in the form `user/repo`).
-        build_pull_requests:
-          type: boolean
-          title: Build Pull Requests
-          description: Whether or not to build pull requests.
-        build_draft_pull_requests:
-          type: boolean
-          title: Build Draft Pull Requests
-          description: Whether or not to build draft pull requests (requires `build_pull_requests`).
-        build_pull_requests_post_merge:
-          type: boolean
-          title: Build PR Post-Merge
-          description: Whether to build pull requests post-merge (if true) or pre-merge (if false).
-        pull_requests_clone_parent_data:
-          type: boolean
-          title: Clone Parent Data
-          description: Whether or not to clone parent data when building pull requests.
-      required:
-      - type
-      - token
-      - repository
-      additionalProperties: false
-    SumologicIntegrationPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        extra:
-          type: object
-          additionalProperties:
-            type: string
-          title: Extra
-          description: Arbitrary key/value pairs to include with forwarded logs
-        url:
-          type: string
-          title: The Sumologic HTTPS endpoint
-          description: ''
-        category:
-          type: string
-          title: Category
-          description: The Category used to easy filtering (sent as X-Sumo-Category header)
-        tls_verify:
-          type: boolean
-          title: TLS Verify
-          description: Enable/Disable HTTPS certificate verification
-        excluded_services:
-          type: array
-          items:
-            type: string
-          title: Excluded Services
-          description: Comma separated list of service and application names to exclude from logging
-      required:
-      - type
-      - url
-      additionalProperties: false
-    ScriptIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        events:
-          type: array
-          items:
-            type: string
-          title: Events
-          description: Events to execute the hook on
-        environments:
-          type: array
-          items:
-            type: string
-          title: Environments
-          description: The environments to execute the hook on
-        excluded_environments:
-          type: array
-          items:
-            type: string
-          title: Excluded Environments
-          description: The environments to not execute the hook on
-        states:
-          type: array
-          items:
-            type: string
-          title: States
-          description: Events to execute the hook on
-        result:
-          type: string
-          enum:
-          - '*'
-          - failure
-          - success
-          title: Result
-          description: Result to execute the hook on
-        script:
-          type: string
-          title: script
-          description: The script to run
-      required:
-      - type
-      - script
-      additionalProperties: false
-    SlackIntegrationCreateInput:
+    SlackIntegrationPatch:
       type: object
       properties:
         type:
@@ -691,508 +315,6 @@ components:
       - token
       - project
       additionalProperties: false
-    NewRelicIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        extra:
-          type: object
-          additionalProperties:
-            type: string
-          title: Extra
-          description: Arbitrary key/value pairs to include with forwarded logs
-        url:
-          type: string
-          title: The NewRelic Logs endpoint
-          description: ''
-        license_key:
-          type: string
-          title: License Key
-          description: The NewRelic Logs License Key
-        tls_verify:
-          type: boolean
-          title: TLS Verify
-          description: Enable/Disable HTTPS certificate verification
-        excluded_services:
-          type: array
-          items:
-            type: string
-          title: Excluded Services
-          description: Comma separated list of service and application names to exclude from logging
-      required:
-      - type
-      - url
-      - license_key
-      additionalProperties: false
-    Integration:
-      oneOf:
-      - $ref: '#/components/schemas/BitbucketIntegration'
-      - $ref: '#/components/schemas/BitbucketServerIntegration'
-      - $ref: '#/components/schemas/BlackfireIntegration'
-      - $ref: '#/components/schemas/FastlyIntegration'
-      - $ref: '#/components/schemas/GithubIntegration'
-      - $ref: '#/components/schemas/GitLabIntegration'
-      - $ref: '#/components/schemas/EmailIntegration'
-      - $ref: '#/components/schemas/PagerDutyIntegration'
-      - $ref: '#/components/schemas/SlackIntegration'
-      - $ref: '#/components/schemas/HealthWebHookIntegration'
-      - $ref: '#/components/schemas/HttpLogIntegration'
-      - $ref: '#/components/schemas/NewRelicIntegration'
-      - $ref: '#/components/schemas/HttpLogIntegration'
-      - $ref: '#/components/schemas/ScriptIntegration'
-      - $ref: '#/components/schemas/SplunkIntegration'
-      - $ref: '#/components/schemas/SumologicIntegration'
-      - $ref: '#/components/schemas/SyslogIntegration'
-      - $ref: '#/components/schemas/WebHookIntegration'
-    FastlyIntegrationPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        events:
-          type: array
-          items:
-            type: string
-          title: Events
-          description: Events to execute the hook on
-        environments:
-          type: array
-          items:
-            type: string
-          title: Environments
-          description: The environments to execute the hook on
-        excluded_environments:
-          type: array
-          items:
-            type: string
-          title: Excluded Environments
-          description: The environments to not execute the hook on
-        states:
-          type: array
-          items:
-            type: string
-          title: States
-          description: Events to execute the hook on
-        result:
-          type: string
-          enum:
-          - '*'
-          - failure
-          - success
-          title: Result
-          description: Result to execute the hook on
-        token:
-          type: string
-          title: Token
-          description: Fastly API Token
-        service_id:
-          type: string
-          title: Fastly Service ID
-          description: ''
-      required:
-      - type
-      - token
-      - service_id
-      additionalProperties: false
-    HealthWebHookIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: HealthWebHookIntegration Identifier
-          description: The identifier of HealthWebHookIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        url:
-          type: string
-          title: WebHook URL
-          description: The URL of the webhook
-      required:
-      - created_at
-      - updated_at
-      - type
-      - url
-      additionalProperties: false
-    SumologicIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        extra:
-          type: object
-          additionalProperties:
-            type: string
-          title: Extra
-          description: Arbitrary key/value pairs to include with forwarded logs
-        url:
-          type: string
-          title: The Sumologic HTTPS endpoint
-          description: ''
-        category:
-          type: string
-          title: Category
-          description: The Category used to easy filtering (sent as X-Sumo-Category header)
-        tls_verify:
-          type: boolean
-          title: TLS Verify
-          description: Enable/Disable HTTPS certificate verification
-        excluded_services:
-          type: array
-          items:
-            type: string
-          title: Excluded Services
-          description: Comma separated list of service and application names to exclude from logging
-      required:
-      - type
-      - url
-      additionalProperties: false
-    GithubIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: GithubIntegration Identifier
-          description: The identifier of GithubIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        fetch_branches:
-          type: boolean
-          title: Fetch Branches
-          description: Whether or not to fetch branches.
-        prune_branches:
-          type: boolean
-          title: Prune Branches
-          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
-        environment_init_resources:
-          type: string
-          enum:
-          - default
-          - manual
-          - minimum
-          - parent
-          title: Environment Init Resources
-          description: The resources used when initializing a new service
-        base_url:
-          type:
-          - string
-          - 'null'
-          title: Base URL
-          description: The base URL of the Github API endpoint.
-        repository:
-          type: string
-          title: Repository
-          description: The GitHub repository (in the form `user/repo`).
-        build_pull_requests:
-          type: boolean
-          title: Build Pull Requests
-          description: Whether or not to build pull requests.
-        build_draft_pull_requests:
-          type: boolean
-          title: Build Draft Pull Requests
-          description: Whether or not to build draft pull requests (requires `build_pull_requests`).
-        build_pull_requests_post_merge:
-          type: boolean
-          title: Build PR Post-Merge
-          description: Whether to build pull requests post-merge (if true) or pre-merge (if false).
-        pull_requests_clone_parent_data:
-          type: boolean
-          title: Clone Parent Data
-          description: Whether or not to clone parent data when building pull requests.
-        token_type:
-          type: string
-          enum:
-          - classic_personal_token
-          - github_app
-          title: Token Type
-          description: The type of the token of this GitHub integration
-      required:
-      - created_at
-      - updated_at
-      - type
-      - fetch_branches
-      - prune_branches
-      - environment_init_resources
-      - base_url
-      - repository
-      - build_pull_requests
-      - build_draft_pull_requests
-      - build_pull_requests_post_merge
-      - pull_requests_clone_parent_data
-      - token_type
-      additionalProperties: false
-    SlackIntegrationPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        token:
-          type: string
-          title: Slack Token
-          description: The Slack token to use
-        channel:
-          type: string
-          title: Slack Channel
-          description: The Slack channel to post messages to
-      required:
-      - type
-      - token
-      - channel
-      additionalProperties: false
-    EmailIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        from_address:
-          type:
-          - string
-          - 'null'
-          title: From Address
-          description: The email address to use
-        recipients:
-          type: array
-          items:
-            type: string
-          title: Recipients
-          description: Recipients of the email
-      required:
-      - type
-      - recipients
-      additionalProperties: false
-    BitbucketIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: BitbucketIntegration Identifier
-          description: The identifier of BitbucketIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        fetch_branches:
-          type: boolean
-          title: Fetch Branches
-          description: Whether or not to fetch branches.
-        prune_branches:
-          type: boolean
-          title: Prune Branches
-          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
-        environment_init_resources:
-          type: string
-          enum:
-          - default
-          - manual
-          - minimum
-          - parent
-          title: Environment Init Resources
-          description: The resources used when initializing a new service
-        app_credentials:
-          type:
-          - object
-          - 'null'
-          properties:
-            key:
-              type: string
-              title: OAuth consumer key.
-              description: The OAuth consumer key.
-          required:
-          - key
-          additionalProperties: false
-          title: OAuth2 consumer
-          description: The OAuth2 consumer information (optional).
-        addon_credentials:
-          type:
-          - object
-          - 'null'
-          properties:
-            addon_key:
-              type: string
-              title: Addon key
-              description: The addon key (public identifier).
-            client_key:
-              type: string
-              title: Client key
-              description: The client key (public identifier).
-          required:
-          - addon_key
-          - client_key
-          additionalProperties: false
-          title: Addon credential
-          description: The addon credential information (optional).
-        repository:
-          type: string
-          title: Bitbucket repository
-          description: The Bitbucket repository (in the form `user/repo`).
-        build_pull_requests:
-          type: boolean
-          title: Build pull requests
-          description: Whether or not to build pull requests.
-        pull_requests_clone_parent_data:
-          type: boolean
-          title: Clone parent data
-          description: Whether or not to clone parent data when building merge requests.
-        resync_pull_requests:
-          type: boolean
-          title: Sync environment data
-          description: Whether or not pull request environment data should be re-synced on every build.
-      required:
-      - created_at
-      - updated_at
-      - type
-      - fetch_branches
-      - prune_branches
-      - environment_init_resources
-      - repository
-      - build_pull_requests
-      - pull_requests_clone_parent_data
-      - resync_pull_requests
-      additionalProperties: false
-    SlackIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: SlackIntegration Identifier
-          description: The identifier of SlackIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        channel:
-          type: string
-          title: Slack Channel
-          description: The Slack channel to post messages to
-      required:
-      - created_at
-      - updated_at
-      - type
-      - channel
-      additionalProperties: false
-    WebHookIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        events:
-          type: array
-          items:
-            type: string
-          title: Events
-          description: Events to execute the hook on
-        environments:
-          type: array
-          items:
-            type: string
-          title: Environments
-          description: The environments to execute the hook on
-        excluded_environments:
-          type: array
-          items:
-            type: string
-          title: Excluded Environments
-          description: The environments to not execute the hook on
-        states:
-          type: array
-          items:
-            type: string
-          title: States
-          description: Events to execute the hook on
-        result:
-          type: string
-          enum:
-          - '*'
-          - failure
-          - success
-          title: Result
-          description: Result to execute the hook on
-        shared_key:
-          type:
-          - string
-          - 'null'
-          title: Shared Key
-          description: The JWS shared secret key
-        url:
-          type: string
-          title: URL
-          description: The URL of the webhook
-      required:
-      - type
-      - url
-      additionalProperties: false
     ScriptIntegrationPatch:
       type: object
       properties:
@@ -1240,197 +362,9 @@ components:
       - type
       - script
       additionalProperties: false
-    GitLabIntegrationPatch:
+    HttpLogIntegrationCreateInput:
       type: object
       properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        fetch_branches:
-          type: boolean
-          title: Fetch Branches
-          description: Whether or not to fetch branches.
-        prune_branches:
-          type: boolean
-          title: Prune Branches
-          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
-        environment_init_resources:
-          type: string
-          enum:
-          - default
-          - manual
-          - minimum
-          - parent
-          title: Environment Init Resources
-          description: The resources used when initializing a new service
-        token:
-          type: string
-          title: GitLab Private Token
-          description: The GitLab private token.
-        rotate_token:
-          type: boolean
-          title: Whether or not to rotate token automatically using Gitlab API.
-          description: ''
-        rotate_token_validity_in_weeks:
-          type: integer
-          title: Validity in weeks of a new token after rotation.
-          description: ''
-        base_url:
-          type: string
-          title: GitLab Base URL
-          description: The base URL of the GitLab installation.
-        project:
-          type: string
-          title: Project
-          description: The GitLab project (in the form `namespace/repo`).
-        build_merge_requests:
-          type: boolean
-          title: Build Merge Requests
-          description: Whether or not to build merge requests.
-        build_wip_merge_requests:
-          type: boolean
-          title: Build WIP Merge Requests
-          description: Whether or not to build work in progress merge requests (requires `build_merge_requests`).
-        merge_requests_clone_parent_data:
-          type: boolean
-          title: Clone Parent Data
-          description: Whether or not to clone parent data when building merge requests.
-      required:
-      - type
-      - token
-      - project
-      additionalProperties: false
-    SyslogIntegrationPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        extra:
-          type: object
-          additionalProperties:
-            type: string
-          title: Extra
-          description: Arbitrary key/value pairs to include with forwarded logs
-        host:
-          type: string
-          title: Host
-          description: Syslog relay/collector host
-        port:
-          type: integer
-          title: Port
-          description: Syslog relay/collector port
-        protocol:
-          type: string
-          enum:
-          - tcp
-          - tls
-          - udp
-          title: Protocol
-          description: Transport protocol
-        facility:
-          type: integer
-          title: Facility
-          description: Syslog facility
-        message_format:
-          type: string
-          enum:
-          - rfc3164
-          - rfc5424
-          title: Message format
-          description: Syslog message format
-        auth_token:
-          type: string
-          title: Authentication token
-          description: ''
-        auth_mode:
-          type: string
-          enum:
-          - prefix
-          - structured_data
-          title: Authentication mode
-          description: ''
-        tls_verify:
-          type: boolean
-          title: TLS Verify
-          description: Enable/Disable HTTPS certificate verification
-        excluded_services:
-          type: array
-          items:
-            type: string
-          title: Excluded Services
-          description: Comma separated list of service and application names to exclude from logging
-      required:
-      - type
-      additionalProperties: false
-    SplunkIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        extra:
-          type: object
-          additionalProperties:
-            type: string
-          title: Extra
-          description: Arbitrary key/value pairs to include with forwarded logs
-        url:
-          type: string
-          title: URL
-          description: The Splunk HTTP Event Connector REST API endpoint
-        index:
-          type: string
-          title: Index
-          description: The Splunk Index
-        token:
-          type: string
-          title: Authorization Token
-          description: The Splunk Authorization Token
-        sourcetype:
-          type: string
-          title: Sourcetype
-          description: The event 'sourcetype'
-        tls_verify:
-          type: boolean
-          title: TLS Verify
-          description: Enable/Disable HTTPS certificate verification
-        excluded_services:
-          type: array
-          items:
-            type: string
-          title: Excluded Services
-          description: Comma separated list of service and application names to exclude from logging
-      required:
-      - type
-      - url
-      - index
-      - token
-      additionalProperties: false
-    HttpLogIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: HttpLogIntegration Identifier
-          description: The identifier of HttpLogIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
         type:
           type: string
           title: Integration type
@@ -1462,16 +396,64 @@ components:
           title: Excluded Services
           description: Comma separated list of service and application names to exclude from logging
       required:
+      - type
+      - url
+      additionalProperties: false
+    EmailIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: EmailIntegration Identifier
+          description: The identifier of EmailIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        from_address:
+          type:
+          - string
+          - 'null'
+          title: From Address
+          description: The email address to use
+        recipients:
+          type: array
+          items:
+            type: string
+          title: Recipients
+          description: Recipients of the email
+      required:
       - created_at
       - updated_at
       - type
-      - extra
-      - url
-      - headers
-      - tls_verify
-      - excluded_services
+      - from_address
+      - recipients
       additionalProperties: false
-    BitbucketIntegrationPatch:
+    BlackfireIntegrationPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+      required:
+      - type
+      additionalProperties: false
+    BitbucketServerIntegrationPatch:
       type: object
       properties:
         type:
@@ -1495,67 +477,40 @@ components:
           - parent
           title: Environment Init Resources
           description: The resources used when initializing a new service
-        app_credentials:
-          type:
-          - object
-          - 'null'
-          properties:
-            key:
-              type: string
-              title: OAuth consumer key.
-              description: The OAuth consumer key.
-            secret:
-              type: string
-              title: OAuth consumer secret.
-              description: The OAuth consumer secret.
-          required:
-          - key
-          - secret
-          additionalProperties: false
-          title: OAuth2 consumer
-          description: The OAuth2 consumer information (optional).
-        addon_credentials:
-          type:
-          - object
-          - 'null'
-          properties:
-            addon_key:
-              type: string
-              title: Addon key
-              description: The addon key (public identifier).
-            client_key:
-              type: string
-              title: Client key
-              description: The client key (public identifier).
-            shared_secret:
-              type: string
-              title: Client secret
-              description: The secret of the client.
-          required:
-          - addon_key
-          - client_key
-          - shared_secret
-          additionalProperties: false
-          title: Addon credential
-          description: The addon credential information (optional).
+        url:
+          type: string
+          title: URL
+          description: The base URL of the Bitbucket Server installation.
+        username:
+          type: string
+          title: Username
+          description: The Bitbucket Server user.
+        token:
+          type: string
+          title: Token
+          description: The Bitbucket Server personal access token.
+        project:
+          type: string
+          title: Project
+          description: The Bitbucket Server project
         repository:
           type: string
-          title: Bitbucket repository
-          description: The Bitbucket repository (in the form `user/repo`).
+          title: Repository
+          description: The Bitbucket Server repository
         build_pull_requests:
           type: boolean
-          title: Build pull requests
+          title: Build Pull Requests
           description: Whether or not to build pull requests.
         pull_requests_clone_parent_data:
           type: boolean
-          title: Clone parent data
+          title: Clone Parent Data
           description: Whether or not to clone parent data when building merge requests.
-        resync_pull_requests:
-          type: boolean
-          title: Sync environment data
-          description: Whether or not pull request environment data should be re-synced on every build.
       required:
       - type
+      - url
+      - username
+      - token
+      - project
       - repository
       additionalProperties: false
     BitbucketIntegrationCreateInput:
@@ -1645,399 +600,6 @@ components:
       - type
       - repository
       additionalProperties: false
-    WebHookIntegrationPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        events:
-          type: array
-          items:
-            type: string
-          title: Events
-          description: Events to execute the hook on
-        environments:
-          type: array
-          items:
-            type: string
-          title: Environments
-          description: The environments to execute the hook on
-        excluded_environments:
-          type: array
-          items:
-            type: string
-          title: Excluded Environments
-          description: The environments to not execute the hook on
-        states:
-          type: array
-          items:
-            type: string
-          title: States
-          description: Events to execute the hook on
-        result:
-          type: string
-          enum:
-          - '*'
-          - failure
-          - success
-          title: Result
-          description: Result to execute the hook on
-        shared_key:
-          type:
-          - string
-          - 'null'
-          title: Shared Key
-          description: The JWS shared secret key
-        url:
-          type: string
-          title: URL
-          description: The URL of the webhook
-      required:
-      - type
-      - url
-      additionalProperties: false
-    SumologicIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: SumologicIntegration Identifier
-          description: The identifier of SumologicIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        extra:
-          type: object
-          additionalProperties:
-            type: string
-          title: Extra
-          description: Arbitrary key/value pairs to include with forwarded logs
-        url:
-          type: string
-          title: The Sumologic HTTPS endpoint
-          description: ''
-        category:
-          type: string
-          title: Category
-          description: The Category used to easy filtering (sent as X-Sumo-Category header)
-        tls_verify:
-          type: boolean
-          title: TLS Verify
-          description: Enable/Disable HTTPS certificate verification
-        excluded_services:
-          type: array
-          items:
-            type: string
-          title: Excluded Services
-          description: Comma separated list of service and application names to exclude from logging
-      required:
-      - created_at
-      - updated_at
-      - type
-      - extra
-      - url
-      - category
-      - tls_verify
-      - excluded_services
-      additionalProperties: false
-    FastlyIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        events:
-          type: array
-          items:
-            type: string
-          title: Events
-          description: Events to execute the hook on
-        environments:
-          type: array
-          items:
-            type: string
-          title: Environments
-          description: The environments to execute the hook on
-        excluded_environments:
-          type: array
-          items:
-            type: string
-          title: Excluded Environments
-          description: The environments to not execute the hook on
-        states:
-          type: array
-          items:
-            type: string
-          title: States
-          description: Events to execute the hook on
-        result:
-          type: string
-          enum:
-          - '*'
-          - failure
-          - success
-          title: Result
-          description: Result to execute the hook on
-        token:
-          type: string
-          title: Token
-          description: Fastly API Token
-        service_id:
-          type: string
-          title: Fastly Service ID
-          description: ''
-      required:
-      - type
-      - token
-      - service_id
-      additionalProperties: false
-    NewRelicIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: NewRelicIntegration Identifier
-          description: The identifier of NewRelicIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        extra:
-          type: object
-          additionalProperties:
-            type: string
-          title: Extra
-          description: Arbitrary key/value pairs to include with forwarded logs
-        url:
-          type: string
-          title: The NewRelic Logs endpoint
-          description: ''
-        tls_verify:
-          type: boolean
-          title: TLS Verify
-          description: Enable/Disable HTTPS certificate verification
-        excluded_services:
-          type: array
-          items:
-            type: string
-          title: Excluded Services
-          description: Comma separated list of service and application names to exclude from logging
-      required:
-      - created_at
-      - updated_at
-      - type
-      - extra
-      - url
-      - tls_verify
-      - excluded_services
-      additionalProperties: false
-    EmailIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: EmailIntegration Identifier
-          description: The identifier of EmailIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        from_address:
-          type:
-          - string
-          - 'null'
-          title: From Address
-          description: The email address to use
-        recipients:
-          type: array
-          items:
-            type: string
-          title: Recipients
-          description: Recipients of the email
-      required:
-      - created_at
-      - updated_at
-      - type
-      - from_address
-      - recipients
-      additionalProperties: false
-    IntegrationCreateInput:
-      oneOf:
-      - $ref: '#/components/schemas/BitbucketIntegrationCreateInput'
-      - $ref: '#/components/schemas/BitbucketServerIntegrationCreateInput'
-      - $ref: '#/components/schemas/BlackfireIntegrationCreateInput'
-      - $ref: '#/components/schemas/FastlyIntegrationCreateInput'
-      - $ref: '#/components/schemas/GithubIntegrationCreateInput'
-      - $ref: '#/components/schemas/GitLabIntegrationCreateInput'
-      - $ref: '#/components/schemas/EmailIntegrationCreateInput'
-      - $ref: '#/components/schemas/PagerDutyIntegrationCreateInput'
-      - $ref: '#/components/schemas/SlackIntegrationCreateInput'
-      - $ref: '#/components/schemas/HealthWebHookIntegrationCreateInput'
-      - $ref: '#/components/schemas/HttpLogIntegrationCreateInput'
-      - $ref: '#/components/schemas/NewRelicIntegrationCreateInput'
-      - $ref: '#/components/schemas/HttpLogIntegrationCreateInput'
-      - $ref: '#/components/schemas/ScriptIntegrationCreateInput'
-      - $ref: '#/components/schemas/SplunkIntegrationCreateInput'
-      - $ref: '#/components/schemas/SumologicIntegrationCreateInput'
-      - $ref: '#/components/schemas/SyslogIntegrationCreateInput'
-      - $ref: '#/components/schemas/WebHookIntegrationCreateInput'
-    HttpLogIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        extra:
-          type: object
-          additionalProperties:
-            type: string
-          title: Extra
-          description: Arbitrary key/value pairs to include with forwarded logs
-        url:
-          type: string
-          title: HTTP endpoint
-          description: ''
-        headers:
-          type: object
-          additionalProperties:
-            type: string
-          title: HTTP Headers
-          description: HTTP headers to use in POST requests
-        tls_verify:
-          type: boolean
-          title: TLS Verify
-          description: Enable/Disable HTTPS certificate verification
-        excluded_services:
-          type: array
-          items:
-            type: string
-          title: Excluded Services
-          description: Comma separated list of service and application names to exclude from logging
-      required:
-      - type
-      - url
-      additionalProperties: false
-    BlackfireIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-      required:
-      - type
-      additionalProperties: false
-    SplunkIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: SplunkIntegration Identifier
-          description: The identifier of SplunkIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        extra:
-          type: object
-          additionalProperties:
-            type: string
-          title: Extra
-          description: Arbitrary key/value pairs to include with forwarded logs
-        url:
-          type: string
-          title: URL
-          description: The Splunk HTTP Event Connector REST API endpoint
-        index:
-          type: string
-          title: Index
-          description: The Splunk Index
-        sourcetype:
-          type: string
-          title: Sourcetype
-          description: The event 'sourcetype'
-        tls_verify:
-          type: boolean
-          title: TLS Verify
-          description: Enable/Disable HTTPS certificate verification
-        excluded_services:
-          type: array
-          items:
-            type: string
-          title: Excluded Services
-          description: Comma separated list of service and application names to exclude from logging
-      required:
-      - created_at
-      - updated_at
-      - type
-      - extra
-      - url
-      - index
-      - sourcetype
-      - tls_verify
-      - excluded_services
-      additionalProperties: false
     ScriptIntegration:
       type: object
       properties:
@@ -2110,91 +672,9 @@ components:
       - result
       - script
       additionalProperties: false
-    SyslogIntegrationCreateInput:
+    GithubIntegrationCreateInput:
       type: object
       properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        extra:
-          type: object
-          additionalProperties:
-            type: string
-          title: Extra
-          description: Arbitrary key/value pairs to include with forwarded logs
-        host:
-          type: string
-          title: Host
-          description: Syslog relay/collector host
-        port:
-          type: integer
-          title: Port
-          description: Syslog relay/collector port
-        protocol:
-          type: string
-          enum:
-          - tcp
-          - tls
-          - udp
-          title: Protocol
-          description: Transport protocol
-        facility:
-          type: integer
-          title: Facility
-          description: Syslog facility
-        message_format:
-          type: string
-          enum:
-          - rfc3164
-          - rfc5424
-          title: Message format
-          description: Syslog message format
-        auth_token:
-          type: string
-          title: Authentication token
-          description: ''
-        auth_mode:
-          type: string
-          enum:
-          - prefix
-          - structured_data
-          title: Authentication mode
-          description: ''
-        tls_verify:
-          type: boolean
-          title: TLS Verify
-          description: Enable/Disable HTTPS certificate verification
-        excluded_services:
-          type: array
-          items:
-            type: string
-          title: Excluded Services
-          description: Comma separated list of service and application names to exclude from logging
-      required:
-      - type
-      additionalProperties: false
-    GitLabIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: GitLabIntegration Identifier
-          description: The identifier of GitLabIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
         type:
           type: string
           title: Integration type
@@ -2216,13 +696,159 @@ components:
           - parent
           title: Environment Init Resources
           description: The resources used when initializing a new service
-        token_expires_at:
+        token:
+          type: string
+          title: Token
+          description: The GitHub token.
+        base_url:
           type:
           - string
           - 'null'
-          format: date-time
-          title: '''expires_at'' value of the current token.'
+          title: Base URL
+          description: The base URL of the Github API endpoint.
+        repository:
+          type: string
+          title: Repository
+          description: The GitHub repository (in the form `user/repo`).
+        build_pull_requests:
+          type: boolean
+          title: Build Pull Requests
+          description: Whether or not to build pull requests.
+        build_draft_pull_requests:
+          type: boolean
+          title: Build Draft Pull Requests
+          description: Whether or not to build draft pull requests (requires `build_pull_requests`).
+        build_pull_requests_post_merge:
+          type: boolean
+          title: Build PR Post-Merge
+          description: Whether to build pull requests post-merge (if true) or pre-merge (if false).
+        pull_requests_clone_parent_data:
+          type: boolean
+          title: Clone Parent Data
+          description: Whether or not to clone parent data when building pull requests.
+      required:
+      - type
+      - token
+      - repository
+      additionalProperties: false
+    SumologicIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
           description: ''
+        extra:
+          type: object
+          additionalProperties:
+            type: string
+          title: Extra
+          description: Arbitrary key/value pairs to include with forwarded logs
+        url:
+          type: string
+          title: The Sumologic HTTPS endpoint
+          description: ''
+        category:
+          type: string
+          title: Category
+          description: The Category used to easy filtering (sent as X-Sumo-Category header)
+        tls_verify:
+          type: boolean
+          title: TLS Verify
+          description: Enable/Disable HTTPS certificate verification
+        excluded_services:
+          type: array
+          items:
+            type: string
+          title: Excluded Services
+          description: Comma separated list of service and application names to exclude from logging
+      required:
+      - type
+      - url
+      additionalProperties: false
+    BlackfireIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+      required:
+      - type
+      additionalProperties: false
+    SplunkIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        extra:
+          type: object
+          additionalProperties:
+            type: string
+          title: Extra
+          description: Arbitrary key/value pairs to include with forwarded logs
+        url:
+          type: string
+          title: URL
+          description: The Splunk HTTP Event Connector REST API endpoint
+        index:
+          type: string
+          title: Index
+          description: The Splunk Index
+        token:
+          type: string
+          title: Authorization Token
+          description: The Splunk Authorization Token
+        sourcetype:
+          type: string
+          title: Sourcetype
+          description: The event 'sourcetype'
+        tls_verify:
+          type: boolean
+          title: TLS Verify
+          description: Enable/Disable HTTPS certificate verification
+        excluded_services:
+          type: array
+          items:
+            type: string
+          title: Excluded Services
+          description: Comma separated list of service and application names to exclude from logging
+      required:
+      - type
+      - url
+      - index
+      - token
+      additionalProperties: false
+    GitLabIntegrationPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        fetch_branches:
+          type: boolean
+          title: Fetch Branches
+          description: Whether or not to fetch branches.
+        prune_branches:
+          type: boolean
+          title: Prune Branches
+          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
+        environment_init_resources:
+          type: string
+          enum:
+          - default
+          - manual
+          - minimum
+          - parent
+          title: Environment Init Resources
+          description: The resources used when initializing a new service
+        token:
+          type: string
+          title: GitLab Private Token
+          description: The GitLab private token.
         rotate_token:
           type: boolean
           title: Whether or not to rotate token automatically using Gitlab API.
@@ -2252,20 +878,532 @@ components:
           title: Clone Parent Data
           description: Whether or not to clone parent data when building merge requests.
       required:
+      - type
+      - token
+      - project
+      additionalProperties: false
+    WebHookIntegrationPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        events:
+          type: array
+          items:
+            type: string
+          title: Events
+          description: Events to execute the hook on
+        environments:
+          type: array
+          items:
+            type: string
+          title: Environments
+          description: The environments to execute the hook on
+        excluded_environments:
+          type: array
+          items:
+            type: string
+          title: Excluded Environments
+          description: The environments to not execute the hook on
+        states:
+          type: array
+          items:
+            type: string
+          title: States
+          description: Events to execute the hook on
+        result:
+          type: string
+          enum:
+          - '*'
+          - failure
+          - success
+          title: Result
+          description: Result to execute the hook on
+        shared_key:
+          type:
+          - string
+          - 'null'
+          title: Shared Key
+          description: The JWS shared secret key
+        url:
+          type: string
+          title: URL
+          description: The URL of the webhook
+      required:
+      - type
+      - url
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    EmailIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        from_address:
+          type:
+          - string
+          - 'null'
+          title: From Address
+          description: The email address to use
+        recipients:
+          type: array
+          items:
+            type: string
+          title: Recipients
+          description: Recipients of the email
+      required:
+      - type
+      - recipients
+      additionalProperties: false
+    SplunkIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: SplunkIntegration Identifier
+          description: The identifier of SplunkIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        extra:
+          type: object
+          additionalProperties:
+            type: string
+          title: Extra
+          description: Arbitrary key/value pairs to include with forwarded logs
+        url:
+          type: string
+          title: URL
+          description: The Splunk HTTP Event Connector REST API endpoint
+        index:
+          type: string
+          title: Index
+          description: The Splunk Index
+        sourcetype:
+          type: string
+          title: Sourcetype
+          description: The event 'sourcetype'
+        tls_verify:
+          type: boolean
+          title: TLS Verify
+          description: Enable/Disable HTTPS certificate verification
+        excluded_services:
+          type: array
+          items:
+            type: string
+          title: Excluded Services
+          description: Comma separated list of service and application names to exclude from logging
+      required:
       - created_at
       - updated_at
       - type
-      - fetch_branches
-      - prune_branches
-      - environment_init_resources
-      - token_expires_at
-      - rotate_token
-      - rotate_token_validity_in_weeks
-      - base_url
+      - extra
+      - url
+      - index
+      - sourcetype
+      - tls_verify
+      - excluded_services
+      additionalProperties: false
+    Integration:
+      oneOf:
+      - $ref: '#/components/schemas/BitbucketIntegration'
+      - $ref: '#/components/schemas/BitbucketServerIntegration'
+      - $ref: '#/components/schemas/BlackfireIntegration'
+      - $ref: '#/components/schemas/FastlyIntegration'
+      - $ref: '#/components/schemas/GithubIntegration'
+      - $ref: '#/components/schemas/GitLabIntegration'
+      - $ref: '#/components/schemas/EmailIntegration'
+      - $ref: '#/components/schemas/PagerDutyIntegration'
+      - $ref: '#/components/schemas/SlackIntegration'
+      - $ref: '#/components/schemas/HealthWebHookIntegration'
+      - $ref: '#/components/schemas/HttpLogIntegration'
+      - $ref: '#/components/schemas/NewRelicIntegration'
+      - $ref: '#/components/schemas/HttpLogIntegration'
+      - $ref: '#/components/schemas/ScriptIntegration'
+      - $ref: '#/components/schemas/SplunkIntegration'
+      - $ref: '#/components/schemas/SumologicIntegration'
+      - $ref: '#/components/schemas/SyslogIntegration'
+      - $ref: '#/components/schemas/WebHookIntegration'
+    IntegrationCreateInput:
+      oneOf:
+      - $ref: '#/components/schemas/BitbucketIntegrationCreateInput'
+      - $ref: '#/components/schemas/BitbucketServerIntegrationCreateInput'
+      - $ref: '#/components/schemas/BlackfireIntegrationCreateInput'
+      - $ref: '#/components/schemas/FastlyIntegrationCreateInput'
+      - $ref: '#/components/schemas/GithubIntegrationCreateInput'
+      - $ref: '#/components/schemas/GitLabIntegrationCreateInput'
+      - $ref: '#/components/schemas/EmailIntegrationCreateInput'
+      - $ref: '#/components/schemas/PagerDutyIntegrationCreateInput'
+      - $ref: '#/components/schemas/SlackIntegrationCreateInput'
+      - $ref: '#/components/schemas/HealthWebHookIntegrationCreateInput'
+      - $ref: '#/components/schemas/HttpLogIntegrationCreateInput'
+      - $ref: '#/components/schemas/NewRelicIntegrationCreateInput'
+      - $ref: '#/components/schemas/HttpLogIntegrationCreateInput'
+      - $ref: '#/components/schemas/ScriptIntegrationCreateInput'
+      - $ref: '#/components/schemas/SplunkIntegrationCreateInput'
+      - $ref: '#/components/schemas/SumologicIntegrationCreateInput'
+      - $ref: '#/components/schemas/SyslogIntegrationCreateInput'
+      - $ref: '#/components/schemas/WebHookIntegrationCreateInput'
+    SlackIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: SlackIntegration Identifier
+          description: The identifier of SlackIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        channel:
+          type: string
+          title: Slack Channel
+          description: The Slack channel to post messages to
+      required:
+      - created_at
+      - updated_at
+      - type
+      - channel
+      additionalProperties: false
+    BitbucketIntegrationPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        fetch_branches:
+          type: boolean
+          title: Fetch Branches
+          description: Whether or not to fetch branches.
+        prune_branches:
+          type: boolean
+          title: Prune Branches
+          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
+        environment_init_resources:
+          type: string
+          enum:
+          - default
+          - manual
+          - minimum
+          - parent
+          title: Environment Init Resources
+          description: The resources used when initializing a new service
+        app_credentials:
+          type:
+          - object
+          - 'null'
+          properties:
+            key:
+              type: string
+              title: OAuth consumer key.
+              description: The OAuth consumer key.
+            secret:
+              type: string
+              title: OAuth consumer secret.
+              description: The OAuth consumer secret.
+          required:
+          - key
+          - secret
+          additionalProperties: false
+          title: OAuth2 consumer
+          description: The OAuth2 consumer information (optional).
+        addon_credentials:
+          type:
+          - object
+          - 'null'
+          properties:
+            addon_key:
+              type: string
+              title: Addon key
+              description: The addon key (public identifier).
+            client_key:
+              type: string
+              title: Client key
+              description: The client key (public identifier).
+            shared_secret:
+              type: string
+              title: Client secret
+              description: The secret of the client.
+          required:
+          - addon_key
+          - client_key
+          - shared_secret
+          additionalProperties: false
+          title: Addon credential
+          description: The addon credential information (optional).
+        repository:
+          type: string
+          title: Bitbucket repository
+          description: The Bitbucket repository (in the form `user/repo`).
+        build_pull_requests:
+          type: boolean
+          title: Build pull requests
+          description: Whether or not to build pull requests.
+        pull_requests_clone_parent_data:
+          type: boolean
+          title: Clone parent data
+          description: Whether or not to clone parent data when building merge requests.
+        resync_pull_requests:
+          type: boolean
+          title: Sync environment data
+          description: Whether or not pull request environment data should be re-synced on every build.
+      required:
+      - type
+      - repository
+      additionalProperties: false
+    SumologicIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: SumologicIntegration Identifier
+          description: The identifier of SumologicIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        extra:
+          type: object
+          additionalProperties:
+            type: string
+          title: Extra
+          description: Arbitrary key/value pairs to include with forwarded logs
+        url:
+          type: string
+          title: The Sumologic HTTPS endpoint
+          description: ''
+        category:
+          type: string
+          title: Category
+          description: The Category used to easy filtering (sent as X-Sumo-Category header)
+        tls_verify:
+          type: boolean
+          title: TLS Verify
+          description: Enable/Disable HTTPS certificate verification
+        excluded_services:
+          type: array
+          items:
+            type: string
+          title: Excluded Services
+          description: Comma separated list of service and application names to exclude from logging
+      required:
+      - created_at
+      - updated_at
+      - type
+      - extra
+      - url
+      - category
+      - tls_verify
+      - excluded_services
+      additionalProperties: false
+    FastlyIntegrationPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        events:
+          type: array
+          items:
+            type: string
+          title: Events
+          description: Events to execute the hook on
+        environments:
+          type: array
+          items:
+            type: string
+          title: Environments
+          description: The environments to execute the hook on
+        excluded_environments:
+          type: array
+          items:
+            type: string
+          title: Excluded Environments
+          description: The environments to not execute the hook on
+        states:
+          type: array
+          items:
+            type: string
+          title: States
+          description: Events to execute the hook on
+        result:
+          type: string
+          enum:
+          - '*'
+          - failure
+          - success
+          title: Result
+          description: Result to execute the hook on
+        token:
+          type: string
+          title: Token
+          description: Fastly API Token
+        service_id:
+          type: string
+          title: Fastly Service ID
+          description: ''
+      required:
+      - type
+      - token
+      - service_id
+      additionalProperties: false
+    BitbucketServerIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        fetch_branches:
+          type: boolean
+          title: Fetch Branches
+          description: Whether or not to fetch branches.
+        prune_branches:
+          type: boolean
+          title: Prune Branches
+          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
+        environment_init_resources:
+          type: string
+          enum:
+          - default
+          - manual
+          - minimum
+          - parent
+          title: Environment Init Resources
+          description: The resources used when initializing a new service
+        url:
+          type: string
+          title: URL
+          description: The base URL of the Bitbucket Server installation.
+        username:
+          type: string
+          title: Username
+          description: The Bitbucket Server user.
+        token:
+          type: string
+          title: Token
+          description: The Bitbucket Server personal access token.
+        project:
+          type: string
+          title: Project
+          description: The Bitbucket Server project
+        repository:
+          type: string
+          title: Repository
+          description: The Bitbucket Server repository
+        build_pull_requests:
+          type: boolean
+          title: Build Pull Requests
+          description: Whether or not to build pull requests.
+        pull_requests_clone_parent_data:
+          type: boolean
+          title: Clone Parent Data
+          description: Whether or not to clone parent data when building merge requests.
+      required:
+      - type
+      - url
+      - username
+      - token
       - project
-      - build_merge_requests
-      - build_wip_merge_requests
-      - merge_requests_clone_parent_data
+      - repository
+      additionalProperties: false
+    SumologicIntegrationPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        extra:
+          type: object
+          additionalProperties:
+            type: string
+          title: Extra
+          description: Arbitrary key/value pairs to include with forwarded logs
+        url:
+          type: string
+          title: The Sumologic HTTPS endpoint
+          description: ''
+        category:
+          type: string
+          title: Category
+          description: The Category used to easy filtering (sent as X-Sumo-Category header)
+        tls_verify:
+          type: boolean
+          title: TLS Verify
+          description: Enable/Disable HTTPS certificate verification
+        excluded_services:
+          type: array
+          items:
+            type: string
+          title: Excluded Services
+          description: Comma separated list of service and application names to exclude from logging
+      required:
+      - type
+      - url
       additionalProperties: false
     FastlyIntegration:
       type: object
@@ -2376,6 +1514,992 @@ components:
       - type
       - url
       additionalProperties: false
+    SlackIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        token:
+          type: string
+          title: Slack Token
+          description: The Slack token to use
+        channel:
+          type: string
+          title: Slack Channel
+          description: The Slack channel to post messages to
+      required:
+      - type
+      - token
+      - channel
+      additionalProperties: false
+    HealthWebHookIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: HealthWebHookIntegration Identifier
+          description: The identifier of HealthWebHookIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        url:
+          type: string
+          title: WebHook URL
+          description: The URL of the webhook
+      required:
+      - created_at
+      - updated_at
+      - type
+      - url
+      additionalProperties: false
+    HttpLogIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: HttpLogIntegration Identifier
+          description: The identifier of HttpLogIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        extra:
+          type: object
+          additionalProperties:
+            type: string
+          title: Extra
+          description: Arbitrary key/value pairs to include with forwarded logs
+        url:
+          type: string
+          title: HTTP endpoint
+          description: ''
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          title: HTTP Headers
+          description: HTTP headers to use in POST requests
+        tls_verify:
+          type: boolean
+          title: TLS Verify
+          description: Enable/Disable HTTPS certificate verification
+        excluded_services:
+          type: array
+          items:
+            type: string
+          title: Excluded Services
+          description: Comma separated list of service and application names to exclude from logging
+      required:
+      - created_at
+      - updated_at
+      - type
+      - extra
+      - url
+      - headers
+      - tls_verify
+      - excluded_services
+      additionalProperties: false
+    HealthWebHookIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        shared_key:
+          type:
+          - string
+          - 'null'
+          title: Shared Key
+          description: The JWS shared secret key
+        url:
+          type: string
+          title: WebHook URL
+          description: The URL of the webhook
+      required:
+      - type
+      - url
+      additionalProperties: false
+    PagerDutyIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        routing_key:
+          type: string
+          title: Routing Key
+          description: The PagerDuty routing key
+      required:
+      - type
+      - routing_key
+      additionalProperties: false
+    BitbucketIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: BitbucketIntegration Identifier
+          description: The identifier of BitbucketIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        fetch_branches:
+          type: boolean
+          title: Fetch Branches
+          description: Whether or not to fetch branches.
+        prune_branches:
+          type: boolean
+          title: Prune Branches
+          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
+        environment_init_resources:
+          type: string
+          enum:
+          - default
+          - manual
+          - minimum
+          - parent
+          title: Environment Init Resources
+          description: The resources used when initializing a new service
+        app_credentials:
+          type:
+          - object
+          - 'null'
+          properties:
+            key:
+              type: string
+              title: OAuth consumer key.
+              description: The OAuth consumer key.
+          required:
+          - key
+          additionalProperties: false
+          title: OAuth2 consumer
+          description: The OAuth2 consumer information (optional).
+        addon_credentials:
+          type:
+          - object
+          - 'null'
+          properties:
+            addon_key:
+              type: string
+              title: Addon key
+              description: The addon key (public identifier).
+            client_key:
+              type: string
+              title: Client key
+              description: The client key (public identifier).
+          required:
+          - addon_key
+          - client_key
+          additionalProperties: false
+          title: Addon credential
+          description: The addon credential information (optional).
+        repository:
+          type: string
+          title: Bitbucket repository
+          description: The Bitbucket repository (in the form `user/repo`).
+        build_pull_requests:
+          type: boolean
+          title: Build pull requests
+          description: Whether or not to build pull requests.
+        pull_requests_clone_parent_data:
+          type: boolean
+          title: Clone parent data
+          description: Whether or not to clone parent data when building merge requests.
+        resync_pull_requests:
+          type: boolean
+          title: Sync environment data
+          description: Whether or not pull request environment data should be re-synced on every build.
+      required:
+      - created_at
+      - updated_at
+      - type
+      - fetch_branches
+      - prune_branches
+      - environment_init_resources
+      - repository
+      - build_pull_requests
+      - pull_requests_clone_parent_data
+      - resync_pull_requests
+      additionalProperties: false
+    GitLabIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: GitLabIntegration Identifier
+          description: The identifier of GitLabIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        fetch_branches:
+          type: boolean
+          title: Fetch Branches
+          description: Whether or not to fetch branches.
+        prune_branches:
+          type: boolean
+          title: Prune Branches
+          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
+        environment_init_resources:
+          type: string
+          enum:
+          - default
+          - manual
+          - minimum
+          - parent
+          title: Environment Init Resources
+          description: The resources used when initializing a new service
+        token_expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: '''expires_at'' value of the current token.'
+          description: ''
+        rotate_token:
+          type: boolean
+          title: Whether or not to rotate token automatically using Gitlab API.
+          description: ''
+        rotate_token_validity_in_weeks:
+          type: integer
+          title: Validity in weeks of a new token after rotation.
+          description: ''
+        base_url:
+          type: string
+          title: GitLab Base URL
+          description: The base URL of the GitLab installation.
+        project:
+          type: string
+          title: Project
+          description: The GitLab project (in the form `namespace/repo`).
+        build_merge_requests:
+          type: boolean
+          title: Build Merge Requests
+          description: Whether or not to build merge requests.
+        build_wip_merge_requests:
+          type: boolean
+          title: Build WIP Merge Requests
+          description: Whether or not to build work in progress merge requests (requires `build_merge_requests`).
+        merge_requests_clone_parent_data:
+          type: boolean
+          title: Clone Parent Data
+          description: Whether or not to clone parent data when building merge requests.
+      required:
+      - created_at
+      - updated_at
+      - type
+      - fetch_branches
+      - prune_branches
+      - environment_init_resources
+      - token_expires_at
+      - rotate_token
+      - rotate_token_validity_in_weeks
+      - base_url
+      - project
+      - build_merge_requests
+      - build_wip_merge_requests
+      - merge_requests_clone_parent_data
+      additionalProperties: false
+    GithubIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: GithubIntegration Identifier
+          description: The identifier of GithubIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        fetch_branches:
+          type: boolean
+          title: Fetch Branches
+          description: Whether or not to fetch branches.
+        prune_branches:
+          type: boolean
+          title: Prune Branches
+          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
+        environment_init_resources:
+          type: string
+          enum:
+          - default
+          - manual
+          - minimum
+          - parent
+          title: Environment Init Resources
+          description: The resources used when initializing a new service
+        base_url:
+          type:
+          - string
+          - 'null'
+          title: Base URL
+          description: The base URL of the Github API endpoint.
+        repository:
+          type: string
+          title: Repository
+          description: The GitHub repository (in the form `user/repo`).
+        build_pull_requests:
+          type: boolean
+          title: Build Pull Requests
+          description: Whether or not to build pull requests.
+        build_draft_pull_requests:
+          type: boolean
+          title: Build Draft Pull Requests
+          description: Whether or not to build draft pull requests (requires `build_pull_requests`).
+        build_pull_requests_post_merge:
+          type: boolean
+          title: Build PR Post-Merge
+          description: Whether to build pull requests post-merge (if true) or pre-merge (if false).
+        pull_requests_clone_parent_data:
+          type: boolean
+          title: Clone Parent Data
+          description: Whether or not to clone parent data when building pull requests.
+        token_type:
+          type: string
+          enum:
+          - classic_personal_token
+          - github_app
+          title: Token Type
+          description: The type of the token of this GitHub integration
+      required:
+      - created_at
+      - updated_at
+      - type
+      - fetch_branches
+      - prune_branches
+      - environment_init_resources
+      - base_url
+      - repository
+      - build_pull_requests
+      - build_draft_pull_requests
+      - build_pull_requests_post_merge
+      - pull_requests_clone_parent_data
+      - token_type
+      additionalProperties: false
+    FastlyIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        events:
+          type: array
+          items:
+            type: string
+          title: Events
+          description: Events to execute the hook on
+        environments:
+          type: array
+          items:
+            type: string
+          title: Environments
+          description: The environments to execute the hook on
+        excluded_environments:
+          type: array
+          items:
+            type: string
+          title: Excluded Environments
+          description: The environments to not execute the hook on
+        states:
+          type: array
+          items:
+            type: string
+          title: States
+          description: Events to execute the hook on
+        result:
+          type: string
+          enum:
+          - '*'
+          - failure
+          - success
+          title: Result
+          description: Result to execute the hook on
+        token:
+          type: string
+          title: Token
+          description: Fastly API Token
+        service_id:
+          type: string
+          title: Fastly Service ID
+          description: ''
+      required:
+      - type
+      - token
+      - service_id
+      additionalProperties: false
+    BlackfireIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: BlackfireIntegration Identifier
+          description: The identifier of BlackfireIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        environments_credentials:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              server_uuid:
+                type: string
+                title: Server UUID
+                description: The environment server UUID
+              server_token:
+                type: string
+                title: Server Token
+                description: Environment server token
+            required:
+            - server_uuid
+            - server_token
+            additionalProperties: false
+          title: Environments Credentials
+          description: Blackfire environments credentials
+        continuous_profiling:
+          type: boolean
+          title: Continuous Profiling
+          description: Whether continuous profiling is enabled for the project
+      required:
+      - created_at
+      - updated_at
+      - type
+      - environments_credentials
+      - continuous_profiling
+      additionalProperties: false
+    PagerDutyIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: PagerDutyIntegration Identifier
+          description: The identifier of PagerDutyIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        routing_key:
+          type: string
+          title: Routing Key
+          description: The PagerDuty routing key
+      required:
+      - created_at
+      - updated_at
+      - type
+      - routing_key
+      additionalProperties: false
+    BitbucketServerIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: BitbucketServerIntegration Identifier
+          description: The identifier of BitbucketServerIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        fetch_branches:
+          type: boolean
+          title: Fetch Branches
+          description: Whether or not to fetch branches.
+        prune_branches:
+          type: boolean
+          title: Prune Branches
+          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
+        environment_init_resources:
+          type: string
+          enum:
+          - default
+          - manual
+          - minimum
+          - parent
+          title: Environment Init Resources
+          description: The resources used when initializing a new service
+        url:
+          type: string
+          title: URL
+          description: The base URL of the Bitbucket Server installation.
+        username:
+          type: string
+          title: Username
+          description: The Bitbucket Server user.
+        project:
+          type: string
+          title: Project
+          description: The Bitbucket Server project
+        repository:
+          type: string
+          title: Repository
+          description: The Bitbucket Server repository
+        build_pull_requests:
+          type: boolean
+          title: Build Pull Requests
+          description: Whether or not to build pull requests.
+        pull_requests_clone_parent_data:
+          type: boolean
+          title: Clone Parent Data
+          description: Whether or not to clone parent data when building merge requests.
+      required:
+      - created_at
+      - updated_at
+      - type
+      - fetch_branches
+      - prune_branches
+      - environment_init_resources
+      - url
+      - username
+      - project
+      - repository
+      - build_pull_requests
+      - pull_requests_clone_parent_data
+      additionalProperties: false
+    PagerDutyIntegrationPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        routing_key:
+          type: string
+          title: Routing Key
+          description: The PagerDuty routing key
+      required:
+      - type
+      - routing_key
+      additionalProperties: false
+    GithubIntegrationPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        fetch_branches:
+          type: boolean
+          title: Fetch Branches
+          description: Whether or not to fetch branches.
+        prune_branches:
+          type: boolean
+          title: Prune Branches
+          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
+        environment_init_resources:
+          type: string
+          enum:
+          - default
+          - manual
+          - minimum
+          - parent
+          title: Environment Init Resources
+          description: The resources used when initializing a new service
+        token:
+          type: string
+          title: Token
+          description: The GitHub token.
+        base_url:
+          type:
+          - string
+          - 'null'
+          title: Base URL
+          description: The base URL of the Github API endpoint.
+        repository:
+          type: string
+          title: Repository
+          description: The GitHub repository (in the form `user/repo`).
+        build_pull_requests:
+          type: boolean
+          title: Build Pull Requests
+          description: Whether or not to build pull requests.
+        build_draft_pull_requests:
+          type: boolean
+          title: Build Draft Pull Requests
+          description: Whether or not to build draft pull requests (requires `build_pull_requests`).
+        build_pull_requests_post_merge:
+          type: boolean
+          title: Build PR Post-Merge
+          description: Whether to build pull requests post-merge (if true) or pre-merge (if false).
+        pull_requests_clone_parent_data:
+          type: boolean
+          title: Clone Parent Data
+          description: Whether or not to clone parent data when building pull requests.
+      required:
+      - type
+      - token
+      - repository
+      additionalProperties: false
+    SplunkIntegrationPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        extra:
+          type: object
+          additionalProperties:
+            type: string
+          title: Extra
+          description: Arbitrary key/value pairs to include with forwarded logs
+        url:
+          type: string
+          title: URL
+          description: The Splunk HTTP Event Connector REST API endpoint
+        index:
+          type: string
+          title: Index
+          description: The Splunk Index
+        token:
+          type: string
+          title: Authorization Token
+          description: The Splunk Authorization Token
+        sourcetype:
+          type: string
+          title: Sourcetype
+          description: The event 'sourcetype'
+        tls_verify:
+          type: boolean
+          title: TLS Verify
+          description: Enable/Disable HTTPS certificate verification
+        excluded_services:
+          type: array
+          items:
+            type: string
+          title: Excluded Services
+          description: Comma separated list of service and application names to exclude from logging
+      required:
+      - type
+      - url
+      - index
+      - token
+      additionalProperties: false
+    SyslogIntegrationPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        extra:
+          type: object
+          additionalProperties:
+            type: string
+          title: Extra
+          description: Arbitrary key/value pairs to include with forwarded logs
+        host:
+          type: string
+          title: Host
+          description: Syslog relay/collector host
+        port:
+          type: integer
+          title: Port
+          description: Syslog relay/collector port
+        protocol:
+          type: string
+          enum:
+          - tcp
+          - tls
+          - udp
+          title: Protocol
+          description: Transport protocol
+        facility:
+          type: integer
+          title: Facility
+          description: Syslog facility
+        message_format:
+          type: string
+          enum:
+          - rfc3164
+          - rfc5424
+          title: Message format
+          description: Syslog message format
+        auth_token:
+          type: string
+          title: Authentication token
+          description: ''
+        auth_mode:
+          type: string
+          enum:
+          - prefix
+          - structured_data
+          title: Authentication mode
+          description: ''
+        tls_verify:
+          type: boolean
+          title: TLS Verify
+          description: Enable/Disable HTTPS certificate verification
+        excluded_services:
+          type: array
+          items:
+            type: string
+          title: Excluded Services
+          description: Comma separated list of service and application names to exclude from logging
+      required:
+      - type
+      additionalProperties: false
+    WebHookIntegration:
+      type: object
+      properties:
+        id:
+          type: string
+          title: WebHookIntegration Identifier
+          description: The identifier of WebHookIntegration
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        events:
+          type: array
+          items:
+            type: string
+          title: Events
+          description: Events to execute the hook on
+        environments:
+          type: array
+          items:
+            type: string
+          title: Environments
+          description: The environments to execute the hook on
+        excluded_environments:
+          type: array
+          items:
+            type: string
+          title: Excluded Environments
+          description: The environments to not execute the hook on
+        states:
+          type: array
+          items:
+            type: string
+          title: States
+          description: Events to execute the hook on
+        result:
+          type: string
+          enum:
+          - '*'
+          - failure
+          - success
+          title: Result
+          description: Result to execute the hook on
+        shared_key:
+          type:
+          - string
+          - 'null'
+          title: Shared Key
+          description: The JWS shared secret key
+        url:
+          type: string
+          title: URL
+          description: The URL of the webhook
+      required:
+      - created_at
+      - updated_at
+      - type
+      - events
+      - environments
+      - excluded_environments
+      - states
+      - result
+      - shared_key
+      - url
+      additionalProperties: false
+    SyslogIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        extra:
+          type: object
+          additionalProperties:
+            type: string
+          title: Extra
+          description: Arbitrary key/value pairs to include with forwarded logs
+        host:
+          type: string
+          title: Host
+          description: Syslog relay/collector host
+        port:
+          type: integer
+          title: Port
+          description: Syslog relay/collector port
+        protocol:
+          type: string
+          enum:
+          - tcp
+          - tls
+          - udp
+          title: Protocol
+          description: Transport protocol
+        facility:
+          type: integer
+          title: Facility
+          description: Syslog facility
+        message_format:
+          type: string
+          enum:
+          - rfc3164
+          - rfc5424
+          title: Message format
+          description: Syslog message format
+        auth_token:
+          type: string
+          title: Authentication token
+          description: ''
+        auth_mode:
+          type: string
+          enum:
+          - prefix
+          - structured_data
+          title: Authentication mode
+          description: ''
+        tls_verify:
+          type: boolean
+          title: TLS Verify
+          description: Enable/Disable HTTPS certificate verification
+        excluded_services:
+          type: array
+          items:
+            type: string
+          title: Excluded Services
+          description: Comma separated list of service and application names to exclude from logging
+      required:
+      - type
+      additionalProperties: false
     SyslogIntegration:
       type: object
       properties:
@@ -2457,7 +2581,111 @@ components:
       - tls_verify
       - excluded_services
       additionalProperties: false
-    SplunkIntegrationPatch:
+    ScriptIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        events:
+          type: array
+          items:
+            type: string
+          title: Events
+          description: Events to execute the hook on
+        environments:
+          type: array
+          items:
+            type: string
+          title: Environments
+          description: The environments to execute the hook on
+        excluded_environments:
+          type: array
+          items:
+            type: string
+          title: Excluded Environments
+          description: The environments to not execute the hook on
+        states:
+          type: array
+          items:
+            type: string
+          title: States
+          description: Events to execute the hook on
+        result:
+          type: string
+          enum:
+          - '*'
+          - failure
+          - success
+          title: Result
+          description: Result to execute the hook on
+        script:
+          type: string
+          title: script
+          description: The script to run
+      required:
+      - type
+      - script
+      additionalProperties: false
+    IntegrationCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Integration'
+    WebHookIntegrationCreateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          title: Integration type
+          description: ''
+        events:
+          type: array
+          items:
+            type: string
+          title: Events
+          description: Events to execute the hook on
+        environments:
+          type: array
+          items:
+            type: string
+          title: Environments
+          description: The environments to execute the hook on
+        excluded_environments:
+          type: array
+          items:
+            type: string
+          title: Excluded Environments
+          description: The environments to not execute the hook on
+        states:
+          type: array
+          items:
+            type: string
+          title: States
+          description: Events to execute the hook on
+        result:
+          type: string
+          enum:
+          - '*'
+          - failure
+          - success
+          title: Result
+          description: Result to execute the hook on
+        shared_key:
+          type:
+          - string
+          - 'null'
+          title: Shared Key
+          description: The JWS shared secret key
+        url:
+          type: string
+          title: URL
+          description: The URL of the webhook
+      required:
+      - type
+      - url
+      additionalProperties: false
+    NewRelicIntegrationCreateInput:
       type: object
       properties:
         type:
@@ -2472,20 +2700,12 @@ components:
           description: Arbitrary key/value pairs to include with forwarded logs
         url:
           type: string
-          title: URL
-          description: The Splunk HTTP Event Connector REST API endpoint
-        index:
+          title: The NewRelic Logs endpoint
+          description: ''
+        license_key:
           type: string
-          title: Index
-          description: The Splunk Index
-        token:
-          type: string
-          title: Authorization Token
-          description: The Splunk Authorization Token
-        sourcetype:
-          type: string
-          title: Sourcetype
-          description: The event 'sourcetype'
+          title: License Key
+          description: The NewRelic Logs License Key
         tls_verify:
           type: boolean
           title: TLS Verify
@@ -2499,31 +2719,38 @@ components:
       required:
       - type
       - url
-      - index
-      - token
+      - license_key
       additionalProperties: false
-    PagerDutyIntegrationCreateInput:
+    EmailIntegrationPatch:
       type: object
       properties:
         type:
           type: string
           title: Integration type
           description: ''
-        routing_key:
-          type: string
-          title: Routing Key
-          description: The PagerDuty routing key
+        from_address:
+          type:
+          - string
+          - 'null'
+          title: From Address
+          description: The email address to use
+        recipients:
+          type: array
+          items:
+            type: string
+          title: Recipients
+          description: Recipients of the email
       required:
       - type
-      - routing_key
+      - recipients
       additionalProperties: false
-    BlackfireIntegration:
+    NewRelicIntegration:
       type: object
       properties:
         id:
           type: string
-          title: BlackfireIntegration Identifier
-          description: The identifier of BlackfireIntegration
+          title: NewRelicIntegration Identifier
+          description: The identifier of NewRelicIntegration
         created_at:
           type:
           - string
@@ -2542,261 +2769,34 @@ components:
           type: string
           title: Integration type
           description: ''
-        environments_credentials:
+        extra:
           type: object
           additionalProperties:
-            type: object
-            properties:
-              server_uuid:
-                type: string
-                title: Server UUID
-                description: The environment server UUID
-              server_token:
-                type: string
-                title: Server Token
-                description: Environment server token
-            required:
-            - server_uuid
-            - server_token
-            additionalProperties: false
-          title: Environments Credentials
-          description: Blackfire environments credentials
-        continuous_profiling:
+            type: string
+          title: Extra
+          description: Arbitrary key/value pairs to include with forwarded logs
+        url:
+          type: string
+          title: The NewRelic Logs endpoint
+          description: ''
+        tls_verify:
           type: boolean
-          title: Continuous Profiling
-          description: Whether continuous profiling is enabled for the project
+          title: TLS Verify
+          description: Enable/Disable HTTPS certificate verification
+        excluded_services:
+          type: array
+          items:
+            type: string
+          title: Excluded Services
+          description: Comma separated list of service and application names to exclude from logging
       required:
       - created_at
       - updated_at
       - type
-      - environments_credentials
-      - continuous_profiling
-      additionalProperties: false
-    BitbucketServerIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        fetch_branches:
-          type: boolean
-          title: Fetch Branches
-          description: Whether or not to fetch branches.
-        prune_branches:
-          type: boolean
-          title: Prune Branches
-          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
-        environment_init_resources:
-          type: string
-          enum:
-          - default
-          - manual
-          - minimum
-          - parent
-          title: Environment Init Resources
-          description: The resources used when initializing a new service
-        url:
-          type: string
-          title: URL
-          description: The base URL of the Bitbucket Server installation.
-        username:
-          type: string
-          title: Username
-          description: The Bitbucket Server user.
-        token:
-          type: string
-          title: Token
-          description: The Bitbucket Server personal access token.
-        project:
-          type: string
-          title: Project
-          description: The Bitbucket Server project
-        repository:
-          type: string
-          title: Repository
-          description: The Bitbucket Server repository
-        build_pull_requests:
-          type: boolean
-          title: Build Pull Requests
-          description: Whether or not to build pull requests.
-        pull_requests_clone_parent_data:
-          type: boolean
-          title: Clone Parent Data
-          description: Whether or not to clone parent data when building merge requests.
-      required:
-      - type
+      - extra
       - url
-      - username
-      - token
-      - project
-      - repository
-      additionalProperties: false
-    HealthWebHookIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        shared_key:
-          type:
-          - string
-          - 'null'
-          title: Shared Key
-          description: The JWS shared secret key
-        url:
-          type: string
-          title: WebHook URL
-          description: The URL of the webhook
-      required:
-      - type
-      - url
-      additionalProperties: false
-    HealthWebHookIntegrationPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        shared_key:
-          type:
-          - string
-          - 'null'
-          title: Shared Key
-          description: The JWS shared secret key
-        url:
-          type: string
-          title: WebHook URL
-          description: The URL of the webhook
-      required:
-      - type
-      - url
-      additionalProperties: false
-    GithubIntegrationCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        fetch_branches:
-          type: boolean
-          title: Fetch Branches
-          description: Whether or not to fetch branches.
-        prune_branches:
-          type: boolean
-          title: Prune Branches
-          description: Whether or not to remove branches that disappeared remotely (requires `fetch_branches`).
-        environment_init_resources:
-          type: string
-          enum:
-          - default
-          - manual
-          - minimum
-          - parent
-          title: Environment Init Resources
-          description: The resources used when initializing a new service
-        token:
-          type: string
-          title: Token
-          description: The GitHub token.
-        base_url:
-          type:
-          - string
-          - 'null'
-          title: Base URL
-          description: The base URL of the Github API endpoint.
-        repository:
-          type: string
-          title: Repository
-          description: The GitHub repository (in the form `user/repo`).
-        build_pull_requests:
-          type: boolean
-          title: Build Pull Requests
-          description: Whether or not to build pull requests.
-        build_draft_pull_requests:
-          type: boolean
-          title: Build Draft Pull Requests
-          description: Whether or not to build draft pull requests (requires `build_pull_requests`).
-        build_pull_requests_post_merge:
-          type: boolean
-          title: Build PR Post-Merge
-          description: Whether to build pull requests post-merge (if true) or pre-merge (if false).
-        pull_requests_clone_parent_data:
-          type: boolean
-          title: Clone Parent Data
-          description: Whether or not to clone parent data when building pull requests.
-      required:
-      - type
-      - token
-      - repository
-      additionalProperties: false
-    PagerDutyIntegration:
-      type: object
-      properties:
-        id:
-          type: string
-          title: PagerDutyIntegration Identifier
-          description: The identifier of PagerDutyIntegration
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        routing_key:
-          type: string
-          title: Routing Key
-          description: The PagerDuty routing key
-      required:
-      - created_at
-      - updated_at
-      - type
-      - routing_key
-      additionalProperties: false
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
-    PagerDutyIntegrationPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          title: Integration type
-          description: ''
-        routing_key:
-          type: string
-          title: Routing Key
-          description: The PagerDuty routing key
-      required:
-      - type
-      - routing_key
+      - tls_verify
+      - excluded_services
       additionalProperties: false
   securitySchemes:
     OAuth2:
