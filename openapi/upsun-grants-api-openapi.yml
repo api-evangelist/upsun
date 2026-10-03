@@ -145,15 +145,6 @@ components:
         ends:
           type: string
           description: Ends with
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
     Error:
       description: ''
       type: object
@@ -186,6 +177,15 @@ components:
         href:
           type: string
           description: URL of the link
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
   parameters:
     UserID:
       name: user_id

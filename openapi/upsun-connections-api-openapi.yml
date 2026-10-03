@@ -97,16 +97,6 @@ paths:
         '404':
           description: Not Found
 components:
-  parameters:
-    UserID:
-      name: user_id
-      in: path
-      required: true
-      description: The ID of the user.
-      schema:
-        type: string
-        example: d81c8ee2-44b3-429f-b944-a33ad7437690
-        format: uuid
   schemas:
     Error:
       description: ''
@@ -167,6 +157,16 @@ components:
           subject: '1621840835647277693'
           email_address: name@example.com
           updated_at: '2021-05-24T07:20:35.683264Z'
+  parameters:
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
   securitySchemes:
     OAuth2:
       type: oauth2

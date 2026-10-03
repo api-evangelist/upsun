@@ -73,10 +73,6 @@ paths:
       description: Lists the endpoints used to retrieve info about the environment type.
 components:
   schemas:
-    EnvironmentTypeCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/EnvironmentType'
     EnvironmentType:
       type: object
       properties:
@@ -94,6 +90,10 @@ components:
       - id
       - attributes
       additionalProperties: false
+    EnvironmentTypeCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EnvironmentType'
   securitySchemes:
     OAuth2:
       type: oauth2

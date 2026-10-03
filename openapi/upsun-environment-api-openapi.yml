@@ -690,69 +690,28 @@ paths:
         (if the deployment target supports it).'
 components:
   schemas:
-    EnvironmentMergeInput:
+    EnvironmentBranchInput:
       type: object
       properties:
-        resources:
-          type:
-          - object
-          - 'null'
-          properties:
-            init:
-              type:
-              - string
-              - 'null'
-              enum:
-              - child
-              - default
-              - manual
-              - minimum
-              title: Init Resources
-              description: The resources used when merging an environment
-          required:
-          - init
-          additionalProperties: false
-          title: Resources
-          description: ''
-      required:
-      - resources
-      additionalProperties: false
-    VersionCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Version'
-    VersionPatch:
-      type: object
-      properties:
-        routing:
-          type: object
-          properties:
-            percentage:
-              type: integer
-              title: Traffic percentage
-              description: The percentage of traffic routed to this version
-          additionalProperties: false
-          title: Routing
-          description: Configuration about the traffic routed to this version
-      additionalProperties: false
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
+        title:
           type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
-    EnvironmentActivateInput:
-      type: object
-      properties:
+          title: Title
+          description: ''
+        name:
+          type: string
+          title: Name
+          description: ''
+        clone_parent:
+          type: boolean
+          title: Clone parent
+          description: Clone data from the parent environment
+        type:
+          type: string
+          enum:
+          - development
+          - staging
+          title: Type
+          description: The type of environment (`staging` or `development`)
         resources:
           type:
           - object
@@ -767,13 +726,88 @@ components:
               - minimum
               - parent
               title: Init Resources
-              description: The resources used when activating an environment
+              description: The resources used when initializing services of the new environment
           required:
           - init
           additionalProperties: false
           title: Resources
           description: ''
       required:
+      - title
+      - name
+      - clone_parent
+      - type
+      - resources
+      additionalProperties: false
+    VersionCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Version'
+    EnvironmentInitializeInput:
+      type: object
+      properties:
+        profile:
+          type: string
+          title: Profile
+          description: Name of the profile to show in the UI
+        repository:
+          type: string
+          title: Repository
+          description: Repository to clone from
+        config:
+          type:
+          - string
+          - 'null'
+          title: Configuration repository
+          description: Repository to clone the configuration files from
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                title: Path
+                description: The path to the file.
+              mode:
+                type: integer
+                title: Mode
+                description: The octal value of the file protection mode.
+              contents:
+                type: string
+                title: Contents
+                description: The contents of the file (base64 encoded).
+            required:
+            - path
+            - mode
+            - contents
+            additionalProperties: false
+          title: Files
+          description: A list of files to add to the repository during initialization
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - default
+              - minimum
+              title: Init Resources
+              description: The resources used when initializing the environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - profile
+      - repository
+      - config
+      - files
       - resources
       additionalProperties: false
     EnvironmentPatch:
@@ -858,23 +892,9 @@ components:
           title: Restrict robots
           description: Whether to restrict robots for this environment
       additionalProperties: false
-    Version:
+    VersionPatch:
       type: object
       properties:
-        id:
-          type: string
-          title: Version Identifier
-          description: The identifier of Version
-        commit:
-          type:
-          - string
-          - 'null'
-          title: Commit SHA
-          description: The SHA of the commit of this version
-        locked:
-          type: boolean
-          title: Is locked
-          description: Whether this version is locked and cannot be modified
         routing:
           type: object
           properties:
@@ -882,103 +902,23 @@ components:
               type: integer
               title: Traffic percentage
               description: The percentage of traffic routed to this version
-          required:
-          - percentage
           additionalProperties: false
           title: Routing
           description: Configuration about the traffic routed to this version
-      required:
-      - id
-      - commit
-      - locked
-      - routing
       additionalProperties: false
-    EnvironmentBranchInput:
+    VersionCreateInput:
       type: object
       properties:
-        title:
-          type: string
-          title: Title
-          description: ''
-        name:
-          type: string
-          title: Name
-          description: ''
-        clone_parent:
-          type: boolean
-          title: Clone parent
-          description: Clone data from the parent environment
-        type:
-          type: string
-          enum:
-          - development
-          - staging
-          title: Type
-          description: The type of environment (`staging` or `development`)
-        resources:
-          type:
-          - object
-          - 'null'
+        routing:
+          type: object
           properties:
-            init:
-              type:
-              - string
-              - 'null'
-              enum:
-              - default
-              - minimum
-              - parent
-              title: Init Resources
-              description: The resources used when initializing services of the new environment
-          required:
-          - init
+            percentage:
+              type: integer
+              title: Traffic percentage
+              description: The percentage of traffic routed to this version
           additionalProperties: false
-          title: Resources
-          description: ''
-      required:
-      - title
-      - name
-      - clone_parent
-      - type
-      - resources
-      additionalProperties: false
-    EnvironmentSynchronizeInput:
-      type: object
-      properties:
-        synchronize_code:
-          type: boolean
-          title: Is code synchronized
-          description: Synchronize code?
-        rebase:
-          type: boolean
-          title: Is code rebased
-          description: Synchronize code by rebasing instead of merging
-        synchronize_data:
-          type: boolean
-          title: Is data synchronized
-          description: Synchronize data?
-        synchronize_resources:
-          type: boolean
-          title: Are resources synchronized
-          description: Synchronize resources?
-      required:
-      - synchronize_code
-      - rebase
-      - synchronize_data
-      - synchronize_resources
-      additionalProperties: false
-    EnvironmentDeployInput:
-      type: object
-      properties:
-        strategy:
-          type: string
-          enum:
-          - rolling
-          - stopstart
-          title: Deployment strategy
-          description: The deployment strategy (`rolling` or `stopstart`)
-      required:
-      - strategy
+          title: Routing
+          description: Configuration about the traffic routed to this version
       additionalProperties: false
     Environment:
       type: object
@@ -1513,51 +1453,36 @@ components:
       - has_deployment
       - supports_restrict_robots
       additionalProperties: false
-    EnvironmentCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Environment'
-    EnvironmentInitializeInput:
+    EnvironmentMergeInput:
       type: object
       properties:
-        profile:
-          type: string
-          title: Profile
-          description: Name of the profile to show in the UI
-        repository:
-          type: string
-          title: Repository
-          description: Repository to clone from
-        config:
+        resources:
           type:
-          - string
+          - object
           - 'null'
-          title: Configuration repository
-          description: Repository to clone the configuration files from
-        files:
-          type: array
-          items:
-            type: object
-            properties:
-              path:
-                type: string
-                title: Path
-                description: The path to the file.
-              mode:
-                type: integer
-                title: Mode
-                description: The octal value of the file protection mode.
-              contents:
-                type: string
-                title: Contents
-                description: The contents of the file (base64 encoded).
-            required:
-            - path
-            - mode
-            - contents
-            additionalProperties: false
-          title: Files
-          description: A list of files to add to the repository during initialization
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - child
+              - default
+              - manual
+              - minimum
+              title: Init Resources
+              description: The resources used when merging an environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - resources
+      additionalProperties: false
+    EnvironmentActivateInput:
+      type: object
+      properties:
         resources:
           type:
           - object
@@ -1570,23 +1495,62 @@ components:
               enum:
               - default
               - minimum
+              - parent
               title: Init Resources
-              description: The resources used when initializing the environment
+              description: The resources used when activating an environment
           required:
           - init
           additionalProperties: false
           title: Resources
           description: ''
       required:
-      - profile
-      - repository
-      - config
-      - files
       - resources
       additionalProperties: false
-    VersionCreateInput:
+    AcceptedResponse:
       type: object
       properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    EnvironmentDeployInput:
+      type: object
+      properties:
+        strategy:
+          type: string
+          enum:
+          - rolling
+          - stopstart
+          title: Deployment strategy
+          description: The deployment strategy (`rolling` or `stopstart`)
+      required:
+      - strategy
+      additionalProperties: false
+    Version:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Version Identifier
+          description: The identifier of Version
+        commit:
+          type:
+          - string
+          - 'null'
+          title: Commit SHA
+          description: The SHA of the commit of this version
+        locked:
+          type: boolean
+          title: Is locked
+          description: Whether this version is locked and cannot be modified
         routing:
           type: object
           properties:
@@ -1594,9 +1558,45 @@ components:
               type: integer
               title: Traffic percentage
               description: The percentage of traffic routed to this version
+          required:
+          - percentage
           additionalProperties: false
           title: Routing
           description: Configuration about the traffic routed to this version
+      required:
+      - id
+      - commit
+      - locked
+      - routing
+      additionalProperties: false
+    EnvironmentCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Environment'
+    EnvironmentSynchronizeInput:
+      type: object
+      properties:
+        synchronize_code:
+          type: boolean
+          title: Is code synchronized
+          description: Synchronize code?
+        rebase:
+          type: boolean
+          title: Is code rebased
+          description: Synchronize code by rebasing instead of merging
+        synchronize_data:
+          type: boolean
+          title: Is data synchronized
+          description: Synchronize data?
+        synchronize_resources:
+          type: boolean
+          title: Are resources synchronized
+          description: Synchronize resources?
+      required:
+      - synchronize_code
+      - rebase
+      - synchronize_data
+      - synchronize_resources
       additionalProperties: false
   securitySchemes:
     OAuth2:

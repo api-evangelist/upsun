@@ -315,6 +315,28 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    SSHKey:
+      description: The ssh key object.
+      properties:
+        key_id:
+          description: The ID of the public key.
+          type: integer
+        uid:
+          description: The internal user ID.
+          type: integer
+        fingerprint:
+          description: The fingerprint of the public key.
+          type: string
+        title:
+          description: The title of the public key.
+          type: string
+        value:
+          description: The actual value of the public key.
+          type: string
+        changed:
+          description: The time of the last key modification (ISO 8601)
+          type: string
+      type: object
     Error:
       description: ''
       type: object
@@ -339,19 +361,6 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    OwnerInfo:
-      description: Project owner information that can be exposed to collaborators.
-      properties:
-        type:
-          description: Type of the owner, usually 'user'.
-          type: string
-        username:
-          description: The username of the owner.
-          type: string
-        display_name:
-          description: The full name of the owner.
-          type: string
-      type: object
     CurrentUser:
       description: The user object.
       properties:
@@ -489,26 +498,17 @@ components:
                 format: date-time
             type: object
       type: object
-    SSHKey:
-      description: The ssh key object.
+    OwnerInfo:
+      description: Project owner information that can be exposed to collaborators.
       properties:
-        key_id:
-          description: The ID of the public key.
-          type: integer
-        uid:
-          description: The internal user ID.
-          type: integer
-        fingerprint:
-          description: The fingerprint of the public key.
+        type:
+          description: Type of the owner, usually 'user'.
           type: string
-        title:
-          description: The title of the public key.
+        username:
+          description: The username of the owner.
           type: string
-        value:
-          description: The actual value of the public key.
-          type: string
-        changed:
-          description: The time of the last key modification (ISO 8601)
+        display_name:
+          description: The full name of the owner.
           type: string
       type: object
     User:

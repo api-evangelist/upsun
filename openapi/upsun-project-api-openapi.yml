@@ -617,6 +617,44 @@ components:
       - status
       - code
       additionalProperties: false
+    ProjectPatch:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        title:
+          type: string
+          title: Title
+          description: The title of the project
+        description:
+          type: string
+          title: Description
+          description: The description of the project
+        default_branch:
+          type:
+          - string
+          - 'null'
+          title: Default branch
+          description: The default branch of the project
+        timezone:
+          type: string
+          title: Timezone
+          description: Timezone of the project
+        region:
+          type: string
+          title: Region
+          description: The region of the project
+        default_domain:
+          type:
+          - string
+          - 'null'
+          title: Default domain
+          description: The default domain of the project
+      additionalProperties: false
     Project:
       type: object
       properties:
@@ -913,44 +951,6 @@ components:
       - repository
       - default_domain
       - subscription
-      additionalProperties: false
-    ProjectPatch:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        title:
-          type: string
-          title: Title
-          description: The title of the project
-        description:
-          type: string
-          title: Description
-          description: The description of the project
-        default_branch:
-          type:
-          - string
-          - 'null'
-          title: Default branch
-          description: The default branch of the project
-        timezone:
-          type: string
-          title: Timezone
-          description: Timezone of the project
-        region:
-          type: string
-          title: Region
-          description: The region of the project
-        default_domain:
-          type:
-          - string
-          - 'null'
-          title: Default domain
-          description: The default domain of the project
       additionalProperties: false
   securitySchemes:
     OAuth2:

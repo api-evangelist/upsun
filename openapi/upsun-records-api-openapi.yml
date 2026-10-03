@@ -113,38 +113,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   parameters:
-    record_end:
-      name: filter[end]
-      in: query
-      description: The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01
-      schema:
-        type: string
-        format: date-time
-    record_usage_group:
-      name: filter[usage_group]
-      in: query
-      description: Filter records by the type of usage.
-      schema:
-        type: string
-        enum:
-        - storage
-        - environments
-        - user_licenses
-    filter_subscription_id:
-      name: filter[subscription_id]
-      in: query
-      description: The ID of the subscription
-      required: false
-      schema:
-        type: string
-    page:
-      name: page
-      in: query
-      description: Page to be displayed. Defaults to 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
     record_status:
       name: filter[status]
       in: query
@@ -174,6 +142,37 @@ components:
         - large
         - xlarge
         - 2xlarge
+    record_end:
+      name: filter[end]
+      in: query
+      description: The end of the observation period for the record. E.g. filter[end]=2018-01-01 will display all records that were active on (i.e. they started before) 2018-01-01
+      schema:
+        type: string
+        format: date-time
+    record_usage_group:
+      name: filter[usage_group]
+      in: query
+      description: Filter records by the type of usage.
+      schema:
+        type: string
+        enum:
+        - storage
+        - environments
+        - user_licenses
+    record_started_at:
+      name: filter[started_at]
+      in: query
+      description: The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>
+      schema:
+        type: string
+        format: date-time
+    record_ended_at:
+      name: filter[ended_at]
+      in: query
+      description: The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>
+      schema:
+        type: string
+        format: date-time
     OrganizationIDName:
       in: path
       name: organization_id
@@ -185,30 +184,22 @@ components:
       required: true
       schema:
         type: string
-    record_ended_at:
-      name: filter[ended_at]
+    page:
+      name: page
       in: query
-      description: The record's end timestamp. You can use this filter to list records ended after, or before a certain time. E.g. filter[ended_at][value]=2020-01-01&filter[ended_at][operator]=>
+      description: Page to be displayed. Defaults to 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+    filter_subscription_id:
+      name: filter[subscription_id]
+      in: query
+      description: The ID of the subscription
+      required: false
       schema:
         type: string
-        format: date-time
-    record_started_at:
-      name: filter[started_at]
-      in: query
-      description: The record's start timestamp. You can use this filter to list records started after, or before a certain time. E.g. filter[started_at][value]=2020-01-01&filter[started_at][operator]=>
-      schema:
-        type: string
-        format: date-time
   schemas:
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
     Error:
       description: ''
       type: object
@@ -279,6 +270,15 @@ components:
         href:
           type: string
           description: URL of the link
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
     Usage:
       description: The usage object.
       properties:

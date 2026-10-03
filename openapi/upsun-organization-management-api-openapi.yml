@@ -249,6 +249,70 @@ paths:
       x-vendor: upsun
 components:
   schemas:
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    PrepaymentObject:
+      type: object
+      description: Prepayment information for an organization.
+      properties:
+        prepayment:
+          type: object
+          description: Prepayment information for an organization.
+          properties:
+            organization_id:
+              type: string
+              description: Organization ID
+            balance:
+              type: object
+              description: The prepayment balance in complex format.
+              properties:
+                formatted:
+                  type: string
+                  description: Formatted balance.
+                amount:
+                  type: number
+                  description: The balance amount.
+                currency_code:
+                  type: string
+                  description: The balance currency code.
+                currency_symbol:
+                  type: string
+                  description: The balance currency symbol.
+            last_updated_at:
+              type:
+              - string
+              - 'null'
+              description: The date the prepayment balance was last updated.
+            sufficient:
+              type: boolean
+              description: Whether the prepayment balance is enough to cover the upcoming order.
+            fallback:
+              type:
+              - string
+              - 'null'
+              description: The fallback payment method, if any, to be used in case prepayment balance is not enough to cover an order.
     OrganizationAlertConfig:
       type: object
       description: The alert configuration for an organization.
@@ -339,30 +403,6 @@ components:
           - string
           - 'null'
           description: The expiration date of the transaction (deposits only).
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
     OrganizationEstimationObject:
       type: object
       description: An estimation of all organization spend.
@@ -489,47 +529,15 @@ components:
                       environments:
                         type: integer
                         description: The total environments for this subsciption.
-    PrepaymentObject:
-      type: object
-      description: Prepayment information for an organization.
-      properties:
-        prepayment:
-          type: object
-          description: Prepayment information for an organization.
-          properties:
-            organization_id:
-              type: string
-              description: Organization ID
-            balance:
-              type: object
-              description: The prepayment balance in complex format.
-              properties:
-                formatted:
-                  type: string
-                  description: Formatted balance.
-                amount:
-                  type: number
-                  description: The balance amount.
-                currency_code:
-                  type: string
-                  description: The balance currency code.
-                currency_symbol:
-                  type: string
-                  description: The balance currency symbol.
-            last_updated_at:
-              type:
-              - string
-              - 'null'
-              description: The date the prepayment balance was last updated.
-            sufficient:
-              type: boolean
-              description: Whether the prepayment balance is enough to cover the upcoming order.
-            fallback:
-              type:
-              - string
-              - 'null'
-              description: The fallback payment method, if any, to be used in case prepayment balance is not enough to cover an order.
   parameters:
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
     OrganizationIDName:
       in: path
       name: organization_id
@@ -541,14 +549,6 @@ components:
       required: true
       schema:
         type: string
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
   securitySchemes:
     OAuth2:
       type: oauth2

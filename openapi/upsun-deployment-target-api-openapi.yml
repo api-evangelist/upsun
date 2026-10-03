@@ -159,13 +159,9 @@ paths:
       description: Delete a single deployment target configuration associated with a specific project.
 components:
   schemas:
-    EnterpriseDeploymentTarget:
+    EnterpriseDeploymentTargetCreateInput:
       type: object
       properties:
-        id:
-          type: string
-          title: EnterpriseDeploymentTarget Identifier
-          description: The identifier of EnterpriseDeploymentTarget
         type:
           type: string
           enum:
@@ -178,37 +174,6 @@ components:
           type: string
           title: Deployment target name
           description: The name of the deployment target.
-        deploy_host:
-          type:
-          - string
-          - 'null'
-          title: Deploy Host
-          description: The host to deploy to.
-        docroots:
-          type: object
-          additionalProperties:
-            type: object
-            properties:
-              active_docroot:
-                type:
-                - string
-                - 'null'
-                title: Active docroot
-                description: The enterprise docroot, that is associated with this application/cluster.
-              docroot_versions:
-                type:
-                - array
-                - 'null'
-                items:
-                  type: string
-                title: Docroot versions
-                description: Versions of the enterprise docroot. When a new environment version is created the active_docroot is updated from these values.
-            required:
-            - active_docroot
-            - docroot_versions
-            additionalProperties: false
-          title: Docroots
-          description: Mapping of clusters to Enterprise applications
         site_urls:
           type: object
           title: Site URLs
@@ -219,10 +184,6 @@ components:
             type: string
           title: SSH Hosts
           description: List of SSH Hosts.
-        maintenance_mode:
-          type: boolean
-          title: Maintenance Mode
-          description: Whether to perform deployments or not
         enterprise_environments_mapping:
           type: object
           title: Enterprise Environments Mapping
@@ -232,34 +193,14 @@ components:
       required:
       - type
       - name
-      - deploy_host
-      - docroots
-      - site_urls
-      - ssh_hosts
-      - maintenance_mode
       additionalProperties: false
-    AcceptedResponse:
+    DeploymentTargetCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/DeploymentTarget'
+    DedicatedDeploymentTargetCreateInput:
       type: object
       properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
-    FoundationDeploymentTarget:
-      type: object
-      properties:
-        id:
-          type: string
-          title: FoundationDeploymentTarget Identifier
-          description: The identifier of FoundationDeploymentTarget
         type:
           type: string
           enum:
@@ -272,68 +213,13 @@ components:
           type: string
           title: Deployment target name
           description: The name of the deployment target.
-        hosts:
-          type:
-          - array
-          - 'null'
-          items:
-            type: object
-            properties:
-              id:
-                type:
-                - string
-                - 'null'
-                title: Host identifier
-                description: The identifier of the host.
-              type:
-                type: string
-                enum:
-                - core
-                - satellite
-                title: Deployment type
-                description: The type of the deployment to this host.
-              services:
-                type:
-                - array
-                - 'null'
-                items:
-                  type: string
-                title: Assigned services
-                description: The services assigned to this host
-            required:
-            - id
-            - type
-            - services
-            additionalProperties: false
-          title: Deployment hosts
-          description: The hosts of the deployment target.
-        use_dedicated_grid:
-          type: boolean
-          title: Whether the deployment should target dedicated Grid hosts.
-          description: 'When true, the deployment will be pinned to Grid hosts dedicated to the environment using this deployment target.
-
-
-            Dedicated Grid hosts must be created prior to deploying the environment.
-
-
-            The constraints that will be set are as follows:
-
-
-            * `cluster_type` is set to `environment-custom`.
-
-            * `cluster` is set to the environment''s cluster name.'
-        storage_type:
-          type:
-          - string
-          - 'null'
-          title: Storage Type
-          description: The storage type.
+        enforced_mounts:
+          type: object
+          title: Enforced Mounts
+          description: Mounts which are always injected into pushed (e.g. enforce /var/log to be a local mount).
       required:
       - type
       - name
-      - hosts
-      - use_dedicated_grid
-      - storage_type
       additionalProperties: false
     DedicatedDeploymentTarget:
       type: object
@@ -457,9 +343,13 @@ components:
       - $ref: '#/components/schemas/DedicatedDeploymentTargetPatch'
       - $ref: '#/components/schemas/EnterpriseDeploymentTargetPatch'
       - $ref: '#/components/schemas/FoundationDeploymentTargetPatch'
-    DedicatedDeploymentTargetPatch:
+    EnterpriseDeploymentTarget:
       type: object
       properties:
+        id:
+          type: string
+          title: EnterpriseDeploymentTarget Identifier
+          description: The identifier of EnterpriseDeploymentTarget
         type:
           type: string
           enum:
@@ -472,14 +362,71 @@ components:
           type: string
           title: Deployment target name
           description: The name of the deployment target.
-        enforced_mounts:
+        deploy_host:
+          type:
+          - string
+          - 'null'
+          title: Deploy Host
+          description: The host to deploy to.
+        docroots:
           type: object
-          title: Enforced Mounts
-          description: Mounts which are always injected into pushed (e.g. enforce /var/log to be a local mount).
+          additionalProperties:
+            type: object
+            properties:
+              active_docroot:
+                type:
+                - string
+                - 'null'
+                title: Active docroot
+                description: The enterprise docroot, that is associated with this application/cluster.
+              docroot_versions:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                title: Docroot versions
+                description: Versions of the enterprise docroot. When a new environment version is created the active_docroot is updated from these values.
+            required:
+            - active_docroot
+            - docroot_versions
+            additionalProperties: false
+          title: Docroots
+          description: Mapping of clusters to Enterprise applications
+        site_urls:
+          type: object
+          title: Site URLs
+          description: ''
+        ssh_hosts:
+          type: array
+          items:
+            type: string
+          title: SSH Hosts
+          description: List of SSH Hosts.
+        maintenance_mode:
+          type: boolean
+          title: Maintenance Mode
+          description: Whether to perform deployments or not
+        enterprise_environments_mapping:
+          type: object
+          title: Enterprise Environments Mapping
+          description: Mapping of clusters to Enterprise applications
+          deprecated: true
+          x-stability: DEPRECATED
       required:
       - type
       - name
+      - deploy_host
+      - docroots
+      - site_urls
+      - ssh_hosts
+      - maintenance_mode
       additionalProperties: false
+    DeploymentTargetCreateInput:
+      oneOf:
+      - $ref: '#/components/schemas/DedicatedDeploymentTargetCreateInput'
+      - $ref: '#/components/schemas/EnterpriseDeploymentTargetCreateInput'
+      - $ref: '#/components/schemas/FoundationDeploymentTargetCreateInput'
     FoundationDeploymentTargetPatch:
       type: object
       properties:
@@ -548,10 +495,84 @@ components:
       - type
       - name
       additionalProperties: false
-    DeploymentTargetCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/DeploymentTarget'
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
+    EnterpriseDeploymentTargetPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - dedicated
+          - enterprise
+          - local
+          title: Deployment target type
+          description: The type of the deployment target.
+        name:
+          type: string
+          title: Deployment target name
+          description: The name of the deployment target.
+        site_urls:
+          type: object
+          title: Site URLs
+          description: ''
+        ssh_hosts:
+          type: array
+          items:
+            type: string
+          title: SSH Hosts
+          description: List of SSH Hosts.
+        enterprise_environments_mapping:
+          type: object
+          title: Enterprise Environments Mapping
+          description: Mapping of clusters to Enterprise applications
+          deprecated: true
+          x-stability: DEPRECATED
+      required:
+      - type
+      - name
+      additionalProperties: false
+    DedicatedDeploymentTargetPatch:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - dedicated
+          - enterprise
+          - local
+          title: Deployment target type
+          description: The type of the deployment target.
+        name:
+          type: string
+          title: Deployment target name
+          description: The name of the deployment target.
+        enforced_mounts:
+          type: object
+          title: Enforced Mounts
+          description: Mounts which are always injected into pushed (e.g. enforce /var/log to be a local mount).
+      required:
+      - type
+      - name
+      additionalProperties: false
+    DeploymentTarget:
+      oneOf:
+      - $ref: '#/components/schemas/DedicatedDeploymentTarget'
+      - $ref: '#/components/schemas/EnterpriseDeploymentTarget'
+      - $ref: '#/components/schemas/FoundationDeploymentTarget'
     FoundationDeploymentTargetCreateInput:
       type: object
       properties:
@@ -620,9 +641,13 @@ components:
       - type
       - name
       additionalProperties: false
-    DedicatedDeploymentTargetCreateInput:
+    FoundationDeploymentTarget:
       type: object
       properties:
+        id:
+          type: string
+          title: FoundationDeploymentTarget Identifier
+          description: The identifier of FoundationDeploymentTarget
         type:
           type: string
           enum:
@@ -635,93 +660,68 @@ components:
           type: string
           title: Deployment target name
           description: The name of the deployment target.
-        enforced_mounts:
-          type: object
-          title: Enforced Mounts
-          description: Mounts which are always injected into pushed (e.g. enforce /var/log to be a local mount).
-      required:
-      - type
-      - name
-      additionalProperties: false
-    EnterpriseDeploymentTargetCreateInput:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - dedicated
-          - enterprise
-          - local
-          title: Deployment target type
-          description: The type of the deployment target.
-        name:
-          type: string
-          title: Deployment target name
-          description: The name of the deployment target.
-        site_urls:
-          type: object
-          title: Site URLs
-          description: ''
-        ssh_hosts:
-          type: array
+        hosts:
+          type:
+          - array
+          - 'null'
           items:
-            type: string
-          title: SSH Hosts
-          description: List of SSH Hosts.
-        enterprise_environments_mapping:
-          type: object
-          title: Enterprise Environments Mapping
-          description: Mapping of clusters to Enterprise applications
-          deprecated: true
-          x-stability: DEPRECATED
+            type: object
+            properties:
+              id:
+                type:
+                - string
+                - 'null'
+                title: Host identifier
+                description: The identifier of the host.
+              type:
+                type: string
+                enum:
+                - core
+                - satellite
+                title: Deployment type
+                description: The type of the deployment to this host.
+              services:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                title: Assigned services
+                description: The services assigned to this host
+            required:
+            - id
+            - type
+            - services
+            additionalProperties: false
+          title: Deployment hosts
+          description: The hosts of the deployment target.
+        use_dedicated_grid:
+          type: boolean
+          title: Whether the deployment should target dedicated Grid hosts.
+          description: 'When true, the deployment will be pinned to Grid hosts dedicated to the environment using this deployment target.
+
+
+            Dedicated Grid hosts must be created prior to deploying the environment.
+
+
+            The constraints that will be set are as follows:
+
+
+            * `cluster_type` is set to `environment-custom`.
+
+            * `cluster` is set to the environment''s cluster name.'
+        storage_type:
+          type:
+          - string
+          - 'null'
+          title: Storage Type
+          description: The storage type.
       required:
       - type
       - name
-      additionalProperties: false
-    DeploymentTarget:
-      oneOf:
-      - $ref: '#/components/schemas/DedicatedDeploymentTarget'
-      - $ref: '#/components/schemas/EnterpriseDeploymentTarget'
-      - $ref: '#/components/schemas/FoundationDeploymentTarget'
-    DeploymentTargetCreateInput:
-      oneOf:
-      - $ref: '#/components/schemas/DedicatedDeploymentTargetCreateInput'
-      - $ref: '#/components/schemas/EnterpriseDeploymentTargetCreateInput'
-      - $ref: '#/components/schemas/FoundationDeploymentTargetCreateInput'
-    EnterpriseDeploymentTargetPatch:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - dedicated
-          - enterprise
-          - local
-          title: Deployment target type
-          description: The type of the deployment target.
-        name:
-          type: string
-          title: Deployment target name
-          description: The name of the deployment target.
-        site_urls:
-          type: object
-          title: Site URLs
-          description: ''
-        ssh_hosts:
-          type: array
-          items:
-            type: string
-          title: SSH Hosts
-          description: List of SSH Hosts.
-        enterprise_environments_mapping:
-          type: object
-          title: Enterprise Environments Mapping
-          description: Mapping of clusters to Enterprise applications
-          deprecated: true
-          x-stability: DEPRECATED
-      required:
-      - type
-      - name
+      - hosts
+      - use_dedicated_grid
+      - storage_type
       additionalProperties: false
   securitySchemes:
     OAuth2:

@@ -288,13 +288,6 @@ components:
           permissions:
           - members
   parameters:
-    InvitationID:
-      name: invitation_id
-      in: path
-      required: true
-      description: The ID of the invitation.
-      schema:
-        type: string
     OrganizationID:
       name: organization_id
       in: path
@@ -303,6 +296,13 @@ components:
       schema:
         type: string
         format: ulid
+    InvitationID:
+      name: invitation_id
+      in: path
+      required: true
+      description: The ID of the invitation.
+      schema:
+        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

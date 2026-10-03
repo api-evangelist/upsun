@@ -182,35 +182,7 @@ paths:
                 $ref: '#/components/schemas/Error'
       x-vendor: upsun
 components:
-  parameters:
-    discountId:
-      name: id
-      in: path
-      description: The ID of the organization discount
-      required: true
-      schema:
-        type: string
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
-      schema:
-        type: string
   schemas:
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
     Discount:
       description: The discount object.
       properties:
@@ -320,6 +292,23 @@ components:
             field:
             - This field is required.
           title: Bad Request
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
     CurrencyAmount:
       description: Currency amount with detailed components.
       properties:
@@ -337,14 +326,6 @@ components:
           description: Currency symbol.
           type: string
       type: object
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
     CurrencyAmountNullable:
       description: Currency amount with detailed components.
       properties:
@@ -364,6 +345,25 @@ components:
       type:
       - object
       - 'null'
+  parameters:
+    discountId:
+      name: id
+      in: path
+      description: The ID of the organization discount
+      required: true
+      schema:
+        type: string
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
   securitySchemes:
     OAuth2:
       type: oauth2
