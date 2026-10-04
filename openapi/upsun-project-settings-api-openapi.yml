@@ -81,90 +81,6 @@ paths:
       description: Update one or more project-level settings.
 components:
   schemas:
-    ProjectSettingsPatch:
-      type: object
-      properties:
-        initialize:
-          type: object
-          title: Initialization key
-          description: ''
-        data_retention:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: object
-            properties:
-              max_backups:
-                type: integer
-                title: Maximum Backups
-                description: The maximum number of backups per environment
-              default_config:
-                type: object
-                properties:
-                  manual_count:
-                    type: integer
-                    title: Manual Count
-                    description: The number of manual backups to keep.
-                  schedule:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        interval:
-                          type: string
-                          title: Interval
-                          description: The policy interval specification.
-                        count:
-                          type: integer
-                          title: Count
-                          description: The number of backups to keep under this interval.
-                      required:
-                      - interval
-                      - count
-                      additionalProperties: false
-                    title: Schedule
-                    description: The backup schedule specification.
-                additionalProperties: false
-                title: Default Config
-                description: ''
-                x-stability: EXPERIMENTAL
-            required:
-            - default_config
-            additionalProperties: false
-          title: Data retention configuration
-          description: Data retention configuration
-        build_resources:
-          type: object
-          properties:
-            cpu:
-              type: number
-              format: float
-              title: CPU
-              description: ''
-            memory:
-              type: integer
-              title: Memory
-              description: ''
-          additionalProperties: false
-          title: Build Resources
-          description: ''
-      additionalProperties: false
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
     ProjectSettings:
       type: object
       properties:
@@ -661,6 +577,90 @@ components:
       - allow_rolling_deployments
       - allow_burst
       - router_resources
+      additionalProperties: false
+    ProjectSettingsPatch:
+      type: object
+      properties:
+        initialize:
+          type: object
+          title: Initialization key
+          description: ''
+        data_retention:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: object
+            properties:
+              max_backups:
+                type: integer
+                title: Maximum Backups
+                description: The maximum number of backups per environment
+              default_config:
+                type: object
+                properties:
+                  manual_count:
+                    type: integer
+                    title: Manual Count
+                    description: The number of manual backups to keep.
+                  schedule:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        interval:
+                          type: string
+                          title: Interval
+                          description: The policy interval specification.
+                        count:
+                          type: integer
+                          title: Count
+                          description: The number of backups to keep under this interval.
+                      required:
+                      - interval
+                      - count
+                      additionalProperties: false
+                    title: Schedule
+                    description: The backup schedule specification.
+                additionalProperties: false
+                title: Default Config
+                description: ''
+                x-stability: EXPERIMENTAL
+            required:
+            - default_config
+            additionalProperties: false
+          title: Data retention configuration
+          description: Data retention configuration
+        build_resources:
+          type: object
+          properties:
+            cpu:
+              type: number
+              format: float
+              title: CPU
+              description: ''
+            memory:
+              type: integer
+              title: Memory
+              description: ''
+          additionalProperties: false
+          title: Build Resources
+          description: ''
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
       additionalProperties: false
   securitySchemes:
     OAuth2:

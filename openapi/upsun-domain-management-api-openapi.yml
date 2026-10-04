@@ -349,54 +349,6 @@ paths:
       description: Delete a single user-specified domain associated with an environment.
 components:
   schemas:
-    ReplacementDomainStoragePatch:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-      additionalProperties: false
-    ProdDomainStorageCreateInput:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Domain name
-          description: ''
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        is_default:
-          type: boolean
-          title: Is Default
-          description: Is this domain default
-      required:
-      - name
-      additionalProperties: false
-    DomainPatch:
-      oneOf:
-      - $ref: '#/components/schemas/ProdDomainStoragePatch'
-      - $ref: '#/components/schemas/ReplacementDomainStoragePatch'
-    ProdDomainStoragePatch:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        is_default:
-          type: boolean
-          title: Is Default
-          description: Is this domain default
-      additionalProperties: false
     ReplacementDomainStorage:
       type: object
       properties:
@@ -451,10 +403,6 @@ components:
       - name
       - attributes
       additionalProperties: false
-    DomainCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Domain'
     AcceptedResponse:
       type: object
       properties:
@@ -470,15 +418,19 @@ components:
       - status
       - code
       additionalProperties: false
-    DomainCreateInput:
-      oneOf:
-      - $ref: '#/components/schemas/ProdDomainStorageCreateInput'
-      - $ref: '#/components/schemas/ReplacementDomainStorageCreateInput'
     Domain:
       oneOf:
       - $ref: '#/components/schemas/ProdDomainStorage'
       - $ref: '#/components/schemas/ReplacementDomainStorage'
-    ReplacementDomainStorageCreateInput:
+    DomainCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Domain'
+    DomainPatch:
+      oneOf:
+      - $ref: '#/components/schemas/ProdDomainStoragePatch'
+      - $ref: '#/components/schemas/ReplacementDomainStoragePatch'
+    ProdDomainStorageCreateInput:
       type: object
       properties:
         name:
@@ -491,10 +443,10 @@ components:
             type: string
           title: Arbitrary attributes
           description: Arbitrary attributes attached to this resource
-        replacement_for:
-          type: string
-          title: Replacement For
-          description: Prod domain which will be replaced by this domain.
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
       required:
       - name
       additionalProperties: false
@@ -551,6 +503,54 @@ components:
       - type
       - name
       - attributes
+      additionalProperties: false
+    ReplacementDomainStoragePatch:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+      additionalProperties: false
+    DomainCreateInput:
+      oneOf:
+      - $ref: '#/components/schemas/ProdDomainStorageCreateInput'
+      - $ref: '#/components/schemas/ReplacementDomainStorageCreateInput'
+    ReplacementDomainStorageCreateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Domain name
+          description: ''
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        replacement_for:
+          type: string
+          title: Replacement For
+          description: Prod domain which will be replaced by this domain.
+      required:
+      - name
+      additionalProperties: false
+    ProdDomainStoragePatch:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
       additionalProperties: false
   securitySchemes:
     OAuth2:

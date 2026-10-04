@@ -218,6 +218,30 @@ paths:
           description: Not Found
 components:
   schemas:
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     StringFilter:
       type: object
       properties:
@@ -245,30 +269,6 @@ components:
         ends:
           type: string
           description: Ends with
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
     ProjectInvitation:
       title: ''
       type: object
@@ -360,18 +360,18 @@ components:
           finished_at: null
           environments: []
   parameters:
-    ProjectID:
-      name: project_id
-      in: path
-      required: true
-      description: The ID of the project.
-      schema:
-        type: string
     InvitationID:
       name: invitation_id
       in: path
       required: true
       description: The ID of the invitation.
+      schema:
+        type: string
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
       schema:
         type: string
   securitySchemes:

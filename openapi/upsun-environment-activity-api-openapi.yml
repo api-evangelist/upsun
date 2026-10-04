@@ -166,10 +166,6 @@ paths:
         Please note that not all activities are cancelable.'
 components:
   schemas:
-    ActivityCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Activity'
     AcceptedResponse:
       type: object
       properties:
@@ -354,6 +350,10 @@ components:
       - expires_at
       - commands
       additionalProperties: false
+    ActivityCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Activity'
   securitySchemes:
     OAuth2:
       type: oauth2

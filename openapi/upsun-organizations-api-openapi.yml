@@ -476,9 +476,21 @@ paths:
       - Organizations
 components:
   schemas:
-    ProjectTitle:
-      type: string
-      description: The title of the project.
+    ArrayFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
     Error:
       description: ''
       type: object
@@ -503,41 +515,6 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
-    OrganizationCarbon:
-      type: object
-      properties:
-        organization_id:
-          $ref: '#/components/schemas/OrganizationID'
-        meta:
-          $ref: '#/components/schemas/MetricsMetadata'
-        projects:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganizationProjectCarbon'
-        total:
-          $ref: '#/components/schemas/CarbonTotal'
-    MetricsMetadata:
-      type: object
-      properties:
-        from:
-          description: The value used to calculate the lower bound of the temporal query. Inclusive.
-        to:
-          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
-        interval:
-          description: The interval used to group the metric values.
-        units:
-          description: The units associated with the provided values.
-    CarbonTotal:
-      type: number
-      description: The calculated total of the metric for the given interval.
     ProjectID:
       type: string
       description: The ID of the project.
@@ -565,39 +542,6 @@ components:
         lte:
           type: string
           description: Less than or equal
-    MetricsValue:
-      type: object
-      properties:
-        value:
-          description: The measured value of the metric for the given time interval.
-        start_time:
-          description: The timestamp at which the time interval began.
-    ArrayFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-    OrganizationProjectCarbon:
-      type: object
-      properties:
-        project_id:
-          $ref: '#/components/schemas/ProjectID'
-        project_title:
-          $ref: '#/components/schemas/ProjectTitle'
-        values:
-          $ref: '#/components/schemas/MetricsValues'
-        total:
-          $ref: '#/components/schemas/CarbonTotal'
     StringFilter:
       type: object
       properties:
@@ -625,13 +569,32 @@ components:
         ends:
           type: string
           description: Ends with
-    OrganizationID:
+    ProjectTitle:
       type: string
-      description: The ID of the organization.
+      description: The title of the project.
     MetricsValues:
       type: array
       items:
         $ref: '#/components/schemas/MetricsValue'
+    MetricsMetadata:
+      type: object
+      properties:
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
     ListLinks:
       type: object
       properties:
@@ -641,6 +604,19 @@ components:
           $ref: '#/components/schemas/Link'
         next:
           $ref: '#/components/schemas/Link'
+    MetricsValue:
+      type: object
+      properties:
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
+    OrganizationID:
+      type: string
+      description: The ID of the organization.
+    CarbonTotal:
+      type: number
+      description: The calculated total of the metric for the given interval.
     Organization:
       type: object
       properties:
@@ -829,7 +805,70 @@ components:
                 href:
                   type: string
                   description: URL of the link.
+    OrganizationProjectCarbon:
+      type: object
+      properties:
+        project_id:
+          $ref: '#/components/schemas/ProjectID'
+        project_title:
+          $ref: '#/components/schemas/ProjectTitle'
+        values:
+          $ref: '#/components/schemas/MetricsValues'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
+    OrganizationCarbon:
+      type: object
+      properties:
+        organization_id:
+          $ref: '#/components/schemas/OrganizationID'
+        meta:
+          $ref: '#/components/schemas/MetricsMetadata'
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationProjectCarbon'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
   parameters:
+    to:
+      in: query
+      name: to
+      description: The end of the time frame for the query. Exclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    UserID:
+      name: user_id
+      in: path
+      required: true
+      description: The ID of the user.
+      schema:
+        type: string
+        example: d81c8ee2-44b3-429f-b944-a33ad7437690
+        format: uuid
+    interval:
+      in: query
+      name: interval
+      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
+      schema:
+        type: string
+        enum:
+        - day
+        - month
+        - year
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    from:
+      in: query
+      name: from
+      description: The start of the time frame for the query. Inclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
     OrganizationIDName:
       in: path
       name: organization_id
@@ -841,45 +880,6 @@ components:
       required: true
       schema:
         type: string
-    UserID:
-      name: user_id
-      in: path
-      required: true
-      description: The ID of the user.
-      schema:
-        type: string
-        example: d81c8ee2-44b3-429f-b944-a33ad7437690
-        format: uuid
-    from:
-      in: query
-      name: from
-      description: The start of the time frame for the query. Inclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    to:
-      in: query
-      name: to
-      description: The end of the time frame for the query. Exclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
-    interval:
-      in: query
-      name: interval
-      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
-      schema:
-        type: string
-        enum:
-        - day
-        - month
-        - year
   securitySchemes:
     OAuth2:
       type: oauth2

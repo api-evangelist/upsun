@@ -273,6 +273,21 @@ components:
       - restore_resources
       - resources
       additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
     Backup:
       type: object
       properties:
@@ -375,6 +390,10 @@ components:
       - restorable
       - automated
       additionalProperties: false
+    BackupCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Backup'
     EnvironmentBackupInput:
       type: object
       properties:
@@ -385,25 +404,6 @@ components:
       required:
       - safe
       additionalProperties: false
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
-    BackupCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Backup'
   securitySchemes:
     OAuth2:
       type: oauth2

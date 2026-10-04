@@ -216,14 +216,6 @@ paths:
         '204':
           description: No Content success.
 components:
-  parameters:
-    user_id:
-      name: userId
-      in: path
-      description: The UUID of the user
-      required: true
-      schema:
-        type: string
   schemas:
     Address:
       description: The address of the user.
@@ -260,25 +252,6 @@ components:
         postal_code:
           description: The postal code area of the user address
           type: string
-      type: object
-    AddressMetadata:
-      description: Information about fields required to express an address.
-      properties:
-        metadata:
-          description: Address field metadata.
-          properties:
-            required_fields:
-              description: Fields required to express the address.
-              type: array
-              items:
-                type: string
-            field_labels:
-              description: Localized labels for address fields.
-              type: object
-            show_vat:
-              description: Whether this country supports a VAT number.
-              type: boolean
-          type: object
       type: object
     HalLinks:
       description: Links to _self, and previous or next page, given that they exist.
@@ -498,6 +471,33 @@ components:
           description: The customer is invoiced.
           type: boolean
       type: object
+    AddressMetadata:
+      description: Information about fields required to express an address.
+      properties:
+        metadata:
+          description: Address field metadata.
+          properties:
+            required_fields:
+              description: Fields required to express the address.
+              type: array
+              items:
+                type: string
+            field_labels:
+              description: Localized labels for address fields.
+              type: object
+            show_vat:
+              description: Whether this country supports a VAT number.
+              type: boolean
+          type: object
+      type: object
+  parameters:
+    user_id:
+      name: userId
+      in: path
+      description: The UUID of the user
+      required: true
+      schema:
+        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

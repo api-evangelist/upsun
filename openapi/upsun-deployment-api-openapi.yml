@@ -109,13 +109,13 @@ paths:
         Only `current` can be queried.'
 components:
   schemas:
-    RedirectRoute:
+    UpstreamRoute:
       type: object
       properties:
         id:
           type: string
-          title: RedirectRoute Identifier
-          description: The identifier of RedirectRoute
+          title: UpstreamRoute Identifier
+          description: The identifier of UpstreamRoute
         primary:
           type:
           - boolean
@@ -207,10 +207,53 @@ components:
           additionalProperties: false
           title: TLS settings
           description: TLS settings for the route.
-        to:
+        cache:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether the cache is enabled.
+            default_ttl:
+              type: integer
+              title: Default TTL
+              description: The TTL to apply when the response doesn't specify one. Only applies to static files.
+            cookies:
+              type: array
+              items:
+                type: string
+              title: Cookies
+              description: The cookies to take into account for the cache key.
+            headers:
+              type: array
+              items:
+                type: string
+              title: Headers
+              description: The headers to take into account for the cache key.
+          required:
+          - enabled
+          - default_ttl
+          - cookies
+          - headers
+          additionalProperties: false
+          title: Cache configuration
+          description: Cache configuration.
+        ssi:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether SSI include is enabled.
+          required:
+          - enabled
+          additionalProperties: false
+          title: SSI configuration
+          description: Server-Side Include configuration.
+        upstream:
           type: string
-          title: Redirect destination
-          description: ''
+          title: Upstream
+          description: The upstream to use for this route.
         redirects:
           type: object
           properties:
@@ -274,6 +317,18 @@ components:
           additionalProperties: false
           title: Redirect configuration
           description: The configuration of the redirects.
+        sticky:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              title: Is enabled
+              description: Whether sticky routing is enabled.
+          required:
+          - enabled
+          additionalProperties: false
+          title: Sticky configuration
+          description: Sticky routing configuration.
       required:
       - primary
       - id
@@ -281,8 +336,11 @@ components:
       - attributes
       - type
       - tls
-      - to
+      - cache
+      - ssi
+      - upstream
       - redirects
+      - sticky
       additionalProperties: false
     Deployment:
       type: object
@@ -2425,13 +2483,13 @@ components:
       - workers
       - container_profiles
       additionalProperties: false
-    UpstreamRoute:
+    RedirectRoute:
       type: object
       properties:
         id:
           type: string
-          title: UpstreamRoute Identifier
-          description: The identifier of UpstreamRoute
+          title: RedirectRoute Identifier
+          description: The identifier of RedirectRoute
         primary:
           type:
           - boolean
@@ -2523,53 +2581,10 @@ components:
           additionalProperties: false
           title: TLS settings
           description: TLS settings for the route.
-        cache:
-          type: object
-          properties:
-            enabled:
-              type: boolean
-              title: Is enabled
-              description: Whether the cache is enabled.
-            default_ttl:
-              type: integer
-              title: Default TTL
-              description: The TTL to apply when the response doesn't specify one. Only applies to static files.
-            cookies:
-              type: array
-              items:
-                type: string
-              title: Cookies
-              description: The cookies to take into account for the cache key.
-            headers:
-              type: array
-              items:
-                type: string
-              title: Headers
-              description: The headers to take into account for the cache key.
-          required:
-          - enabled
-          - default_ttl
-          - cookies
-          - headers
-          additionalProperties: false
-          title: Cache configuration
-          description: Cache configuration.
-        ssi:
-          type: object
-          properties:
-            enabled:
-              type: boolean
-              title: Is enabled
-              description: Whether SSI include is enabled.
-          required:
-          - enabled
-          additionalProperties: false
-          title: SSI configuration
-          description: Server-Side Include configuration.
-        upstream:
+        to:
           type: string
-          title: Upstream
-          description: The upstream to use for this route.
+          title: Redirect destination
+          description: ''
         redirects:
           type: object
           properties:
@@ -2633,18 +2648,6 @@ components:
           additionalProperties: false
           title: Redirect configuration
           description: The configuration of the redirects.
-        sticky:
-          type: object
-          properties:
-            enabled:
-              type: boolean
-              title: Is enabled
-              description: Whether sticky routing is enabled.
-          required:
-          - enabled
-          additionalProperties: false
-          title: Sticky configuration
-          description: Sticky routing configuration.
       required:
       - primary
       - id
@@ -2652,11 +2655,8 @@ components:
       - attributes
       - type
       - tls
-      - cache
-      - ssi
-      - upstream
+      - to
       - redirects
-      - sticky
       additionalProperties: false
     DeploymentCollection:
       type: array

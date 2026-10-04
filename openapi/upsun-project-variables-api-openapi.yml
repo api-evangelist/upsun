@@ -180,53 +180,6 @@ paths:
       description: Delete a single user-defined project variable.
 components:
   schemas:
-    ProjectVariableCreateInput:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Name of the variable
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        value:
-          type: string
-          title: Value
-          description: Value of the variable
-        is_json:
-          type: boolean
-          title: Is JSON
-          description: The variable is a JSON string
-        is_sensitive:
-          type: boolean
-          title: Is Sensitive
-          description: The variable is sensitive
-        visible_build:
-          type: boolean
-          title: Visible during build
-          description: The variable is visible during build
-        visible_runtime:
-          type: boolean
-          title: Visible at runtime
-          description: The variable is visible at runtime
-        application_scope:
-          type: array
-          items:
-            type: string
-          title: Application Scope
-          description: Applications that have access to this variable
-      required:
-      - name
-      - value
-      additionalProperties: false
-    ProjectVariableCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/ProjectVariable'
     AcceptedResponse:
       type: object
       properties:
@@ -241,46 +194,6 @@ components:
       required:
       - status
       - code
-      additionalProperties: false
-    ProjectVariablePatch:
-      type: object
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Name of the variable
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        value:
-          type: string
-          title: Value
-          description: Value of the variable
-        is_json:
-          type: boolean
-          title: Is JSON
-          description: The variable is a JSON string
-        is_sensitive:
-          type: boolean
-          title: Is Sensitive
-          description: The variable is sensitive
-        visible_build:
-          type: boolean
-          title: Visible during build
-          description: The variable is visible during build
-        visible_runtime:
-          type: boolean
-          title: Visible at runtime
-          description: The variable is visible at runtime
-        application_scope:
-          type: array
-          items:
-            type: string
-          title: Application Scope
-          description: Applications that have access to this variable
       additionalProperties: false
     ProjectVariable:
       type: object
@@ -350,6 +263,93 @@ components:
       - visible_build
       - visible_runtime
       - application_scope
+      additionalProperties: false
+    ProjectVariablePatch:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Name of the variable
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        value:
+          type: string
+          title: Value
+          description: Value of the variable
+        is_json:
+          type: boolean
+          title: Is JSON
+          description: The variable is a JSON string
+        is_sensitive:
+          type: boolean
+          title: Is Sensitive
+          description: The variable is sensitive
+        visible_build:
+          type: boolean
+          title: Visible during build
+          description: The variable is visible during build
+        visible_runtime:
+          type: boolean
+          title: Visible at runtime
+          description: The variable is visible at runtime
+        application_scope:
+          type: array
+          items:
+            type: string
+          title: Application Scope
+          description: Applications that have access to this variable
+      additionalProperties: false
+    ProjectVariableCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/ProjectVariable'
+    ProjectVariableCreateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Name of the variable
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        value:
+          type: string
+          title: Value
+          description: Value of the variable
+        is_json:
+          type: boolean
+          title: Is JSON
+          description: The variable is a JSON string
+        is_sensitive:
+          type: boolean
+          title: Is Sensitive
+          description: The variable is sensitive
+        visible_build:
+          type: boolean
+          title: Visible during build
+          description: The variable is visible during build
+        visible_runtime:
+          type: boolean
+          title: Visible at runtime
+          description: The variable is visible at runtime
+        application_scope:
+          type: array
+          items:
+            type: string
+          title: Application Scope
+          description: Applications that have access to this variable
+      required:
+      - name
+      - value
       additionalProperties: false
   securitySchemes:
     OAuth2:

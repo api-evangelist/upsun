@@ -168,30 +168,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
     Link:
       type: object
       title: Link
@@ -200,58 +176,12 @@ components:
         href:
           type: string
           description: URL of the link
-    ListLinks:
-      type: object
+    Components:
+      description: The components of the project
       properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
-    LineItem:
-      description: A line item in an order.
-      properties:
-        type:
-          description: The type of line item.
-          type: string
-          enum:
-          - project_plan
-          - project_feature
-          - project_subtotal
-          - organization_plan
-          - organization_feature
-          - organization_subtotal
-        license_id:
-          description: The associated subscription identifier.
-          type:
-          - number
-          - 'null'
-        project_id:
-          description: The associated project identifier.
-          type:
-          - string
-          - 'null'
-        product:
-          description: Display name of the line item product.
-          type: string
-        sku:
-          description: The line item product SKU.
-          type: string
-        total:
-          description: Total price as a decimal.
-          type: number
-        total_formatted:
-          description: Total price, formatted with currency.
-          type: string
-        components:
-          description: The price components for the line item, keyed by type.
+        voucher/vat/baseprice:
+          description: stub
           type: object
-          additionalProperties:
-            $ref: '#/components/schemas/LineItemComponent'
-        exclude_from_invoice:
-          description: Line item should not be considered billable.
-          type: boolean
       type: object
     Address:
       description: The address of the user.
@@ -289,22 +219,30 @@ components:
           description: The postal code area of the user address
           type: string
       type: object
-    LineItemComponent:
-      description: A price component for a line item.
-      properties:
-        amount:
-          description: The price as a decimal.
-          type: number
-        amount_formatted:
-          description: The price formatted with currency.
-          type: string
-        display_title:
-          description: The display title for the component.
-          type: string
-        currency:
-          description: The currency code for the component.
-          type: string
+    Error:
+      description: ''
       type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     Order:
       description: The order object.
       properties:
@@ -404,14 +342,82 @@ components:
               type: object
           type: object
       type: object
-    Components:
-      description: The components of the project
+    LineItemComponent:
+      description: A price component for a line item.
       properties:
-        voucher/vat/baseprice:
-          description: stub
+        amount:
+          description: The price as a decimal.
+          type: number
+        amount_formatted:
+          description: The price formatted with currency.
+          type: string
+        display_title:
+          description: The display title for the component.
+          type: string
+        currency:
+          description: The currency code for the component.
+          type: string
+      type: object
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    LineItem:
+      description: A line item in an order.
+      properties:
+        type:
+          description: The type of line item.
+          type: string
+          enum:
+          - project_plan
+          - project_feature
+          - project_subtotal
+          - organization_plan
+          - organization_feature
+          - organization_subtotal
+        license_id:
+          description: The associated subscription identifier.
+          type:
+          - number
+          - 'null'
+        project_id:
+          description: The associated project identifier.
+          type:
+          - string
+          - 'null'
+        product:
+          description: Display name of the line item product.
+          type: string
+        sku:
+          description: The line item product SKU.
+          type: string
+        total:
+          description: Total price as a decimal.
+          type: number
+        total_formatted:
+          description: Total price, formatted with currency.
+          type: string
+        components:
+          description: The price components for the line item, keyed by type.
           type: object
+          additionalProperties:
+            $ref: '#/components/schemas/LineItemComponent'
+        exclude_from_invoice:
+          description: Line item should not be considered billable.
+          type: boolean
       type: object
   parameters:
+    filter_order_total:
+      name: filter[total]
+      in: query
+      description: The total of the order.
+      schema:
+        type: integer
     filter_order_status:
       name: filter[status]
       in: query
@@ -425,6 +431,22 @@ components:
         - canceled
         - payment_failed_soft_decline
         - payment_failed_hard_decline
+    mode:
+      name: mode
+      in: query
+      description: The output mode.
+      schema:
+        type: string
+        enum:
+        - details
+    page:
+      name: page
+      in: query
+      description: Page to be displayed. Defaults to 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
     OrderID:
       in: path
       name: order_id
@@ -443,28 +465,6 @@ components:
       required: true
       schema:
         type: string
-    filter_order_total:
-      name: filter[total]
-      in: query
-      description: The total of the order.
-      schema:
-        type: integer
-    page:
-      name: page
-      in: query
-      description: Page to be displayed. Defaults to 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-    mode:
-      name: mode
-      in: query
-      description: The output mode.
-      schema:
-        type: string
-        enum:
-        - details
   securitySchemes:
     OAuth2:
       type: oauth2

@@ -248,6 +248,26 @@ paths:
                 $ref: '#/components/schemas/Error'
       x-vendor: upsun
 components:
+  parameters:
+    OrganizationID:
+      name: organization_id
+      in: path
+      required: true
+      description: The ID of the organization.
+      schema:
+        type: string
+        format: ulid
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
+      schema:
+        type: string
   schemas:
     Error:
       description: ''
@@ -313,54 +333,6 @@ components:
               - string
               - 'null'
               description: The fallback payment method, if any, to be used in case prepayment balance is not enough to cover an order.
-    OrganizationAlertConfig:
-      type: object
-      description: The alert configuration for an organization.
-      properties:
-        id:
-          type: string
-          description: Type of alert (e.g. "billing")
-        active:
-          type: boolean
-          description: Whether the billing alert should be active or not.
-        alerts_sent:
-          type: number
-          description: Number of alerts sent.
-        last_alert_at:
-          type:
-          - string
-          - 'null'
-          description: The datetime the alert was last sent.
-        updated_at:
-          type:
-          - string
-          - 'null'
-          description: The datetime the alert was last updated.
-        config:
-          type:
-          - object
-          - 'null'
-          description: Configuration for threshold and mode.
-          properties:
-            threshold:
-              type: object
-              description: Data regarding threshold spend.
-              properties:
-                formatted:
-                  type: string
-                  description: Formatted threshold value.
-                amount:
-                  type: number
-                  description: Threshold value.
-                currency_code:
-                  type: string
-                  description: Threshold currency code.
-                currency_symbol:
-                  type: string
-                  description: Threshold currency symbol.
-            mode:
-              type: string
-              description: The mode of alert.
     PrepaymentTransactionObject:
       type: object
       description: Prepayment transaction for an organization.
@@ -529,26 +501,54 @@ components:
                       environments:
                         type: integer
                         description: The total environments for this subsciption.
-  parameters:
-    OrganizationID:
-      name: organization_id
-      in: path
-      required: true
-      description: The ID of the organization.
-      schema:
-        type: string
-        format: ulid
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
-      schema:
-        type: string
+    OrganizationAlertConfig:
+      type: object
+      description: The alert configuration for an organization.
+      properties:
+        id:
+          type: string
+          description: Type of alert (e.g. "billing")
+        active:
+          type: boolean
+          description: Whether the billing alert should be active or not.
+        alerts_sent:
+          type: number
+          description: Number of alerts sent.
+        last_alert_at:
+          type:
+          - string
+          - 'null'
+          description: The datetime the alert was last sent.
+        updated_at:
+          type:
+          - string
+          - 'null'
+          description: The datetime the alert was last updated.
+        config:
+          type:
+          - object
+          - 'null'
+          description: Configuration for threshold and mode.
+          properties:
+            threshold:
+              type: object
+              description: Data regarding threshold spend.
+              properties:
+                formatted:
+                  type: string
+                  description: Formatted threshold value.
+                amount:
+                  type: number
+                  description: Threshold value.
+                currency_code:
+                  type: string
+                  description: Threshold currency code.
+                currency_symbol:
+                  type: string
+                  description: Threshold currency symbol.
+            mode:
+              type: string
+              description: The mode of alert.
   securitySchemes:
     OAuth2:
       type: oauth2
