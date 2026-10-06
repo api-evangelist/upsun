@@ -42,7 +42,7 @@ accessModel:
   method: derived
 specificationVersion: '0.23'
 created: '2026-07-17'
-modified: '2026-07-21'
+modified: '2026-10-06'
 image: https://avatars.githubusercontent.com/u/151578842?v=4
 tags:
 - Company
@@ -952,6 +952,8 @@ apis:
   - type: Documentation
     url: https://developer.upsun.com/api-reference
 common:
+- url: https://upsun.com/blog/index.xml
+  type: BlogRSS
 - type: RateLimits
   url: rate-limits/upsun-rate-limits.yml
 - type: Plans
