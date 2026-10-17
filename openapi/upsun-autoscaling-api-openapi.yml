@@ -116,45 +116,6 @@ paths:
       summary: Modifies Autoscaler settings
 components:
   schemas:
-    AutoscalerScalingCooldown:
-      description: Scaling cooldown settings
-      properties:
-        up:
-          description: Number of seconds to wait until scaling up can be done again (since last attempt)
-          minimum: 0
-          title: Up
-          type: integer
-        down:
-          description: Number of seconds to wait until scaling down can be done again (since last attempt)
-          minimum: 0
-          title: Down
-          type: integer
-      title: AutoscalerScalingCooldown
-      type: object
-    AutoscalerCPUPressureTrigger:
-      description: 'CPU pressure trigger settings.
-
-
-        When CPU pressure goes below lower bound, service will be scaled down.
-
-        When CPU pressure goes above upper bound, service will be scaled up.'
-      properties:
-        enabled:
-          type:
-          - boolean
-          - 'null'
-          title: Enabled
-          description: Whether the trigger is enabled
-        down:
-          allOf:
-          - description: Lower bound on resource usage
-          - $ref: '#/components/schemas/AutoscalerCondition'
-        up:
-          allOf:
-          - description: Upper bound on resource usage
-          - $ref: '#/components/schemas/AutoscalerCondition'
-      title: AutoscalerCPUPressureTrigger
-      type: object
     AutoscalerScalingFactor:
       description: Scaling factor settings
       properties:
@@ -169,98 +130,6 @@ components:
           title: Down
           type: integer
       title: AutoscalerScalingFactor
-      type: object
-    AutoscalerCPUTrigger:
-      description: 'CPU resource trigger settings.
-
-
-        When CPU usage goes below lower bound, service will be scaled down.
-
-        When CPU usage goes above upper bound, service will be scaled up.'
-      properties:
-        enabled:
-          type:
-          - boolean
-          - 'null'
-          title: Enabled
-          description: Whether the trigger is enabled
-        down:
-          allOf:
-          - description: Lower bound on resource usage
-          - $ref: '#/components/schemas/AutoscalerCondition'
-        up:
-          allOf:
-          - description: Upper bound on resource usage
-          - $ref: '#/components/schemas/AutoscalerCondition'
-      title: AutoscalerCPUTrigger
-      type: object
-    AutoscalerSettings:
-      description: 'Update model for autoscaling settings.
-
-
-        This model is mainly used for partial updates (PATCH), therefore all its
-
-        attributes are optional.'
-      properties:
-        services:
-          additionalProperties:
-            type:
-            - object
-            - 'null'
-            additionalProperties:
-              $ref: '#/components/schemas/AutoscalerServiceSettings'
-          type:
-          - object
-          - 'null'
-          title: Services
-          description: Each service for which autoscaling is configured is listed in the key
-      title: AutoscalerSettings
-      type: object
-    AutoscalerCondition:
-      description: Trigger condition settings
-      properties:
-        threshold:
-          description: Value at which the condition is satisfied
-          maximum: 100
-          minimum: 0
-          title: Threshold
-          type: number
-        duration:
-          allOf:
-          - description: Number of seconds during which the condition must be satisfied
-          - $ref: '#/components/schemas/AutoscalerDuration'
-        enabled:
-          type:
-          - boolean
-          - 'null'
-          title: Enabled
-          description: Whether the condition should be used for generating alerts
-      required:
-      - threshold
-      title: AutoscalerCondition
-      type: object
-    AutoscalerDuration:
-      enum:
-      - 60
-      - 120
-      - 300
-      - 600
-      - 1800
-      - 3600
-      title: AutoscalerDuration
-      type: integer
-    AutoscalerInstances:
-      description: Horizontal scaling settings
-      properties:
-        min:
-          description: Minimum number of instances when scaling down horizontally
-          title: Min
-          type: integer
-        max:
-          description: Maximum number of instances when scaling up horizontally
-          title: Max
-          type: integer
-      title: AutoscalerInstances
       type: object
     AutoscalerServiceSettings:
       description: Autoscaling settings for a specific service
@@ -286,6 +155,171 @@ components:
           - description: How long to wait before the next scaling attempt can be performed
           - $ref: '#/components/schemas/AutoscalerScalingCooldown'
       title: AutoscalerServiceSettings
+      type: object
+    AutoscalerSettings:
+      description: 'Update model for autoscaling settings.
+
+
+        This model is mainly used for partial updates (PATCH), therefore all its
+
+        attributes are optional.'
+      properties:
+        services:
+          additionalProperties:
+            type:
+            - object
+            - 'null'
+            additionalProperties:
+              $ref: '#/components/schemas/AutoscalerServiceSettings'
+          type:
+          - object
+          - 'null'
+          title: Services
+          description: Each service for which autoscaling is configured is listed in the key
+      title: AutoscalerSettings
+      type: object
+    AutoscalerDuration:
+      enum:
+      - 60
+      - 120
+      - 300
+      - 600
+      - 1800
+      - 3600
+      title: AutoscalerDuration
+      type: integer
+    AutoscalerInstances:
+      description: Horizontal scaling settings
+      properties:
+        min:
+          description: Minimum number of instances when scaling down horizontally
+          title: Min
+          type: integer
+        max:
+          description: Maximum number of instances when scaling up horizontally
+          title: Max
+          type: integer
+      title: AutoscalerInstances
+      type: object
+    AutoscalerScalingCooldown:
+      description: Scaling cooldown settings
+      properties:
+        up:
+          description: Number of seconds to wait until scaling up can be done again (since last attempt)
+          minimum: 0
+          title: Up
+          type: integer
+        down:
+          description: Number of seconds to wait until scaling down can be done again (since last attempt)
+          minimum: 0
+          title: Down
+          type: integer
+      title: AutoscalerScalingCooldown
+      type: object
+    AutoscalerTriggers:
+      additionalProperties: false
+      description: Scaling triggers settings
+      properties:
+        cpu:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerCPUTrigger'
+          description: Settings for scaling based on CPU usage
+        memory:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerMemoryTrigger'
+          description: Settings for scaling based on Memory usage
+        cpu_pressure:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerCPUPressureTrigger'
+          description: Settings for scaling based on CPU pressure
+        memory_pressure:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/AutoscalerMemoryPressureTrigger'
+          description: Settings for scaling based on Memory pressure
+      title: AutoscalerTriggers
+      type: object
+    AutoscalerCondition:
+      description: Trigger condition settings
+      properties:
+        threshold:
+          description: Value at which the condition is satisfied
+          maximum: 100
+          minimum: 0
+          title: Threshold
+          type: number
+        duration:
+          allOf:
+          - description: Number of seconds during which the condition must be satisfied
+          - $ref: '#/components/schemas/AutoscalerDuration'
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the condition should be used for generating alerts
+      required:
+      - threshold
+      title: AutoscalerCondition
+      type: object
+    AutoscalerCPUPressureTrigger:
+      description: 'CPU pressure trigger settings.
+
+
+        When CPU pressure goes below lower bound, service will be scaled down.
+
+        When CPU pressure goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerCPUPressureTrigger
+      type: object
+    AutoscalerCPUTrigger:
+      description: 'CPU resource trigger settings.
+
+
+        When CPU usage goes below lower bound, service will be scaled down.
+
+        When CPU usage goes above upper bound, service will be scaled up.'
+      properties:
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          title: Enabled
+          description: Whether the trigger is enabled
+        down:
+          allOf:
+          - description: Lower bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+        up:
+          allOf:
+          - description: Upper bound on resource usage
+          - $ref: '#/components/schemas/AutoscalerCondition'
+      title: AutoscalerCPUTrigger
       type: object
     AutoscalerMemoryTrigger:
       description: 'Memory resource trigger settings.
@@ -330,39 +364,20 @@ components:
           description: Lower/Upper bounds on Memory allocation when scaling
       title: AutoscalerResources
       type: object
-    AutoscalerTriggers:
-      additionalProperties: false
-      description: Scaling triggers settings
+    AutoscalerCPUResources:
+      description: CPU scaling settings
       properties:
-        cpu:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/AutoscalerCPUTrigger'
-          description: Settings for scaling based on CPU usage
-        memory:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/AutoscalerMemoryTrigger'
-          description: Settings for scaling based on Memory usage
-        cpu_pressure:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/AutoscalerCPUPressureTrigger'
-          description: Settings for scaling based on CPU pressure
-        memory_pressure:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/AutoscalerMemoryPressureTrigger'
-          description: Settings for scaling based on Memory pressure
-      title: AutoscalerTriggers
+        min:
+          description: Minimum CPUs when scaling down vertically
+          minimum: 0
+          title: Min
+          type: number
+        max:
+          description: Maximum CPUs when scaling up vertically
+          minimum: 0
+          title: Max
+          type: number
+      title: AutoscalerCPUResources
       type: object
     AutoscalerMemoryResources:
       description: Memory scaling settings
@@ -402,21 +417,6 @@ components:
           - description: Upper bound on resource usage
           - $ref: '#/components/schemas/AutoscalerCondition'
       title: AutoscalerMemoryPressureTrigger
-      type: object
-    AutoscalerCPUResources:
-      description: CPU scaling settings
-      properties:
-        min:
-          description: Minimum CPUs when scaling down vertically
-          minimum: 0
-          title: Min
-          type: number
-        max:
-          description: Maximum CPUs when scaling up vertically
-          minimum: 0
-          title: Max
-          type: number
-      title: AutoscalerCPUResources
       type: object
   securitySchemes:
     OAuth2:

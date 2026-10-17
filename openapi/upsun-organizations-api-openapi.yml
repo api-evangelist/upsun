@@ -476,48 +476,16 @@ paths:
       - Organizations
 components:
   schemas:
-    ArrayFilter:
+    MetricsValue:
       type: object
       properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
-    ProjectID:
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
+    OrganizationID:
       type: string
-      description: The ID of the project.
+      description: The ID of the organization.
     DateTimeFilter:
       type: object
       properties:
@@ -542,59 +510,30 @@ components:
         lte:
           type: string
           description: Less than or equal
-    StringFilter:
+    Error:
+      description: ''
       type: object
       properties:
-        eq:
+        status:
           type: string
-          description: Equal
-        ne:
+        message:
           type: string
-          description: Not equal
-        in:
+        code:
+          type: number
+        detail:
+          type: object
+        title:
           type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-        between:
-          type: string
-          description: Between (comma-separated list)
-        contains:
-          type: string
-          description: Contains
-        starts:
-          type: string
-          description: Starts with
-        ends:
-          type: string
-          description: Ends with
-    ProjectTitle:
-      type: string
-      description: The title of the project.
-    MetricsValues:
-      type: array
-      items:
-        $ref: '#/components/schemas/MetricsValue'
-    MetricsMetadata:
-      type: object
-      properties:
-        from:
-          description: The value used to calculate the lower bound of the temporal query. Inclusive.
-        to:
-          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
-        interval:
-          description: The interval used to group the metric values.
-        units:
-          description: The units associated with the provided values.
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
     ListLinks:
       type: object
       properties:
@@ -604,19 +543,12 @@ components:
           $ref: '#/components/schemas/Link'
         next:
           $ref: '#/components/schemas/Link'
-    MetricsValue:
-      type: object
-      properties:
-        value:
-          description: The measured value of the metric for the given time interval.
-        start_time:
-          description: The timestamp at which the time interval began.
-    OrganizationID:
-      type: string
-      description: The ID of the organization.
     CarbonTotal:
       type: number
       description: The calculated total of the metric for the given interval.
+    ProjectTitle:
+      type: string
+      description: The title of the project.
     Organization:
       type: object
       properties:
@@ -805,17 +737,60 @@ components:
                 href:
                   type: string
                   description: URL of the link.
-    OrganizationProjectCarbon:
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    ArrayFilter:
       type: object
       properties:
-        project_id:
-          $ref: '#/components/schemas/ProjectID'
-        project_title:
-          $ref: '#/components/schemas/ProjectTitle'
-        values:
-          $ref: '#/components/schemas/MetricsValues'
-        total:
-          $ref: '#/components/schemas/CarbonTotal'
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
+    MetricsValues:
+      type: array
+      items:
+        $ref: '#/components/schemas/MetricsValue'
     OrganizationCarbon:
       type: object
       properties:
@@ -829,13 +804,43 @@ components:
             $ref: '#/components/schemas/OrganizationProjectCarbon'
         total:
           $ref: '#/components/schemas/CarbonTotal'
+    MetricsMetadata:
+      type: object
+      properties:
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
+    OrganizationProjectCarbon:
+      type: object
+      properties:
+        project_id:
+          $ref: '#/components/schemas/ProjectID'
+        project_title:
+          $ref: '#/components/schemas/ProjectTitle'
+        values:
+          $ref: '#/components/schemas/MetricsValues'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
+    ProjectID:
+      type: string
+      description: The ID of the project.
   parameters:
-    to:
-      in: query
-      name: to
-      description: The end of the time frame for the query. Exclusive.
+    OrganizationIDName:
+      in: path
+      name: organization_id
+      description: 'The ID of the organization.<br>
+
+        Prefix with name= to retrieve the organization by name instead.
+
+        '
+      required: true
       schema:
-        $ref: '#/components/schemas/DateTimeFilter'
+        type: string
     UserID:
       name: user_id
       in: path
@@ -845,16 +850,6 @@ components:
         type: string
         example: d81c8ee2-44b3-429f-b944-a33ad7437690
         format: uuid
-    interval:
-      in: query
-      name: interval
-      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
-      schema:
-        type: string
-        enum:
-        - day
-        - month
-        - year
     OrganizationID:
       name: organization_id
       in: path
@@ -869,17 +864,22 @@ components:
       description: The start of the time frame for the query. Inclusive.
       schema:
         $ref: '#/components/schemas/DateTimeFilter'
-    OrganizationIDName:
-      in: path
-      name: organization_id
-      description: 'The ID of the organization.<br>
-
-        Prefix with name= to retrieve the organization by name instead.
-
-        '
-      required: true
+    interval:
+      in: query
+      name: interval
+      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
       schema:
         type: string
+        enum:
+        - day
+        - month
+        - year
+    to:
+      in: query
+      name: to
+      description: The end of the time frame for the query. Exclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
   securitySchemes:
     OAuth2:
       type: oauth2

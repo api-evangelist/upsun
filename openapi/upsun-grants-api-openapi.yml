@@ -142,14 +142,15 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    Link:
+    ListLinks:
       type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
       properties:
-        href:
-          type: string
-          description: URL of the link
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
     StringFilter:
       type: object
       properties:
@@ -177,15 +178,14 @@ components:
         ends:
           type: string
           description: Ends with
-    ListLinks:
+    Link:
       type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
       properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
+        href:
+          type: string
+          description: URL of the link
   parameters:
     UserID:
       name: user_id

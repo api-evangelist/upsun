@@ -217,6 +217,21 @@ paths:
         '404':
           description: Not Found
 components:
+  parameters:
+    InvitationID:
+      name: invitation_id
+      in: path
+      required: true
+      description: The ID of the invitation.
+      schema:
+        type: string
+    ProjectID:
+      name: project_id
+      in: path
+      required: true
+      description: The ID of the project.
+      schema:
+        type: string
   schemas:
     Error:
       description: ''
@@ -242,33 +257,6 @@ components:
             field:
             - This field is required.
           title: Bad Request
-    StringFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-        between:
-          type: string
-          description: Between (comma-separated list)
-        contains:
-          type: string
-          description: Contains
-        starts:
-          type: string
-          description: Starts with
-        ends:
-          type: string
-          description: Ends with
     ProjectInvitation:
       title: ''
       type: object
@@ -359,21 +347,33 @@ components:
           updated_at: '2019-08-24T14:15:22Z'
           finished_at: null
           environments: []
-  parameters:
-    InvitationID:
-      name: invitation_id
-      in: path
-      required: true
-      description: The ID of the invitation.
-      schema:
-        type: string
-    ProjectID:
-      name: project_id
-      in: path
-      required: true
-      description: The ID of the project.
-      schema:
-        type: string
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
   securitySchemes:
     OAuth2:
       type: oauth2

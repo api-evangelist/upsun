@@ -429,14 +429,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
     Error:
       description: ''
       type: object
@@ -544,6 +536,14 @@ components:
         - production:admin
         - production:contributor
         - production:viewer
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
   parameters:
     UserID:
       name: user_id

@@ -218,6 +218,44 @@ paths:
         endpoint.'
 components:
   schemas:
+    Ref:
+      type: object
+      properties:
+        id:
+          type: string
+          title: Ref Identifier
+          description: The identifier of Ref
+        ref:
+          type: string
+          title: Name
+          description: The name of the reference
+        object:
+          type: object
+          properties:
+            type:
+              type: string
+              title: Type
+              description: The type of object pointed to
+            sha:
+              type: string
+              title: The SHA of the object pointed to
+              description: ''
+          required:
+          - type
+          - sha
+          additionalProperties: false
+          title: Object
+          description: The object the reference points to
+        sha:
+          type: string
+          title: SHA
+          description: The commit sha of the ref
+      required:
+      - id
+      - ref
+      - object
+      - sha
+      additionalProperties: false
     Blob:
       type: object
       properties:
@@ -330,44 +368,6 @@ components:
       - message
       - tree
       - parents
-      additionalProperties: false
-    Ref:
-      type: object
-      properties:
-        id:
-          type: string
-          title: Ref Identifier
-          description: The identifier of Ref
-        ref:
-          type: string
-          title: Name
-          description: The name of the reference
-        object:
-          type: object
-          properties:
-            type:
-              type: string
-              title: Type
-              description: The type of object pointed to
-            sha:
-              type: string
-              title: The SHA of the object pointed to
-              description: ''
-          required:
-          - type
-          - sha
-          additionalProperties: false
-          title: Object
-          description: The object the reference points to
-        sha:
-          type: string
-          title: SHA
-          description: The commit sha of the ref
-      required:
-      - id
-      - ref
-      - object
-      - sha
       additionalProperties: false
     Tree:
       type: object

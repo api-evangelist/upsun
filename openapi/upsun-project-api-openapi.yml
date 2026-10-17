@@ -449,43 +449,20 @@ components:
       - default_domain
       - subscription
       additionalProperties: false
-    ProjectPatch:
+    AcceptedResponse:
       type: object
       properties:
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        title:
+        status:
           type: string
-          title: Title
-          description: The title of the project
-        description:
-          type: string
-          title: Description
-          description: The description of the project
-        default_branch:
-          type:
-          - string
-          - 'null'
-          title: Default branch
-          description: The default branch of the project
-        timezone:
-          type: string
-          title: Timezone
-          description: Timezone of the project
-        region:
-          type: string
-          title: Region
-          description: The region of the project
-        default_domain:
-          type:
-          - string
-          - 'null'
-          title: Default domain
-          description: The default domain of the project
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
       additionalProperties: false
     ProjectCapabilities:
       type: object
@@ -937,20 +914,43 @@ components:
       - data_retention
       - autoscaling
       additionalProperties: false
-    AcceptedResponse:
+    ProjectPatch:
       type: object
       properties:
-        status:
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        title:
           type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
+          title: Title
+          description: The title of the project
+        description:
+          type: string
+          title: Description
+          description: The description of the project
+        default_branch:
+          type:
+          - string
+          - 'null'
+          title: Default branch
+          description: The default branch of the project
+        timezone:
+          type: string
+          title: Timezone
+          description: Timezone of the project
+        region:
+          type: string
+          title: Region
+          description: The region of the project
+        default_domain:
+          type:
+          - string
+          - 'null'
+          title: Default domain
+          description: The default domain of the project
       additionalProperties: false
   securitySchemes:
     OAuth2:

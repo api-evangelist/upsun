@@ -159,69 +159,6 @@ paths:
           description: Not Found
 components:
   schemas:
-    OrganizationPermissions:
-      type: array
-      description: The permissions the invitee should be given on the organization.
-      items:
-        type: string
-        enum:
-        - admin
-        - billing
-        - plans
-        - members
-        - project:create
-        - projects:list
-    Error:
-      description: ''
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
-    StringFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-        between:
-          type: string
-          description: Between (comma-separated list)
-        contains:
-          type: string
-          description: Contains
-        starts:
-          type: string
-          description: Starts with
-        ends:
-          type: string
-          description: Ends with
     OrganizationInvitation:
       title: OrganizationInvitation
       type: object
@@ -287,7 +224,77 @@ components:
           finished_at: null
           permissions:
           - members
+    OrganizationPermissions:
+      type: array
+      description: The permissions the invitee should be given on the organization.
+      items:
+        type: string
+        enum:
+        - admin
+        - billing
+        - plans
+        - members
+        - project:create
+        - projects:list
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
   parameters:
+    InvitationID:
+      name: invitation_id
+      in: path
+      required: true
+      description: The ID of the invitation.
+      schema:
+        type: string
     OrganizationID:
       name: organization_id
       in: path
@@ -296,13 +303,6 @@ components:
       schema:
         type: string
         format: ulid
-    InvitationID:
-      name: invitation_id
-      in: path
-      required: true
-      description: The ID of the invitation.
-      schema:
-        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

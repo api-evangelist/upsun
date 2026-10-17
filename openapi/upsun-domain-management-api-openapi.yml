@@ -349,60 +349,10 @@ paths:
       description: Delete a single user-specified domain associated with an environment.
 components:
   schemas:
-    ReplacementDomainStorage:
-      type: object
-      properties:
-        id:
-          type: string
-          title: ReplacementDomainStorage Identifier
-          description: The identifier of ReplacementDomainStorage
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Creation date
-          description: The creation date
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          title: Update date
-          description: The update date
-        type:
-          type: string
-          title: Type
-          description: Domain type
-        project:
-          type: string
-          title: Project name
-          description: ''
-        name:
-          type: string
-          title: Domain name
-          description: ''
-        registered_name:
-          type: string
-          title: Claimed domain name
-          description: ''
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-          title: Arbitrary attributes
-          description: Arbitrary attributes attached to this resource
-        replacement_for:
-          type: string
-          title: Replacement For
-          description: Prod domain which will be replaced by this domain.
-      required:
-      - created_at
-      - updated_at
-      - type
-      - name
-      - attributes
-      additionalProperties: false
+    DomainPatch:
+      oneOf:
+      - $ref: '#/components/schemas/ProdDomainStoragePatch'
+      - $ref: '#/components/schemas/ReplacementDomainStoragePatch'
     AcceptedResponse:
       type: object
       properties:
@@ -418,25 +368,9 @@ components:
       - status
       - code
       additionalProperties: false
-    Domain:
-      oneOf:
-      - $ref: '#/components/schemas/ProdDomainStorage'
-      - $ref: '#/components/schemas/ReplacementDomainStorage'
-    DomainCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Domain'
-    DomainPatch:
-      oneOf:
-      - $ref: '#/components/schemas/ProdDomainStoragePatch'
-      - $ref: '#/components/schemas/ReplacementDomainStoragePatch'
-    ProdDomainStorageCreateInput:
+    ProdDomainStoragePatch:
       type: object
       properties:
-        name:
-          type: string
-          title: Domain name
-          description: ''
         attributes:
           type: object
           additionalProperties:
@@ -447,9 +381,11 @@ components:
           type: boolean
           title: Is Default
           description: Is this domain default
-      required:
-      - name
       additionalProperties: false
+    Domain:
+      oneOf:
+      - $ref: '#/components/schemas/ProdDomainStorage'
+      - $ref: '#/components/schemas/ReplacementDomainStorage'
     ProdDomainStorage:
       type: object
       properties:
@@ -504,20 +440,26 @@ components:
       - name
       - attributes
       additionalProperties: false
-    ReplacementDomainStoragePatch:
+    ProdDomainStorageCreateInput:
       type: object
       properties:
+        name:
+          type: string
+          title: Domain name
+          description: ''
         attributes:
           type: object
           additionalProperties:
             type: string
           title: Arbitrary attributes
           description: Arbitrary attributes attached to this resource
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Is this domain default
+      required:
+      - name
       additionalProperties: false
-    DomainCreateInput:
-      oneOf:
-      - $ref: '#/components/schemas/ProdDomainStorageCreateInput'
-      - $ref: '#/components/schemas/ReplacementDomainStorageCreateInput'
     ReplacementDomainStorageCreateInput:
       type: object
       properties:
@@ -538,7 +480,7 @@ components:
       required:
       - name
       additionalProperties: false
-    ProdDomainStoragePatch:
+    ReplacementDomainStoragePatch:
       type: object
       properties:
         attributes:
@@ -547,11 +489,69 @@ components:
             type: string
           title: Arbitrary attributes
           description: Arbitrary attributes attached to this resource
-        is_default:
-          type: boolean
-          title: Is Default
-          description: Is this domain default
       additionalProperties: false
+    DomainCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Domain'
+    ReplacementDomainStorage:
+      type: object
+      properties:
+        id:
+          type: string
+          title: ReplacementDomainStorage Identifier
+          description: The identifier of ReplacementDomainStorage
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Creation date
+          description: The creation date
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          title: Update date
+          description: The update date
+        type:
+          type: string
+          title: Type
+          description: Domain type
+        project:
+          type: string
+          title: Project name
+          description: ''
+        name:
+          type: string
+          title: Domain name
+          description: ''
+        registered_name:
+          type: string
+          title: Claimed domain name
+          description: ''
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          title: Arbitrary attributes
+          description: Arbitrary attributes attached to this resource
+        replacement_for:
+          type: string
+          title: Replacement For
+          description: Prod domain which will be replaced by this domain.
+      required:
+      - created_at
+      - updated_at
+      - type
+      - name
+      - attributes
+      additionalProperties: false
+    DomainCreateInput:
+      oneOf:
+      - $ref: '#/components/schemas/ProdDomainStorageCreateInput'
+      - $ref: '#/components/schemas/ReplacementDomainStorageCreateInput'
   securitySchemes:
     OAuth2:
       type: oauth2

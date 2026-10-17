@@ -222,72 +222,6 @@ paths:
       x-stability: EXPERIMENTAL
 components:
   schemas:
-    EnvironmentRestoreInput:
-      type: object
-      properties:
-        environment_name:
-          type:
-          - string
-          - 'null'
-          title: Environment name
-          description: ''
-        branch_from:
-          type:
-          - string
-          - 'null'
-          title: Branch from
-          description: ''
-        restore_code:
-          type: boolean
-          title: Is code or data restored
-          description: Whether we should restore the code or only the data
-        restore_resources:
-          type: boolean
-          title: Is resources restored
-          description: Whether we should restore resources configuration from the backup
-        resources:
-          type:
-          - object
-          - 'null'
-          properties:
-            init:
-              type:
-              - string
-              - 'null'
-              enum:
-              - backup
-              - default
-              - minimum
-              - parent
-              title: Init Resources
-              description: The resources used when initializing services of the environment
-          required:
-          - init
-          additionalProperties: false
-          title: Resources
-          description: ''
-      required:
-      - environment_name
-      - branch_from
-      - restore_code
-      - restore_resources
-      - resources
-      additionalProperties: false
-    AcceptedResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          title: Status text
-          description: The status text of the response
-        code:
-          type: integer
-          title: Status code
-          description: The status code of the response
-      required:
-      - status
-      - code
-      additionalProperties: false
     Backup:
       type: object
       properties:
@@ -390,10 +324,72 @@ components:
       - restorable
       - automated
       additionalProperties: false
-    BackupCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Backup'
+    EnvironmentRestoreInput:
+      type: object
+      properties:
+        environment_name:
+          type:
+          - string
+          - 'null'
+          title: Environment name
+          description: ''
+        branch_from:
+          type:
+          - string
+          - 'null'
+          title: Branch from
+          description: ''
+        restore_code:
+          type: boolean
+          title: Is code or data restored
+          description: Whether we should restore the code or only the data
+        restore_resources:
+          type: boolean
+          title: Is resources restored
+          description: Whether we should restore resources configuration from the backup
+        resources:
+          type:
+          - object
+          - 'null'
+          properties:
+            init:
+              type:
+              - string
+              - 'null'
+              enum:
+              - backup
+              - default
+              - minimum
+              - parent
+              title: Init Resources
+              description: The resources used when initializing services of the environment
+          required:
+          - init
+          additionalProperties: false
+          title: Resources
+          description: ''
+      required:
+      - environment_name
+      - branch_from
+      - restore_code
+      - restore_resources
+      - resources
+      additionalProperties: false
+    AcceptedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          title: Status text
+          description: The status text of the response
+        code:
+          type: integer
+          title: Status code
+          description: The status code of the response
+      required:
+      - status
+      - code
+      additionalProperties: false
     EnvironmentBackupInput:
       type: object
       properties:
@@ -404,6 +400,10 @@ components:
       required:
       - safe
       additionalProperties: false
+    BackupCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Backup'
   securitySchemes:
     OAuth2:
       type: oauth2

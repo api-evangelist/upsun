@@ -332,43 +332,32 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
-      description: ''
+    ProjectDedicatedTag:
+      type: string
+      description: Dedicated tag.
+    MetricsValue:
       type: object
       properties:
-        status:
-          type: string
-        message:
-          type: string
-        code:
-          type: number
-        detail:
-          type: object
-        title:
-          type: string
-      title: ''
-      x-examples:
-        example-1:
-          status: Invalid input
-          message: This field is required.
-          code: 400
-          detail:
-            field:
-            - This field is required.
-          title: Bad Request
+        value:
+          description: The measured value of the metric for the given time interval.
+        start_time:
+          description: The timestamp at which the time interval began.
+    ProjectPlan:
+      type: string
+      description: The project plan.
     ProjectType:
       type: string
       description: The type of projects.
       enum:
       - grid
       - dedicated
-    ProjectID:
-      type: string
-      description: The ID of the project.
     UpdatedAt:
       type: string
       format: date-time
       description: The date and time when the resource was last updated.
+    OrganizationID:
+      type: string
+      description: The ID of the organization.
     DateTimeFilter:
       type: object
       properties:
@@ -393,6 +382,142 @@ components:
         lte:
           type: string
           description: Less than or equal
+    ProjectTrialPlan:
+      description: Whether the project is currently on a trial plan.
+      type: boolean
+    Error:
+      description: ''
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        code:
+          type: number
+        detail:
+          type: object
+        title:
+          type: string
+      title: ''
+      x-examples:
+        example-1:
+          status: Invalid input
+          message: This field is required.
+          code: 400
+          detail:
+            field:
+            - This field is required.
+          title: Bad Request
+    RegionID:
+      type: string
+      description: The machine name of the region where the project is located.
+    ProjectCarbon:
+      type: object
+      properties:
+        project_id:
+          $ref: '#/components/schemas/ProjectID'
+        project_title:
+          $ref: '#/components/schemas/ProjectTitle'
+        meta:
+          $ref: '#/components/schemas/MetricsMetadata'
+        values:
+          $ref: '#/components/schemas/MetricsValues'
+        total:
+          $ref: '#/components/schemas/CarbonTotal'
+    ListLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        previous:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+    ProjectTimeZone:
+      type: string
+      description: Timezone of the project.
+    ProjectTitle:
+      type: string
+      description: The title of the project.
+    CarbonTotal:
+      type: number
+      description: The calculated total of the metric for the given interval.
+    Link:
+      type: object
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
+      properties:
+        href:
+          type: string
+          description: URL of the link
+    StringFilter:
+      type: object
+      properties:
+        eq:
+          type: string
+          description: Equal
+        ne:
+          type: string
+          description: Not equal
+        in:
+          type: string
+          description: In (comma-separated list)
+        nin:
+          type: string
+          description: Not in (comma-separated list)
+        between:
+          type: string
+          description: Between (comma-separated list)
+        contains:
+          type: string
+          description: Contains
+        starts:
+          type: string
+          description: Starts with
+        ends:
+          type: string
+          description: Ends with
+    MetricsValues:
+      type: array
+      items:
+        $ref: '#/components/schemas/MetricsValue'
+    ProjectUI:
+      description: The URL for the project's user interface.
+      type: string
+    ProjectCSENotes:
+      type: string
+      description: CSE notes.
+    CreatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the resource was created.
+    MetricsMetadata:
+      type: object
+      properties:
+        from:
+          description: The value used to calculate the lower bound of the temporal query. Inclusive.
+        to:
+          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
+        interval:
+          description: The interval used to group the metric values.
+        units:
+          description: The units associated with the provided values.
+    ProjectStatus:
+      type: string
+      description: The status of the project.
+      enum:
+      - requested
+      - active
+      - failed
+      - suspended
+      - deleted
+    SubscriptionID:
+      type: string
+      description: The ID of the subscription.
+    ProjectDefaultBranch:
+      type: string
+      description: Default branch.
     OrganizationProject:
       type: object
       properties:
@@ -477,154 +602,13 @@ components:
                 href:
                   type: string
                   description: URL of the link.
-    ProjectCarbon:
-      type: object
-      properties:
-        project_id:
-          $ref: '#/components/schemas/ProjectID'
-        project_title:
-          $ref: '#/components/schemas/ProjectTitle'
-        meta:
-          $ref: '#/components/schemas/MetricsMetadata'
-        values:
-          $ref: '#/components/schemas/MetricsValues'
-        total:
-          $ref: '#/components/schemas/CarbonTotal'
-    StringFilter:
-      type: object
-      properties:
-        eq:
-          type: string
-          description: Equal
-        ne:
-          type: string
-          description: Not equal
-        in:
-          type: string
-          description: In (comma-separated list)
-        nin:
-          type: string
-          description: Not in (comma-separated list)
-        between:
-          type: string
-          description: Between (comma-separated list)
-        contains:
-          type: string
-          description: Contains
-        starts:
-          type: string
-          description: Starts with
-        ends:
-          type: string
-          description: Ends with
-    SubscriptionID:
+    ProjectID:
       type: string
-      description: The ID of the subscription.
-    ProjectCSENotes:
-      type: string
-      description: CSE notes.
-    ProjectDedicatedTag:
-      type: string
-      description: Dedicated tag.
-    ProjectTimeZone:
-      type: string
-      description: Timezone of the project.
-    ProjectPlan:
-      type: string
-      description: The project plan.
-    MetricsValues:
-      type: array
-      items:
-        $ref: '#/components/schemas/MetricsValue'
-    ProjectTitle:
-      type: string
-      description: The title of the project.
-    MetricsMetadata:
-      type: object
-      properties:
-        from:
-          description: The value used to calculate the lower bound of the temporal query. Inclusive.
-        to:
-          description: The truncated value used to calculate the upper bound of the temporal query. Exclusive.
-        interval:
-          description: The interval used to group the metric values.
-        units:
-          description: The units associated with the provided values.
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
-      properties:
-        href:
-          type: string
-          description: URL of the link
-    RegionID:
-      type: string
-      description: The machine name of the region where the project is located.
-    ProjectStatus:
-      type: string
-      description: The status of the project.
-      enum:
-      - requested
-      - active
-      - failed
-      - suspended
-      - deleted
-    ListLinks:
-      type: object
-      properties:
-        self:
-          $ref: '#/components/schemas/Link'
-        previous:
-          $ref: '#/components/schemas/Link'
-        next:
-          $ref: '#/components/schemas/Link'
-    MetricsValue:
-      type: object
-      properties:
-        value:
-          description: The measured value of the metric for the given time interval.
-        start_time:
-          description: The timestamp at which the time interval began.
-    ProjectDefaultBranch:
-      type: string
-      description: Default branch.
-    OrganizationID:
-      type: string
-      description: The ID of the organization.
+      description: The ID of the project.
     ProjectLocked:
       type: boolean
       description: Locked
-    CreatedAt:
-      type: string
-      format: date-time
-      description: The date and time when the resource was created.
-    ProjectUI:
-      description: The URL for the project's user interface.
-      type: string
-    CarbonTotal:
-      type: number
-      description: The calculated total of the metric for the given interval.
-    ProjectTrialPlan:
-      description: Whether the project is currently on a trial plan.
-      type: boolean
   parameters:
-    to:
-      in: query
-      name: to
-      description: The end of the time frame for the query. Exclusive.
-      schema:
-        $ref: '#/components/schemas/DateTimeFilter'
-    interval:
-      in: query
-      name: interval
-      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
-      schema:
-        type: string
-        enum:
-        - day
-        - month
-        - year
     OrganizationID:
       name: organization_id
       in: path
@@ -644,6 +628,22 @@ components:
       in: query
       name: from
       description: The start of the time frame for the query. Inclusive.
+      schema:
+        $ref: '#/components/schemas/DateTimeFilter'
+    interval:
+      in: query
+      name: interval
+      description: The interval by which the query groups the results. of the time frame for the query. Exclusive.
+      schema:
+        type: string
+        enum:
+        - day
+        - month
+        - year
+    to:
+      in: query
+      name: to
+      description: The end of the time frame for the query. Exclusive.
       schema:
         $ref: '#/components/schemas/DateTimeFilter'
   securitySchemes:

@@ -183,14 +183,42 @@ paths:
       x-vendor: upsun
 components:
   schemas:
-    Link:
-      type: object
-      title: Link
-      description: A hypermedia link to the {current, next, previous} set of items.
+    CurrencyAmount:
+      description: Currency amount with detailed components.
       properties:
-        href:
+        formatted:
+          description: Formatted currency value.
           type: string
-          description: URL of the link
+        amount:
+          description: Plain amount.
+          type: number
+          format: float
+        currency_code:
+          description: Currency code.
+          type: string
+        currency_symbol:
+          description: Currency symbol.
+          type: string
+      type: object
+    CurrencyAmountNullable:
+      description: Currency amount with detailed components.
+      properties:
+        formatted:
+          description: Formatted currency value.
+          type: string
+        amount:
+          description: Plain amount.
+          type: number
+          format: float
+        currency_code:
+          description: Currency code.
+          type: string
+        currency_symbol:
+          description: Currency symbol.
+          type: string
+      type:
+      - object
+      - 'null'
     Error:
       description: ''
       type: object
@@ -309,50 +337,15 @@ components:
           $ref: '#/components/schemas/Link'
         next:
           $ref: '#/components/schemas/Link'
-    CurrencyAmount:
-      description: Currency amount with detailed components.
-      properties:
-        formatted:
-          description: Formatted currency value.
-          type: string
-        amount:
-          description: Plain amount.
-          type: number
-          format: float
-        currency_code:
-          description: Currency code.
-          type: string
-        currency_symbol:
-          description: Currency symbol.
-          type: string
+    Link:
       type: object
-    CurrencyAmountNullable:
-      description: Currency amount with detailed components.
+      title: Link
+      description: A hypermedia link to the {current, next, previous} set of items.
       properties:
-        formatted:
-          description: Formatted currency value.
+        href:
           type: string
-        amount:
-          description: Plain amount.
-          type: number
-          format: float
-        currency_code:
-          description: Currency code.
-          type: string
-        currency_symbol:
-          description: Currency symbol.
-          type: string
-      type:
-      - object
-      - 'null'
+          description: URL of the link
   parameters:
-    discountId:
-      name: id
-      in: path
-      description: The ID of the organization discount
-      required: true
-      schema:
-        type: string
     OrganizationIDName:
       in: path
       name: organization_id
@@ -361,6 +354,13 @@ components:
         Prefix with name= to retrieve the organization by name instead.
 
         '
+      required: true
+      schema:
+        type: string
+    discountId:
+      name: id
+      in: path
+      description: The ID of the organization discount
       required: true
       schema:
         type: string
