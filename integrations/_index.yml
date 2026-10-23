@@ -65,3 +65,48 @@
     detected: '2026-10-22'
   status: not-a-workflow
   arazzo: null
+- slug: upsun-drupal-association-supporter-programmes
+  label: Drupal Association supporter programmes
+  partner: drupal-org
+  partner_name: Drupal Association supporter programmes
+  category: Drupal Association partner / supporter programme
+  type: register
+  channel: standard-directory
+  evidence: https://www.drupal.org/upsun-formerly-platformsh
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: drupal.org organization directory, Drupal Association supporter flags (api-d7 organization)
+    standard: null
+    spec_file: null
+    role: drupal-association-supporter
+    registered_name: Upsun (formerly Platform.sh)
+    register_id: '2695539'
+    register_country: null
+    matched_domain: upsun.com
+    matched_by: domain+name-among-holders
+    programmes:
+    - programme: DrupalCares 2020
+      levels:
+      - premiere
+    support_flags:
+    - drupalcares_2020_premiere
+    signal_note: 'participation only: Drupal Association partner / supporter programme flags; listing is not conformance
+      (no certified_products)'
+    detected_by: sweep-drupal-contrib-ecosystem.py
+    detected: '2026-10-22'
+  status: not-a-workflow
+  arazzo: null
+- slug: upsun-drupal-own
+  label: Drupal (own)
+  partner: drupal
+  partner_name: Drupal (own)
+  category: Drupal contributed module
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.drupal.org/project/commerce_invoice
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null

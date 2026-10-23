@@ -89,6 +89,55 @@ edges:
     detected: '2026-10-22'
   detected_by: sweep-php-dart-elixir-package-registries.py
   first_seen: '2026-10-22'
+- partner_name: Drupal Association supporter programmes
+  partner: drupal-org
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  partner_tier: premiere
+  evidence: https://www.drupal.org/upsun-formerly-platformsh
+  category: Drupal Association partner / supporter programme
+  contract_reference:
+    register: drupal.org organization directory, Drupal Association supporter flags (api-d7 organization)
+    standard: null
+    spec_file: null
+    role: drupal-association-supporter
+    registered_name: Upsun (formerly Platform.sh)
+    register_id: '2695539'
+    register_country: null
+    matched_domain: upsun.com
+    matched_by: domain+name-among-holders
+    programmes:
+    - programme: DrupalCares 2020
+      levels:
+      - premiere
+    support_flags:
+    - drupalcares_2020_premiere
+    signal_note: 'participation only: Drupal Association partner / supporter programme flags; listing is not conformance
+      (no certified_products)'
+    detected_by: sweep-drupal-contrib-ecosystem.py
+    detected: '2026-10-22'
+  detected_by: sweep-drupal-contrib-ecosystem.py
+  first_seen: '2026-10-22'
+- partner_name: Drupal (own)
+  partner: drupal
+  partner_match: mirror
+  mirror_match: domain+name-among-holders
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.drupal.org/project/commerce_invoice
+  mirror_of: drupal/integrations/drupal-integration-edges.yml
+  apps:
+  - Commerce Invoice
+  listing_count: 1
+  detected: '2026-10-22'
+  detected_by: mirror-platform-listings.py
+  category: Drupal contributed module
 generated: '2026-10-18'
 method: searched
 source:
@@ -115,3 +164,6 @@ checked:
 - https://hex.pm/api
 - https://packagist.org/packages
 - https://pub.dev/api
+- https://www.drupal.org/api-d7/node.json?type=organization
+- https://www.drupal.org/api-d7/node.json?type=project_module
+- drupal/integrations/drupal-integration-edges.yml
